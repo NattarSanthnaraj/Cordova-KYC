@@ -24,17 +24,18 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import accura.kyc.app.R;
-
 public class FaceMatchActivity extends AppCompatActivity implements FaceHelper.FaceMatchCallBack, FaceCallback {
     FaceHelper faceHelper;
     Bitmap face1, detectFace, face2;
     Bundle bundle;
     boolean witFace = false;
+    public int R(String name, String type){
+        return getResources().getIdentifier(name, type, getPackageName());
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_face_match);
+        setContentView(R("activity_face_match", "layout"));
         bundle = getIntent().getExtras();
         faceHelper = new FaceHelper(this);
         if (bundle.containsKey("with_face")) {
@@ -56,34 +57,34 @@ public class FaceMatchActivity extends AppCompatActivity implements FaceHelper.F
 
     public void openFaceMatch() throws JSONException {
         LivenessCustomization cameraScreenCustomization = new LivenessCustomization();
-        cameraScreenCustomization.backGroundColor = getResources().getColor(R.color.camera_Background);
+        cameraScreenCustomization.backGroundColor = getResources().getColor(R("camera_Background", "color"));
         if (bundle.containsKey("backGroundColor")) {
             cameraScreenCustomization.backGroundColor = Color.parseColor(bundle.getString("backGroundColor"));
         }
-        cameraScreenCustomization.closeIconColor = getResources().getColor(R.color.camera_CloseIcon);
+        cameraScreenCustomization.closeIconColor = getResources().getColor(R("camera_CloseIcon", "color"));
         if (bundle.containsKey("closeIconColor")) {
             cameraScreenCustomization.closeIconColor = Color.parseColor(bundle.getString("closeIconColor"));
         }
-        cameraScreenCustomization.feedbackBackGroundColor = getResources().getColor(R.color.camera_feedbackBg);
+        cameraScreenCustomization.feedbackBackGroundColor = getResources().getColor(R("camera_feedbackBg", "color"));
         if (bundle.containsKey("feedbackBackGroundColor")) {
             cameraScreenCustomization.feedbackBackGroundColor = Color.parseColor(bundle.getString("feedbackBackGroundColor"));
         }
-        cameraScreenCustomization.feedbackTextColor = getResources().getColor(R.color.camera_feedbackText);
+        cameraScreenCustomization.feedbackTextColor = getResources().getColor(R("camera_feedbackText", "color"));
         if (bundle.containsKey("feedbackTextColor")) {
             cameraScreenCustomization.feedbackTextColor = Color.parseColor(bundle.getString("feedbackTextColor"));
         }
-        cameraScreenCustomization.feedbackTextSize = bundle.getInt("feedbackTextSize", getResources().getInteger(R.integer.feedbackTextSize));
-        cameraScreenCustomization.feedBackframeMessage = bundle.getString("feedBackframeMessage", getResources().getString(R.string.feedBackframeMessage));
-        cameraScreenCustomization.feedBackAwayMessage =bundle.getString("feedBackAwayMessage", getResources().getString(R.string.feedBackAwayMessage));
-        cameraScreenCustomization.feedBackOpenEyesMessage = bundle.getString("feedBackOpenEyesMessage", getResources().getString(R.string.feedBackOpenEyesMessage));
-        cameraScreenCustomization.feedBackCloserMessage = bundle.getString("feedBackCloserMessage", getResources().getString(R.string.feedBackCloserMessage));
-        cameraScreenCustomization.feedBackCenterMessage = bundle.getString("feedBackCenterMessage", getResources().getString(R.string.feedBackCenterMessage));
-        cameraScreenCustomization.feedBackMultipleFaceMessage = bundle.getString("feedBackMultipleFaceMessage", getResources().getString(R.string.feedBackMultipleFaceMessage));
-        cameraScreenCustomization.feedBackHeadStraightMessage =bundle.getString("feedBackHeadStraightMessage", getResources().getString(R.string.feedBackHeadStraightMessage));
-        cameraScreenCustomization.feedBackBlurFaceMessage = bundle.getString("feedBackBlurFaceMessage", getResources().getString(R.string.feedBackBlurFaceMessage));
-        cameraScreenCustomization.feedBackGlareFaceMessage = bundle.getString("feedBackGlareFaceMessage", getResources().getString(R.string.feedBackGlareFaceMessage));
-        cameraScreenCustomization.setBlurPercentage(bundle.getInt("setBlurPercentage", getResources().getInteger(R.integer.setBlurPercentage)));
-        cameraScreenCustomization.setGlarePercentage(bundle.getInt("setGlarePercentage_0", getResources().getInteger(R.integer.setGlarePercentage_0)), bundle.getInt("setGlarePercentage_1",getResources().getInteger(R.integer.setGlarePercentage_1)));
+        cameraScreenCustomization.feedbackTextSize = bundle.getInt("feedbackTextSize", getResources().getInteger(R("feedbackTextSize", "integer")));
+        cameraScreenCustomization.feedBackframeMessage = bundle.getString("feedBackframeMessage", getResources().getString(R("feedBackframeMessage", "string")));
+        cameraScreenCustomization.feedBackAwayMessage =bundle.getString("feedBackAwayMessage", getResources().getString(R("feedBackAwayMessage", "string")));
+        cameraScreenCustomization.feedBackOpenEyesMessage = bundle.getString("feedBackOpenEyesMessage", getResources().getString(R("feedBackOpenEyesMessage", "string")));
+        cameraScreenCustomization.feedBackCloserMessage = bundle.getString("feedBackCloserMessage", getResources().getString(R("feedBackCloserMessage", "string")));
+        cameraScreenCustomization.feedBackCenterMessage = bundle.getString("feedBackCenterMessage", getResources().getString(R("feedBackCenterMessage", "string")));
+        cameraScreenCustomization.feedBackMultipleFaceMessage = bundle.getString("feedBackMultipleFaceMessage", getResources().getString(R("feedBackMultipleFaceMessage", "string")));
+        cameraScreenCustomization.feedBackHeadStraightMessage =bundle.getString("feedBackHeadStraightMessage", getResources().getString(R("feedBackHeadStraightMessage", "string")));
+        cameraScreenCustomization.feedBackBlurFaceMessage = bundle.getString("feedBackBlurFaceMessage", getResources().getString(R("feedBackBlurFaceMessage", "string")));
+        cameraScreenCustomization.feedBackGlareFaceMessage = bundle.getString("feedBackGlareFaceMessage", getResources().getString(R("feedBackGlareFaceMessage", "string")));
+        cameraScreenCustomization.setBlurPercentage(bundle.getInt("setBlurPercentage", getResources().getInteger(R("setBlurPercentage", "integer"))));
+        cameraScreenCustomization.setGlarePercentage(bundle.getInt("setGlarePercentage_0", getResources().getInteger(R("setGlarePercentage_0", "integer"))), bundle.getInt("setGlarePercentage_1",getResources().getInteger(R("setGlarePercentage_1", "integer"))));
         Intent intent = SelfieCameraActivity.getFaceMatchCameraIntent(this, cameraScreenCustomization);
         startActivityForResult(intent, 202);
     }

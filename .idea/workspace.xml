@@ -1,7 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7e937092-d7cb-49c1-9e99-ab31a93a8ee9" name="Default Changelist" comment="" />
+    <list default="true" id="7e937092-d7cb-49c1-9e99-ab31a93a8ee9" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/AccuraMRZ.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/accura-orc/ACCURAService.java" beforeDir="false" afterPath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/accura-orc/ACCURAService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/accura-orc/FaceMatchActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/accura-orc/FaceMatchActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/accura-orc/NavigateActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/accura-orc/NavigateActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/accura-orc/OcrActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/accura-orc/OcrActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/adapter/BarCodeFormatListAdapter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/layout/activity_face_match.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/layout/activity_navigate.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/layout/custom_frame_layout.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/layout/dialog_barcode_type.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/layout/item_barcode.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/layout/item_layout.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/layout/ocr_activity.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/menu/menu_land_port.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/resources/drawable-xhdpi/ic_barcode.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/resources/drawable-xhdpi/ic_biometric.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/resources/drawable-xhdpi/ic_liveness.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/resources/drawable/btn_bg_gray.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/resources/drawable/flip_camera_icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/resources/flip_camera_icon.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/resources/drawable/ic_launcher_background.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/resources/drawable/round_border_rect.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/resources/layout-land/custom_frame_layout.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/resources/layout-land/ocr_activity.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/resources/mipmap-xhdpi/ic_document_verified.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/values/accura_strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/values/accura_strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/values/colors.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/values/styles.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura_kyc_v1_0.aar" beforeDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -10,99 +41,29 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/www/js/index.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="18">
-              <caret line="192" column="18" selection-start-line="192" selection-start-column="9" selection-end-line="192" selection-end-column="18" />
-              <folding>
-                <element signature="n#!!block;n#openVideoForPlay#0" />
-                <element signature="n#src#0;n#img#0;n#!!top" expanded="true" />
-                <element signature="n#src#0;n#img#0;n#!!top" expanded="true" />
-                <element signature="n#src#0;n#img#1;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#img#0;n#div#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#img#1;n#div#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#button#0;n#div#2;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#img#0;n#div#0;n#button#0;n#div#1;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#img#0;n#button#0;n#div#1;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#button#1;n#div#1;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#img#0;n#div#0;n#button#1;n#div#1;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#img#0;n#div#0;n#button#1;n#div#1;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#2;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/www/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1827">
-              <caret line="183" selection-start-line="183" selection-end-line="184" selection-end-column="7" />
-              <folding>
-                <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#button#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#button#0;n#div#1;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#4;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#button#0;n#div#1;n#div#4;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#5;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#6;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#button#0;n#div#6;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#7;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="e#6331#6338#1" expanded="true" />
-                <element signature="e#7090#7097#1" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/configs/accura_strings.xml">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/configs/recog_engine_config.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="42">
-              <caret line="2" selection-start-line="2" selection-end-line="27" selection-end-column="52" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/config.xml">
           <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="525">
+              <caret line="25" column="31" lean-forward="true" selection-start-line="25" selection-start-column="31" selection-end-line="25" selection-end-column="31" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/configs/accura_error_titles_configs.xml">
+          <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="378">
-              <caret line="18" column="4" selection-start-line="18" selection-end-line="21" selection-end-column="25" />
+              <caret line="18" column="105" lean-forward="true" selection-start-line="2" selection-start-column="4" selection-end-line="18" selection-end-column="105" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/configs/liveness_config.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="651">
-              <caret line="31" column="74" selection-start-line="2" selection-start-column="4" selection-end-line="31" selection-end-column="74" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/www/ACCURA.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="185">
-              <caret line="39" column="87" selection-start-line="39" selection-start-column="87" selection-end-line="39" selection-end-column="87" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/plugin.xml">
+        <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/configs/accura_scan_titles_configs.xml">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="189">
-              <caret line="9" column="24" selection-start-line="9" selection-start-column="24" selection-end-line="9" selection-end-column="43" />
+              <caret line="9" column="64" lean-forward="true" selection-start-line="2" selection-start-column="4" selection-end-line="9" selection-end-column="64" />
             </state>
           </provider>
         </entry>
@@ -146,6 +107,8 @@
       <find>pos</find>
       <find>getca</find>
       <find>mrz</find>
+      <find>startlive</find>
+      <find>tr&gt;</find>
     </findStrings>
     <replaceStrings>
       <replace>resource-file</replace>
@@ -156,6 +119,9 @@
       <replace>Barcode</replace>
       <replace>width</replace>
     </replaceStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -190,83 +156,97 @@
         <option value="$PROJECT_DIR$/config.xml" />
         <option value="$PROJECT_DIR$/plugins/cordova-accura-kyc/scripts/afterRemove.js" />
         <option value="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/www/ACCURA.js" />
-        <option value="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/plugin.xml" />
         <option value="$PROJECT_DIR$/www/js/index.js" />
+        <option value="$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/plugin.xml" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="782" />
-    <option name="y" value="58" />
-    <option name="width" value="1940" />
-    <option name="height" value="1054" />
+    <option name="x" value="780" />
+    <option name="y" value="56" />
+    <option name="width" value="1943" />
+    <option name="height" value="1056" />
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
-              <item name="AccuraMRZ" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AccuraMRZ" type="462c0819:PsiDirectoryNode" />
+              <item name="accura-cordova" type="b2602c69:ProjectViewProjectNode" />
+              <item name="accura-cordova" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="AccuraMRZ" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AccuraMRZ" type="462c0819:PsiDirectoryNode" />
+              <item name="accura-cordova" type="b2602c69:ProjectViewProjectNode" />
+              <item name="accura-cordova" type="462c0819:PsiDirectoryNode" />
               <item name="custom-plugins" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="AccuraMRZ" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AccuraMRZ" type="462c0819:PsiDirectoryNode" />
+              <item name="accura-cordova" type="b2602c69:ProjectViewProjectNode" />
+              <item name="accura-cordova" type="462c0819:PsiDirectoryNode" />
               <item name="custom-plugins" type="462c0819:PsiDirectoryNode" />
               <item name="cordova-accura-kyc" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="AccuraMRZ" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AccuraMRZ" type="462c0819:PsiDirectoryNode" />
+              <item name="accura-cordova" type="b2602c69:ProjectViewProjectNode" />
+              <item name="accura-cordova" type="462c0819:PsiDirectoryNode" />
               <item name="custom-plugins" type="462c0819:PsiDirectoryNode" />
               <item name="cordova-accura-kyc" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="AccuraMRZ" type="b2602c69:ProjectViewProjectNode" />
-              <item name="AccuraMRZ" type="462c0819:PsiDirectoryNode" />
+              <item name="accura-cordova" type="b2602c69:ProjectViewProjectNode" />
+              <item name="accura-cordova" type="462c0819:PsiDirectoryNode" />
+              <item name="custom-plugins" type="462c0819:PsiDirectoryNode" />
+              <item name="cordova-accura-kyc" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="android" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="accura-cordova" type="b2602c69:ProjectViewProjectNode" />
+              <item name="accura-cordova" type="462c0819:PsiDirectoryNode" />
               <item name="custom-plugins" type="462c0819:PsiDirectoryNode" />
               <item name="cordova-accura-kyc" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="ios" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="accura-cordova" type="b2602c69:ProjectViewProjectNode" />
+              <item name="accura-cordova" type="462c0819:PsiDirectoryNode" />
+              <item name="www" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../tmpAcc" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="I:\commercial\AccuraMRZ\AccuraMRZ\custom-plugins\cordova-accura-kyc\src\ios" />
-      <recent name="I:\commercial\AccuraMRZ\AccuraMRZ\custom-plugins\cordova-accura-kyc\src\android\accura-orc" />
-      <recent name="I:\commercial\AccuraMRZ\AccuraMRZ\custom-plugins\cordova-accura-kyc\src\android" />
-      <recent name="I:\commercial\AccuraMRZ\AccuraMRZ\custom-plugins\cordova-accura-kyc\src\android\accura-orc\drawables\layout-land" />
+      <recent name="I:\commercial\accura-cordova\custom-plugins\cordova-accura-kyc\src\android\accura-orc" />
+      <recent name="I:\commercial\accura-cordova\custom-plugins\cordova-accura-kyc\src\ios\accura-orc\values" />
       <recent name="I:\commercial\AccuraMRZ\AccuraMRZ\custom-plugins\cordova-accura-kyc\src\android\accura-orc\layout" />
+      <recent name="I:\commercial\AccuraMRZ\AccuraMRZ\custom-plugins\cordova-accura-kyc\src\android\accura-orc\values" />
+      <recent name="I:\commercial\AccuraMRZ\AccuraMRZ\custom-plugins\cordova-accura-kyc\src\android\accura-orc" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="I:\commercial\accura-cordova\custom-plugins\cordova-accura-kyc\src\ios\accura-orc\resources" />
+      <recent name="I:\commercial\accura-cordova\custom-plugins\cordova-accura-kyc\src\ios\accura-orc\values" />
       <recent name="I:\commercial\AccuraMRZ\AccuraMRZ\custom-plugins\cordova-accura-mrz\src\android\configs" />
       <recent name="I:\commercial\AccuraMRZ\AccuraMRZ\custom-plugins\cordova-accura-mrz\src\android" />
       <recent name="I:\commercial\AccuraMRZ\AccuraMRZ\custom-plugins\cordova-accura-mrz\src\android\accura-orc\drawables" />
-      <recent name="I:\commercial\AccuraMRZ\AccuraMRZ\custom-plugins\cordova-accura-mrz\src\android\accura-orc\layout" />
-      <recent name="I:\commercial\AccuraMRZ\AccuraMRZ\custom-plugins\cordova-accura-mrz\src\android\AMP" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -300,17 +280,19 @@
       <workItem from="1625386126304" duration="12964000" />
       <workItem from="1625401848753" duration="6399000" />
       <workItem from="1625482353346" duration="31788000" />
-      <workItem from="1625696046646" duration="76025000" />
+      <workItem from="1625696046646" duration="80178000" />
+      <workItem from="1626051680216" duration="831000" />
+      <workItem from="1626052540312" duration="2442000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="161077000" />
+    <option name="totallyTimeSpent" value="168503000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1691" height="917" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2320442" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26151013" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -336,112 +318,12 @@
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/platforms/android/app/src/main/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="84">
-          <caret line="4" column="63" selection-start-line="4" selection-start-column="63" selection-end-line="4" selection-end-column="63" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-mrz/src/android/accura-orc/layout/item_barcode.xml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-mrz/src/android/accura-orc/layout/ocr_activity.xml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-mrz/src/android/accura-orc/layout/table_row.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="16" column="16" selection-start-line="16" selection-start-column="16" selection-end-line="16" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-mrz/src/android/accura-orc/values/strings.xml" />
-    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-mrz/scripts/afterBuild.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="42">
-          <caret line="2" column="101" selection-start-line="2" selection-start-column="101" selection-end-line="2" selection-end-column="101" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-mrz/scripts/afterRemove.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="11" column="1" selection-start-line="11" selection-start-column="1" selection-end-line="11" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-mrz/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor />
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-mrz/src/android/configs/colors.xml" />
-    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-mrz/src/android/configs/accura_error_titles_configs.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="378">
-          <caret line="18" column="105" selection-start-line="2" selection-start-column="4" selection-end-line="18" selection-end-column="105" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-mrz/src/android/configs/accura_scan_titles_configs.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="9" column="64" lean-forward="true" selection-start-line="2" selection-start-column="4" selection-end-line="9" selection-end-column="64" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-mrz/src/android/configs/accura_strings.xml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-mrz/src/android/configs/face_match_config.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="399">
-          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-mrz/src/android/configs/liveness_config.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="42">
-          <caret line="2" selection-start-line="2" selection-end-line="31" selection-end-column="74" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-mrz/src/android/configs/recog_engine_config.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="42">
-          <caret line="2" selection-start-line="2" selection-end-line="14" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/plugins/cordova-accura-mrz/www/ACCURA.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="840">
-          <caret line="40" column="59" selection-start-line="40" selection-start-column="59" selection-end-line="40" selection-end-column="59" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-mrz/www/Promise.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-mrz/plugin.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="293">
-          <caret line="43" column="142" selection-start-line="43" selection-start-column="142" selection-end-line="43" selection-end-column="142" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-mrz/www/ACCURA.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="376">
-          <caret line="27" column="66" selection-start-line="27" selection-start-column="66" selection-end-line="27" selection-end-column="66" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-mrz/src/android/configs/liveness_config.xml" />
+    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-mrz/src/android/configs/recog_engine_config.xml" />
+    <entry file="file://$PROJECT_DIR$/plugins/cordova-accura-mrz/www/ACCURA.js" />
+    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-mrz/www/Promise.js" />
+    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-mrz/plugin.xml" />
+    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-mrz/www/ACCURA.js" />
     <entry file="file://$PROJECT_DIR$/plugins/cordova-accura-kyc/plugin.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
@@ -473,35 +355,15 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/accura-orc/layout/activity_ocr_result.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="8" column="29" selection-start-line="8" selection-start-column="29" selection-end-line="8" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/accura-orc/layout/activity_service_main.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="9" column="29" selection-start-line="9" selection-start-column="29" selection-end-line="9" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/accura-orc/layout/activity_ocr_result.xml" />
+    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/accura-orc/layout/activity_service_main.xml" />
     <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/accura-orc/layout/custom_frame_layout.xml">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/accura-orc/layout/dialog_barcode_type.xml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/accura-orc/layout/item_barcode.xml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/accura-orc/layout/item_layout.xml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/accura-orc/layout/table_row.xml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/accura-orc/layout/dialog_barcode_type.xml" />
+    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/accura-orc/layout/item_barcode.xml" />
+    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/accura-orc/layout/item_layout.xml" />
+    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/accura-orc/layout/table_row.xml" />
     <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/scripts/afterBuild.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="231">
@@ -524,13 +386,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/accura-orc/layout/ocr_activity.xml">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/www/css/index.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="504">
-          <caret line="24" column="24" selection-start-line="24" selection-start-column="24" selection-end-line="24" selection-end-column="24" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/plugins/cordova-accura-kyc/www/ACCURA.js">
       <provider selected="true" editor-type-id="text-editor">
@@ -574,30 +429,61 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/config.xml">
+    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/drawables/drawable/btn_bg_gray.xml" />
+    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/drawables/drawable/flip_camera_icon.png" />
+    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/drawables/drawable/ic_launcher_background.xml" />
+    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/drawables/drawable-xhdpi/ic_barcode.png" />
+    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/accura-orc/values/accura_strings.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="378">
-          <caret line="18" column="4" selection-start-line="18" selection-end-line="21" selection-end-column="25" />
+        <state relative-caret-position="357">
+          <caret line="30" column="27" lean-forward="true" selection-start-line="30" selection-start-column="27" selection-end-line="30" selection-end-column="27" />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/accura-orc/values/colors.xml" />
+    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/accura-orc/values/styles.xml" />
+    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/menu/menu_land_port.xml" />
+    <entry file="file://$PROJECT_DIR$/www/js/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="17" column="5" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
+          <folding>
+            <element signature="n#!!block;n#openVideoForPlay#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/www/css/index.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="189">
+          <caret line="9" column="17" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/AccuraService.swift">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/ios/accura-orc/FaceMatch.swift">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/www/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1827">
-          <caret line="183" selection-start-line="183" selection-end-line="184" selection-end-column="7" />
+        <state relative-caret-position="2226">
+          <caret line="124" column="28" selection-start-line="124" selection-start-column="28" selection-end-line="124" selection-end-column="36" />
           <folding>
             <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#button#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#button#0;n#div#1;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#4;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#button#0;n#div#1;n#div#4;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#5;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#6;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#button#0;n#div#6;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#7;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="e#6331#6338#1" expanded="true" />
-            <element signature="e#7090#7097#1" expanded="true" />
+            <element signature="n#div#2;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#div#3;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#div#4;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#div#5;n#body#0;n#html#0;n#!!top" />
           </folding>
         </state>
       </provider>
@@ -609,39 +495,41 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/plugin.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="9" column="24" selection-start-line="9" selection-start-column="24" selection-end-line="9" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/www/ACCURA.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
+        <state relative-caret-position="819">
           <caret line="39" column="87" selection-start-line="39" selection-start-column="87" selection-end-line="39" selection-end-column="87" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/www/js/index.js">
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/plugin.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
-          <caret line="192" column="18" selection-start-line="192" selection-start-column="9" selection-end-line="192" selection-end-column="18" />
-          <folding>
-            <element signature="n#!!block;n#openVideoForPlay#0" />
-            <element signature="n#src#0;n#img#0;n#!!top" expanded="true" />
-            <element signature="n#src#0;n#img#0;n#!!top" expanded="true" />
-            <element signature="n#src#0;n#img#1;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#img#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#img#1;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#button#0;n#div#2;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#img#0;n#div#0;n#button#0;n#div#1;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#img#0;n#button#0;n#div#1;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#button#1;n#div#1;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#img#0;n#div#0;n#button#1;n#div#1;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#img#0;n#div#0;n#button#1;n#div#1;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#2;n#!!top" expanded="true" />
-          </folding>
+        <state relative-caret-position="1512">
+          <caret line="72" selection-start-line="72" selection-end-line="72" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="525">
+          <caret line="25" column="31" lean-forward="true" selection-start-line="25" selection-start-column="31" selection-end-line="25" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/configs/accura_scan_titles_configs.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="189">
+          <caret line="9" column="64" lean-forward="true" selection-start-line="2" selection-start-column="4" selection-end-line="9" selection-end-column="64" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/custom-plugins/cordova-accura-kyc/src/android/configs/accura_error_titles_configs.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="18" column="105" lean-forward="true" selection-start-line="2" selection-start-column="4" selection-end-line="18" selection-end-column="105" />
         </state>
       </provider>
     </entry>

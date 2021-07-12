@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/AccuraMRZ.iml" filepath="$PROJECT_DIR$/.idea/AccuraMRZ.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/accura-cordova.iml" filepath="$PROJECT_DIR$/.idea/accura-cordova.iml" />
     </modules>
   </component>
 </project>

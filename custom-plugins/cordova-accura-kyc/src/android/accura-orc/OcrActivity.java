@@ -8,25 +8,19 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-
-import accura.kyc.app.R;
-import accura.kyc.plugin.adapter.BarCodeFormatListAdapter;
 
 import com.accurascan.ocr.mrz.CameraView;
 import com.accurascan.ocr.mrz.interfaces.OcrCallback;
@@ -44,7 +38,6 @@ import com.docrecog.scan.RecogType;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -53,7 +46,6 @@ import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 import static accura.kyc.plugin.ACCURAService.getImageUri;
 import static accura.kyc.plugin.ACCURAService.getSaltString;
@@ -110,7 +102,9 @@ public class OcrActivity extends SensorsActivity implements OcrCallback {
     String type = "";
     Boolean needCallback = true;
     Bundle bundle;
-
+    public int R(String name, String type){
+        return getResources().getIdentifier(name, type, getPackageName());
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         bundle = getIntent().getExtras();
@@ -126,9 +120,9 @@ public class OcrActivity extends SensorsActivity implements OcrCallback {
             Log.e("ttt", type);
         }
         ACCURAService.ocrCLProcess = true;
-        setTheme(R.style.AppThemeNoActionBar);
+        setTheme(R("AppThemeNoActionBar","style"));
         requestWindowFeature(Window.FEATURE_NO_TITLE); // Hide the window title.
-        setContentView(R.layout.ocr_activity);
+        setContentView(R("ocr_activity", "layout"));
         AccuraLog.loge(TAG, "Start Camera Activity");
         init();
 
@@ -165,13 +159,13 @@ public class OcrActivity extends SensorsActivity implements OcrCallback {
         int statusBarHeight = contentViewTop - statusBarTop;
         //</editor-fold>
 
-        RelativeLayout linearLayout = findViewById(R.id.ocr_root); // layout width and height is match_parent
+        RelativeLayout linearLayout = findViewById(R("ocr_root", "id")); // layout width and height is match_parent
 
         cameraView = new CameraView(this);
         if (recogType == RecogType.OCR || recogType == RecogType.DL_PLATE) {
             // must have to set data for RecogType.OCR and RecogType.DL_PLATE
             cameraView.setCountryId(countryId).setCardId(cardId)
-                    .setMinFrameForValidate(bundle.getInt("rg_setMinFrameForValidate", res.getInteger(R.integer.rg_setMinFrameForValidate))); // to set min frame for qatar Id card
+                    .setMinFrameForValidate(bundle.getInt("rg_setMinFrameForValidate", res.getInteger(R("rg_setMinFrameForValidate", "integer")))); // to set min frame for qatar Id card
         } else if (recogType == RecogType.PDF417) {
             // must have to set data RecogType.PDF417
             cameraView.setCountryId(countryId);
@@ -180,24 +174,24 @@ public class OcrActivity extends SensorsActivity implements OcrCallback {
         }
         cameraView.setRecogType(recogType)
                 .setView(linearLayout) // To add camera view
-                .setCameraFacing(bundle.getInt("rg_setCameraFacing", res.getInteger(R.integer.rg_setCameraFacing))) // To set front or back camera.
+                .setCameraFacing(bundle.getInt("rg_setCameraFacing", res.getInteger(R("rg_setCameraFacing", "integer")))) // To set front or back camera.
                 .setOcrCallback(this)  // To get Update and Success Call back
                 .setStatusBarHeight(statusBarHeight)  // To remove Height from Camera View if status bar visible
                 .setFrontSide()
 //                optional field
-                .setEnableMediaPlayer(bundle.getBoolean("rg_setEnableMediaPlayer", res.getBoolean(R.bool.rg_setEnableMediaPlayer))) // false to disable default sound and default it is true
+                .setEnableMediaPlayer(bundle.getBoolean("rg_setEnableMediaPlayer", res.getBoolean(R("rg_setEnableMediaPlayer", "bool")))) // false to disable default sound and default it is true
 //                .setCustomMediaPlayer(MediaPlayer.create(this, com.accurascan.ocr.mrz.R.raw.beep)) // To add your custom sound and Must have to enable media player
                 .init();  // initialized camera
     }
 
     private void init() {
-        viewLeft = findViewById(R.id.view_left_frame);
-        viewRight = findViewById(R.id.view_right_frame);
-        borderFrame = findViewById(R.id.border_frame);
-        tvTitle = findViewById(R.id.tv_title);
-        tvScanMessage = findViewById(R.id.tv_scan_msg);
-        imageFlip = findViewById(R.id.im_flip_image);
-        View btn_flip = findViewById(R.id.btn_flip);
+        viewLeft = findViewById(R("view_left_frame", "id"));
+        viewRight = findViewById(R("view_right_frame", "id"));
+        borderFrame = findViewById(R("border_frame", "id"));
+        tvTitle = findViewById(R("tv_title", "id"));
+        tvScanMessage = findViewById(R("tv_scan_msg", "id"));
+        imageFlip = findViewById(R("im_flip_image", "id"));
+        View btn_flip = findViewById(R("btn_flip", "id"));
         btn_flip.setOnClickListener(v -> {
             if (cameraView != null) {
                 cameraView.flipCamera();
@@ -258,7 +252,7 @@ public class OcrActivity extends SensorsActivity implements OcrCallback {
         lpLeft.height = height;
         viewLeft.setLayoutParams(lpLeft);
 
-        findViewById(R.id.ocr_frame).setVisibility(View.VISIBLE);
+        findViewById(R("ocr_frame", "id")).setVisibility(View.VISIBLE);
 
     }
 
@@ -424,90 +418,90 @@ public class OcrActivity extends SensorsActivity implements OcrCallback {
                     backUri = getImageUri(barcodeData.docBackBitmap, "back", fileDir);
                 }
                 try {
-                    frontResult.put(getString(R.string.firstName), barcodeData.fname);
-                    frontResult.put(getString(R.string.firstName), barcodeData.firstName);
-                    frontResult.put(getString(R.string.firstName), barcodeData.firstName1);
-                    frontResult.put(getString(R.string.lastName), barcodeData.lname);
-                    frontResult.put(getString(R.string.lastName), barcodeData.lastName);
-                    frontResult.put(getString(R.string.lastName), barcodeData.lastName1);
-                    frontResult.put(getString(R.string.middle_name), barcodeData.mname);
-                    frontResult.put(getString(R.string.middle_name), barcodeData.middleName);
-                    frontResult.put(getString(R.string.addressLine1), barcodeData.address1);
-                    frontResult.put(getString(R.string.addressLine2), barcodeData.address2);
-                    frontResult.put(getString(R.string.ResidenceStreetAddress1), barcodeData.ResidenceAddress1);
-                    frontResult.put(getString(R.string.ResidenceStreetAddress2), barcodeData.ResidenceAddress2);
-                    frontResult.put(getString(R.string.city), barcodeData.city);
-                    frontResult.put(getString(R.string.zipcode), barcodeData.zipcode);
-                    frontResult.put(getString(R.string.birth_date), barcodeData.birthday);
-                    frontResult.put(getString(R.string.birth_date), barcodeData.birthday1);
-                    frontResult.put(getString(R.string.license_number), barcodeData.licence_number);
-                    frontResult.put(getString(R.string.license_expiry_date), barcodeData.licence_expire_date);
-                    frontResult.put(getString(R.string.sex), barcodeData.sex);
-                    frontResult.put(getString(R.string.jurisdiction_code), barcodeData.jurisdiction);
-                    frontResult.put(getString(R.string.license_classification), barcodeData.licenseClassification);
-                    frontResult.put(getString(R.string.license_restriction), barcodeData.licenseRestriction);
-                    frontResult.put(getString(R.string.license_endorsement), barcodeData.licenseEndorsement);
-                    frontResult.put(getString(R.string.issue_date), barcodeData.issueDate);
-                    frontResult.put(getString(R.string.organ_donor), barcodeData.organDonor);
-                    frontResult.put(getString(R.string.height_in_ft), barcodeData.heightinFT);
-                    frontResult.put(getString(R.string.height_in_cm), barcodeData.heightCM);
-                    frontResult.put(getString(R.string.full_name), barcodeData.fullName);
-                    frontResult.put(getString(R.string.full_name), barcodeData.fullName1);
-                    frontResult.put(getString(R.string.weight_in_lbs), barcodeData.weightLBS);
-                    frontResult.put(getString(R.string.weight_in_kg), barcodeData.weightKG);
-                    frontResult.put(getString(R.string.name_prefix), barcodeData.namePrefix);
-                    frontResult.put(getString(R.string.name_suffix), barcodeData.nameSuffix);
-                    frontResult.put(getString(R.string.prefix), barcodeData.Prefix);
-                    frontResult.put(getString(R.string.suffix), barcodeData.Suffix);
-                    frontResult.put(getString(R.string.suffix), barcodeData.Suffix1);
-                    frontResult.put(getString(R.string.eye_color), barcodeData.eyeColor);
-                    frontResult.put(getString(R.string.hair_color), barcodeData.hairColor);
-                    frontResult.put(getString(R.string.issue_time), barcodeData.issueTime);
-                    frontResult.put(getString(R.string.number_of_duplicate), barcodeData.numberDuplicate);
-                    frontResult.put(getString(R.string.unique_customer_id), barcodeData.uniqueCustomerId);
-                    frontResult.put(getString(R.string.social_security_number), barcodeData.socialSecurityNo);
-                    frontResult.put(getString(R.string.social_security_number), barcodeData.socialSecurityNo1);
-                    frontResult.put(getString(R.string.under_18), barcodeData.under18);
-                    frontResult.put(getString(R.string.under_19), barcodeData.under19);
-                    frontResult.put(getString(R.string.under_21), barcodeData.under21);
-                    frontResult.put(getString(R.string.permit_classification_code), barcodeData.permitClassification);
-                    frontResult.put(getString(R.string.veteran_indicator), barcodeData.veteranIndicator);
-                    frontResult.put(getString(R.string.permit_issue), barcodeData.permitIssue);
-                    frontResult.put(getString(R.string.permit_expire), barcodeData.permitExpire);
-                    frontResult.put(getString(R.string.permit_restriction), barcodeData.permitRestriction);
-                    frontResult.put(getString(R.string.permit_endorsement), barcodeData.permitEndorsement);
-                    frontResult.put(getString(R.string.court_restriction), barcodeData.courtRestriction);
-                    frontResult.put(getString(R.string.inventory_control_no), barcodeData.inventoryNo);
-                    frontResult.put(getString(R.string.race_ethnicity), barcodeData.raceEthnicity);
-                    frontResult.put(getString(R.string.standard_vehicle_class), barcodeData.standardVehicleClass);
-                    frontResult.put(getString(R.string.document_discriminator), barcodeData.documentDiscriminator);
-                    frontResult.put(getString(R.string.ResidenceCity), barcodeData.ResidenceCity);
-                    frontResult.put(getString(R.string.ResidenceJurisdictionCode), barcodeData.ResidenceJurisdictionCode);
-                    frontResult.put(getString(R.string.ResidencePostalCode), barcodeData.ResidencePostalCode);
-                    frontResult.put(getString(R.string.MedicalIndicatorCodes), barcodeData.MedicalIndicatorCodes);
-                    frontResult.put(getString(R.string.NonResidentIndicator), barcodeData.NonResidentIndicator);
-                    frontResult.put(getString(R.string.VirginiaSpecificClass), barcodeData.VirginiaSpecificClass);
-                    frontResult.put(getString(R.string.VirginiaSpecificRestrictions), barcodeData.VirginiaSpecificRestrictions);
-                    frontResult.put(getString(R.string.VirginiaSpecificEndorsements), barcodeData.VirginiaSpecificEndorsements);
-                    frontResult.put(getString(R.string.PhysicalDescriptionWeight), barcodeData.PhysicalDescriptionWeight);
-                    frontResult.put(getString(R.string.CountryTerritoryOfIssuance), barcodeData.CountryTerritoryOfIssuance);
-                    frontResult.put(getString(R.string.FederalCommercialVehicleCodes), barcodeData.FederalCommercialVehicleCodes);
-                    frontResult.put(getString(R.string.PlaceOfBirth), barcodeData.PlaceOfBirth);
-                    frontResult.put(getString(R.string.StandardEndorsementCode), barcodeData.StandardEndorsementCode);
-                    frontResult.put(getString(R.string.StandardRestrictionCode), barcodeData.StandardRestrictionCode);
-                    frontResult.put(getString(R.string.JuriSpeciVehiClassiDescri), barcodeData.JuriSpeciVehiClassiDescri);
-                    frontResult.put(getString(R.string.JuriSpeciRestriCodeDescri), barcodeData.JuriSpeciRestriCodeDescri);
-                    frontResult.put(getString(R.string.ComplianceType), barcodeData.ComplianceType);
-                    frontResult.put(getString(R.string.CardRevisionDate), barcodeData.CardRevisionDate);
-                    frontResult.put(getString(R.string.HazMatEndorsementExpiryDate), barcodeData.HazMatEndorsementExpiryDate);
-                    frontResult.put(getString(R.string.LimitedDurationDocumentIndicator), barcodeData.LimitedDurationDocumentIndicator);
-                    frontResult.put(getString(R.string.FamilyNameTruncation), barcodeData.FamilyNameTruncation);
-                    frontResult.put(getString(R.string.FirstNamesTruncation), barcodeData.FirstNamesTruncation);
-                    frontResult.put(getString(R.string.MiddleNamesTruncation), barcodeData.MiddleNamesTruncation);
-                    frontResult.put(getString(R.string.organ_donor_indicator), barcodeData.OrganDonorIndicator);
-                    frontResult.put(getString(R.string.PermitIdentifier), barcodeData.PermitIdentifier);
-                    frontResult.put(getString(R.string.AuditInformation), barcodeData.AuditInformation);
-                    frontResult.put(getString(R.string.JurisdictionSpecific), barcodeData.JurisdictionSpecific);
+                    frontResult.put(getString(R("firstName", "string")), barcodeData.fname);
+                    frontResult.put(getString(R("firstName", "string")), barcodeData.firstName);
+                    frontResult.put(getString(R("firstName", "string")), barcodeData.firstName1);
+                    frontResult.put(getString(R("lastName", "string")), barcodeData.lname);
+                    frontResult.put(getString(R("lastName", "string")), barcodeData.lastName);
+                    frontResult.put(getString(R("lastName", "string")), barcodeData.lastName1);
+                    frontResult.put(getString(R("middle_name", "string")), barcodeData.mname);
+                    frontResult.put(getString(R("middle_name", "string")), barcodeData.middleName);
+                    frontResult.put(getString(R("addressLine1", "string")), barcodeData.address1);
+                    frontResult.put(getString(R("addressLine2", "string")), barcodeData.address2);
+                    frontResult.put(getString(R("ResidenceStreetAddress1", "string")), barcodeData.ResidenceAddress1);
+                    frontResult.put(getString(R("ResidenceStreetAddress2", "string")), barcodeData.ResidenceAddress2);
+                    frontResult.put(getString(R("city", "string")), barcodeData.city);
+                    frontResult.put(getString(R("zipcode", "string")), barcodeData.zipcode);
+                    frontResult.put(getString(R("birth_date", "string")), barcodeData.birthday);
+                    frontResult.put(getString(R("birth_date", "string")), barcodeData.birthday1);
+                    frontResult.put(getString(R("license_number", "string")), barcodeData.licence_number);
+                    frontResult.put(getString(R("license_expiry_date", "string")), barcodeData.licence_expire_date);
+                    frontResult.put(getString(R("sex", "string")), barcodeData.sex);
+                    frontResult.put(getString(R("jurisdiction_code", "string")), barcodeData.jurisdiction);
+                    frontResult.put(getString(R("license_classification", "string")), barcodeData.licenseClassification);
+                    frontResult.put(getString(R("license_restriction", "string")), barcodeData.licenseRestriction);
+                    frontResult.put(getString(R("license_endorsement", "string")), barcodeData.licenseEndorsement);
+                    frontResult.put(getString(R("issue_date", "string")), barcodeData.issueDate);
+                    frontResult.put(getString(R("organ_donor", "string")), barcodeData.organDonor);
+                    frontResult.put(getString(R("height_in_ft", "string")), barcodeData.heightinFT);
+                    frontResult.put(getString(R("height_in_cm", "string")), barcodeData.heightCM);
+                    frontResult.put(getString(R("full_name", "string")), barcodeData.fullName);
+                    frontResult.put(getString(R("full_name", "string")), barcodeData.fullName1);
+                    frontResult.put(getString(R("weight_in_lbs", "string")), barcodeData.weightLBS);
+                    frontResult.put(getString(R("weight_in_kg", "string")), barcodeData.weightKG);
+                    frontResult.put(getString(R("name_prefix", "string")), barcodeData.namePrefix);
+                    frontResult.put(getString(R("name_suffix", "string")), barcodeData.nameSuffix);
+                    frontResult.put(getString(R("prefix", "string")), barcodeData.Prefix);
+                    frontResult.put(getString(R("suffix", "string")), barcodeData.Suffix);
+                    frontResult.put(getString(R("suffix", "string")), barcodeData.Suffix1);
+                    frontResult.put(getString(R("eye_color", "string")), barcodeData.eyeColor);
+                    frontResult.put(getString(R("hair_color", "string")), barcodeData.hairColor);
+                    frontResult.put(getString(R("issue_time", "string")), barcodeData.issueTime);
+                    frontResult.put(getString(R("number_of_duplicate", "string")), barcodeData.numberDuplicate);
+                    frontResult.put(getString(R("unique_customer_id", "string")), barcodeData.uniqueCustomerId);
+                    frontResult.put(getString(R("social_security_number", "string")), barcodeData.socialSecurityNo);
+                    frontResult.put(getString(R("social_security_number", "string")), barcodeData.socialSecurityNo1);
+                    frontResult.put(getString(R("under_18", "string")), barcodeData.under18);
+                    frontResult.put(getString(R("under_19", "string")), barcodeData.under19);
+                    frontResult.put(getString(R("under_21", "string")), barcodeData.under21);
+                    frontResult.put(getString(R("permit_classification_code", "string")), barcodeData.permitClassification);
+                    frontResult.put(getString(R("veteran_indicator", "string")), barcodeData.veteranIndicator);
+                    frontResult.put(getString(R("permit_issue", "string")), barcodeData.permitIssue);
+                    frontResult.put(getString(R("permit_expire", "string")), barcodeData.permitExpire);
+                    frontResult.put(getString(R("permit_restriction", "string")), barcodeData.permitRestriction);
+                    frontResult.put(getString(R("permit_endorsement", "string")), barcodeData.permitEndorsement);
+                    frontResult.put(getString(R("court_restriction", "string")), barcodeData.courtRestriction);
+                    frontResult.put(getString(R("inventory_control_no", "string")), barcodeData.inventoryNo);
+                    frontResult.put(getString(R("race_ethnicity", "string")), barcodeData.raceEthnicity);
+                    frontResult.put(getString(R("standard_vehicle_class", "string")), barcodeData.standardVehicleClass);
+                    frontResult.put(getString(R("document_discriminator", "string")), barcodeData.documentDiscriminator);
+                    frontResult.put(getString(R("ResidenceCity", "string")), barcodeData.ResidenceCity);
+                    frontResult.put(getString(R("ResidenceJurisdictionCode", "string")), barcodeData.ResidenceJurisdictionCode);
+                    frontResult.put(getString(R("ResidencePostalCode", "string")), barcodeData.ResidencePostalCode);
+                    frontResult.put(getString(R("MedicalIndicatorCodes", "string")), barcodeData.MedicalIndicatorCodes);
+                    frontResult.put(getString(R("NonResidentIndicator", "string")), barcodeData.NonResidentIndicator);
+                    frontResult.put(getString(R("VirginiaSpecificClass", "string")), barcodeData.VirginiaSpecificClass);
+                    frontResult.put(getString(R("VirginiaSpecificRestrictions", "string")), barcodeData.VirginiaSpecificRestrictions);
+                    frontResult.put(getString(R("VirginiaSpecificEndorsements", "string")), barcodeData.VirginiaSpecificEndorsements);
+                    frontResult.put(getString(R("PhysicalDescriptionWeight", "string")), barcodeData.PhysicalDescriptionWeight);
+                    frontResult.put(getString(R("CountryTerritoryOfIssuance", "string")), barcodeData.CountryTerritoryOfIssuance);
+                    frontResult.put(getString(R("FederalCommercialVehicleCodes", "string")), barcodeData.FederalCommercialVehicleCodes);
+                    frontResult.put(getString(R("PlaceOfBirth", "string")), barcodeData.PlaceOfBirth);
+                    frontResult.put(getString(R("StandardEndorsementCode", "string")), barcodeData.StandardEndorsementCode);
+                    frontResult.put(getString(R("StandardRestrictionCode", "string")), barcodeData.StandardRestrictionCode);
+                    frontResult.put(getString(R("JuriSpeciVehiClassiDescri", "string")), barcodeData.JuriSpeciVehiClassiDescri);
+                    frontResult.put(getString(R("JuriSpeciRestriCodeDescri", "string")), barcodeData.JuriSpeciRestriCodeDescri);
+                    frontResult.put(getString(R("ComplianceType", "string")), barcodeData.ComplianceType);
+                    frontResult.put(getString(R("CardRevisionDate", "string")), barcodeData.CardRevisionDate);
+                    frontResult.put(getString(R("HazMatEndorsementExpiryDate", "string")), barcodeData.HazMatEndorsementExpiryDate);
+                    frontResult.put(getString(R("LimitedDurationDocumentIndicator", "string")), barcodeData.LimitedDurationDocumentIndicator);
+                    frontResult.put(getString(R("FamilyNameTruncation", "string")), barcodeData.FamilyNameTruncation);
+                    frontResult.put(getString(R("FirstNamesTruncation", "string")), barcodeData.FirstNamesTruncation);
+                    frontResult.put(getString(R("MiddleNamesTruncation", "string")), barcodeData.MiddleNamesTruncation);
+                    frontResult.put(getString(R("organ_donor_indicator", "string")), barcodeData.OrganDonorIndicator);
+                    frontResult.put(getString(R("PermitIdentifier", "string")), barcodeData.PermitIdentifier);
+                    frontResult.put(getString(R("AuditInformation", "string")), barcodeData.AuditInformation);
+                    frontResult.put(getString(R("JurisdictionSpecific", "string")), barcodeData.JurisdictionSpecific);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -637,22 +631,22 @@ public class OcrActivity extends SensorsActivity implements OcrCallback {
         if (titleCode < 0) return null;
         switch (titleCode) {
             case RecogEngine.SCAN_TITLE_OCR_FRONT:// for front side ocr;
-                return String.format(bundle.getString("SCAN_TITLE_OCR_FRONT", res.getString(R.string.SCAN_TITLE_OCR_FRONT)), cardName);
+                return String.format(bundle.getString("SCAN_TITLE_OCR_FRONT", res.getString(R("SCAN_TITLE_OCR_FRONT", "string"))), cardName);
             case RecogEngine.SCAN_TITLE_OCR_BACK: // for back side ocr
-                return String.format(bundle.getString("SCAN_TITLE_OCR_BACK", res.getString(R.string.SCAN_TITLE_OCR_BACK)), cardName);
+                return String.format(bundle.getString("SCAN_TITLE_OCR_BACK", res.getString(R("SCAN_TITLE_OCR_BACK", "string"))), cardName);
             case RecogEngine.SCAN_TITLE_OCR: // only for single side ocr
-                return String.format(bundle.getString("SCAN_TITLE_OCR", res.getString(R.string.SCAN_TITLE_OCR)), cardName);
+                return String.format(bundle.getString("SCAN_TITLE_OCR", res.getString(R("SCAN_TITLE_OCR", "string"))), cardName);
             case RecogEngine.SCAN_TITLE_MRZ_PDF417_FRONT:// for front side MRZ and PDF417
                 if (recogType == RecogType.BANKCARD) {
-                    return bundle.getString("SCAN_TITLE_MRZ_PDF417_FRONT_BANKCARD", res.getString(R.string.SCAN_TITLE_MRZ_PDF417_FRONT_BANKCARD));
+                    return bundle.getString("SCAN_TITLE_MRZ_PDF417_FRONT_BANKCARD", res.getString(R("SCAN_TITLE_MRZ_PDF417_FRONT_BANKCARD", "string")));
                 } else if (recogType == RecogType.BARCODE) {
-                    return bundle.getString("SCAN_TITLE_MRZ_PDF417_FRONT_BARCODE", res.getString(R.string.SCAN_TITLE_MRZ_PDF417_FRONT_BARCODE));
+                    return bundle.getString("SCAN_TITLE_MRZ_PDF417_FRONT_BARCODE", res.getString(R("SCAN_TITLE_MRZ_PDF417_FRONT_BARCODE", "string")));
                 } else
-                    return bundle.getString("SCAN_TITLE_MRZ_PDF417_FRONT_DEFAULT", res.getString(R.string.SCAN_TITLE_MRZ_PDF417_FRONT_DEFAULT));
+                    return bundle.getString("SCAN_TITLE_MRZ_PDF417_FRONT_DEFAULT", res.getString(R("SCAN_TITLE_MRZ_PDF417_FRONT_DEFAULT", "string")));
             case RecogEngine.SCAN_TITLE_MRZ_PDF417_BACK: // for back side MRZ and PDF417
-                return bundle.getString("SCAN_TITLE_MRZ_PDF417_BACK", res.getString(R.string.SCAN_TITLE_MRZ_PDF417_BACK));
+                return bundle.getString("SCAN_TITLE_MRZ_PDF417_BACK", res.getString(R("SCAN_TITLE_MRZ_PDF417_BACK", "string")));
             case RecogEngine.SCAN_TITLE_DLPLATE: // for DL plate
-                return bundle.getString("SCAN_TITLE_DLPLATE", res.getString(R.string.SCAN_TITLE_DLPLATE));
+                return bundle.getString("SCAN_TITLE_DLPLATE", res.getString(R("SCAN_TITLE_DLPLATE", "string")));
             default:
                 return "";
         }
@@ -662,39 +656,39 @@ public class OcrActivity extends SensorsActivity implements OcrCallback {
         Bundle bundle = getIntent().getExtras();
         switch (s) {
             case RecogEngine.ACCURA_ERROR_CODE_MOTION:
-                return bundle.getString("ACCURA_ERROR_CODE_MOTION", res.getString(R.string.ACCURA_ERROR_CODE_MOTION));
+                return bundle.getString("ACCURA_ERROR_CODE_MOTION", res.getString(R("ACCURA_ERROR_CODE_MOTION", "string")));
             case RecogEngine.ACCURA_ERROR_CODE_DOCUMENT_IN_FRAME:
-                return bundle.getString("ACCURA_ERROR_CODE_DOCUMENT_IN_FRAME", res.getString(R.string.ACCURA_ERROR_CODE_DOCUMENT_IN_FRAME));
+                return bundle.getString("ACCURA_ERROR_CODE_DOCUMENT_IN_FRAME", res.getString(R("ACCURA_ERROR_CODE_DOCUMENT_IN_FRAME", "string")));
             case RecogEngine.ACCURA_ERROR_CODE_BRING_DOCUMENT_IN_FRAME:
-                return bundle.getString("ACCURA_ERROR_CODE_BRING_DOCUMENT_IN_FRAME", res.getString(R.string.ACCURA_ERROR_CODE_BRING_DOCUMENT_IN_FRAME));
+                return bundle.getString("ACCURA_ERROR_CODE_BRING_DOCUMENT_IN_FRAME", res.getString(R("ACCURA_ERROR_CODE_BRING_DOCUMENT_IN_FRAME", "string")));
             case RecogEngine.ACCURA_ERROR_CODE_PROCESSING:
-                return bundle.getString("ACCURA_ERROR_CODE_PROCESSING", res.getString(R.string.ACCURA_ERROR_CODE_PROCESSING));
+                return bundle.getString("ACCURA_ERROR_CODE_PROCESSING", res.getString(R("ACCURA_ERROR_CODE_PROCESSING", "string")));
             case RecogEngine.ACCURA_ERROR_CODE_BLUR_DOCUMENT:
-                return bundle.getString("ACCURA_ERROR_CODE_BLUR_DOCUMENT", res.getString(R.string.ACCURA_ERROR_CODE_BLUR_DOCUMENT));
+                return bundle.getString("ACCURA_ERROR_CODE_BLUR_DOCUMENT", res.getString(R("ACCURA_ERROR_CODE_BLUR_DOCUMENT", "string")));
             case RecogEngine.ACCURA_ERROR_CODE_FACE_BLUR:
-                return bundle.getString("ACCURA_ERROR_CODE_FACE_BLUR", res.getString(R.string.ACCURA_ERROR_CODE_FACE_BLUR));
+                return bundle.getString("ACCURA_ERROR_CODE_FACE_BLUR", res.getString(R("ACCURA_ERROR_CODE_FACE_BLUR", "string")));
             case RecogEngine.ACCURA_ERROR_CODE_GLARE_DOCUMENT:
-                return bundle.getString("ACCURA_ERROR_CODE_GLARE_DOCUMENT", res.getString(R.string.ACCURA_ERROR_CODE_GLARE_DOCUMENT));
+                return bundle.getString("ACCURA_ERROR_CODE_GLARE_DOCUMENT", res.getString(R("ACCURA_ERROR_CODE_GLARE_DOCUMENT", "string")));
             case RecogEngine.ACCURA_ERROR_CODE_HOLOGRAM:
-                return bundle.getString("ACCURA_ERROR_CODE_HOLOGRAM", res.getString(R.string.ACCURA_ERROR_CODE_HOLOGRAM));
+                return bundle.getString("ACCURA_ERROR_CODE_HOLOGRAM", res.getString(R("ACCURA_ERROR_CODE_HOLOGRAM", "string")));
             case RecogEngine.ACCURA_ERROR_CODE_DARK_DOCUMENT:
-                return bundle.getString("ACCURA_ERROR_CODE_DARK_DOCUMENT", res.getString(R.string.ACCURA_ERROR_CODE_DARK_DOCUMENT));
+                return bundle.getString("ACCURA_ERROR_CODE_DARK_DOCUMENT", res.getString(R("ACCURA_ERROR_CODE_DARK_DOCUMENT", "string")));
             case RecogEngine.ACCURA_ERROR_CODE_PHOTO_COPY_DOCUMENT:
-                return bundle.getString("ACCURA_ERROR_CODE_PHOTO_COPY_DOCUMENT", res.getString(R.string.ACCURA_ERROR_CODE_PHOTO_COPY_DOCUMENT));
+                return bundle.getString("ACCURA_ERROR_CODE_PHOTO_COPY_DOCUMENT", res.getString(R("ACCURA_ERROR_CODE_PHOTO_COPY_DOCUMENT", "string")));
             case RecogEngine.ACCURA_ERROR_CODE_FACE:
-                return bundle.getString("ACCURA_ERROR_CODE_FACE", res.getString(R.string.ACCURA_ERROR_CODE_FACE));
+                return bundle.getString("ACCURA_ERROR_CODE_FACE", res.getString(R("ACCURA_ERROR_CODE_FACE", "string")));
             case RecogEngine.ACCURA_ERROR_CODE_MRZ:
-                return bundle.getString("ACCURA_ERROR_CODE_MRZ", res.getString(R.string.ACCURA_ERROR_CODE_MRZ));
+                return bundle.getString("ACCURA_ERROR_CODE_MRZ", res.getString(R("ACCURA_ERROR_CODE_MRZ", "string")));
             case RecogEngine.ACCURA_ERROR_CODE_PASSPORT_MRZ:
-                return bundle.getString("ACCURA_ERROR_CODE_PASSPORT_MRZ", res.getString(R.string.ACCURA_ERROR_CODE_PASSPORT_MRZ));
+                return bundle.getString("ACCURA_ERROR_CODE_PASSPORT_MRZ", res.getString(R("ACCURA_ERROR_CODE_PASSPORT_MRZ", "string")));
             case RecogEngine.ACCURA_ERROR_CODE_ID_MRZ:
-                return bundle.getString("ACCURA_ERROR_CODE_ID_MRZ", res.getString(R.string.ACCURA_ERROR_CODE_ID_MRZ));
+                return bundle.getString("ACCURA_ERROR_CODE_ID_MRZ", res.getString(R("ACCURA_ERROR_CODE_ID_MRZ", "string")));
             case RecogEngine.ACCURA_ERROR_CODE_VISA_MRZ:
-                return bundle.getString("ACCURA_ERROR_CODE_VISA_MRZ", res.getString(R.string.ACCURA_ERROR_CODE_VISA_MRZ));
+                return bundle.getString("ACCURA_ERROR_CODE_VISA_MRZ", res.getString(R("ACCURA_ERROR_CODE_VISA_MRZ", "string")));
             case RecogEngine.ACCURA_ERROR_CODE_WRONG_SIDE:
-                return bundle.getString("ACCURA_ERROR_CODE_WRONG_SIDE", res.getString(R.string.ACCURA_ERROR_CODE_WRONG_SIDE));
+                return bundle.getString("ACCURA_ERROR_CODE_WRONG_SIDE", res.getString(R("ACCURA_ERROR_CODE_WRONG_SIDE", "string")));
             case RecogEngine.ACCURA_ERROR_CODE_UPSIDE_DOWN_SIDE:
-                return bundle.getString("ACCURA_ERROR_CODE_UPSIDE_DOWN_SIDE", res.getString(R.string.ACCURA_ERROR_CODE_UPSIDE_DOWN_SIDE));
+                return bundle.getString("ACCURA_ERROR_CODE_UPSIDE_DOWN_SIDE", res.getString(R("ACCURA_ERROR_CODE_UPSIDE_DOWN_SIDE", "string")));
             default:
                 return s;
         }

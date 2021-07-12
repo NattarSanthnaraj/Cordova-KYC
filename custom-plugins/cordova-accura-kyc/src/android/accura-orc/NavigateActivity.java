@@ -13,18 +13,18 @@ import com.accurascan.ocr.mrz.util.AccuraLog;
 import com.docrecog.scan.MRZDocumentType;
 import com.docrecog.scan.RecogEngine;
 import com.docrecog.scan.RecogType;
-import com.google.gson.Gson;
 
 import java.util.List;
 
-import accura.kyc.app.R;
 
 public class NavigateActivity extends AppCompatActivity {
-
+    public int R(String name, String type){
+        return getResources().getIdentifier(name, type, getPackageName());
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_navigate);
+        setContentView(R("activity_navigate", "layout"));
         Bundle bundle = getIntent().getExtras();
         List<ContryModel> modelList = null;
         try {
@@ -36,13 +36,13 @@ public class NavigateActivity extends AppCompatActivity {
             if (sdkModel.i >= 0) {
                 // if OCR enable then get card list
                 Resources res = getResources();
-                recogEngine.setBlurPercentage(this, bundle.getInt("rg_setBlurPercentage", res.getInteger(R.integer.rg_setBlurPercentage)));
-                recogEngine.setFaceBlurPercentage(this, bundle.getInt("rg_setFaceBlurPercentage", res.getInteger(R.integer.rg_setFaceBlurPercentage)));
-                recogEngine.setGlarePercentage(this, bundle.getInt("rg_setGlarePercentage_0", res.getInteger(R.integer.rg_setGlarePercentage_0)), bundle.getInt("rg_setGlarePercentage_1", res.getInteger(R.integer.rg_setGlarePercentage_1)));
-                recogEngine.isCheckPhotoCopy(this, bundle.getBoolean("rg_isCheckPhotoCopy", res.getBoolean(R.bool.rg_isCheckPhotoCopy)));
-                recogEngine.SetHologramDetection(this, bundle.getBoolean("rg_SetHologramDetection", res.getBoolean(R.bool.rg_SetHologramDetection)));
-                recogEngine.setLowLightTolerance(this, bundle.getInt("rg_setLowLightTolerance", res.getInteger(R.integer.rg_setLowLightTolerance)));
-                recogEngine.setMotionThreshold(this, bundle.getInt("rg_setMotionThreshold", res.getInteger(R.integer.rg_setMotionThreshold)));
+                recogEngine.setBlurPercentage(this, bundle.getInt("rg_setBlurPercentage", res.getInteger(R("rg_setBlurPercentage", "integer"))));
+                recogEngine.setFaceBlurPercentage(this, bundle.getInt("rg_setFaceBlurPercentage", res.getInteger(R("rg_setFaceBlurPercentage", "integer"))));
+                recogEngine.setGlarePercentage(this, bundle.getInt("rg_setGlarePercentage_0", res.getInteger(R("rg_setGlarePercentage_0", "integer"))), bundle.getInt("rg_setGlarePercentage_1", res.getInteger(R("rg_setGlarePercentage_1", "integer"))));
+                recogEngine.isCheckPhotoCopy(this, bundle.getBoolean("rg_isCheckPhotoCopy", res.getBoolean(R("rg_isCheckPhotoCopy", "bool"))));
+                recogEngine.SetHologramDetection(this, bundle.getBoolean("rg_SetHologramDetection", res.getBoolean(R("rg_SetHologramDetection", "bool"))));
+                recogEngine.setLowLightTolerance(this, bundle.getInt("rg_setLowLightTolerance", res.getInteger(R("rg_setLowLightTolerance", "integer"))));
+                recogEngine.setMotionThreshold(this, bundle.getInt("rg_setMotionThreshold", res.getInteger(R("rg_setMotionThreshold", "integer"))));
                 Intent ocr = new Intent(this, OcrActivity.class);
                 ocr.putExtras(bundle);
                 if (bundle.getString("type").equalsIgnoreCase("ocr")) {
@@ -60,27 +60,27 @@ public class NavigateActivity extends AppCompatActivity {
                         case "passport_mrz":
                             RecogType.MRZ.attachTo(ocr);
                             MRZDocumentType.PASSPORT_MRZ.attachTo(ocr);
-                            ocr.putExtra("card_name", getResources().getString(R.string.passport_mrz));
+                            ocr.putExtra("card_name", getResources().getString(R("passport_mrz", "string")));
                             break;
                         case "id_mrz":
                             RecogType.MRZ.attachTo(ocr);
                             MRZDocumentType.ID_CARD_MRZ.attachTo(ocr);
-                            ocr.putExtra("card_name", getResources().getString(R.string.id_mrz));
+                            ocr.putExtra("card_name", getResources().getString(R("id_mrz", "string")));
                             break;
                         case "visa_mrz":
                             RecogType.MRZ.attachTo(ocr);
                             MRZDocumentType.VISA_MRZ.attachTo(ocr);
-                            ocr.putExtra("card_name", getResources().getString(R.string.visa_mrz));
+                            ocr.putExtra("card_name", getResources().getString(R("visa_mrz", "string")));
                             break;
                         default:
                             RecogType.MRZ.attachTo(ocr);
                             MRZDocumentType.NONE.attachTo(ocr);
-                            ocr.putExtra("card_name", getResources().getString(R.string.other_mrz));
+                            ocr.putExtra("card_name", getResources().getString(R("other_mrz", "string")));
                     }
                 } else if (bundle.getString("type").equalsIgnoreCase("bankcard")) {
                     RecogType.BANKCARD.attachTo(ocr);
                     ocr.putExtras(getIntent().getExtras());
-                    ocr.putExtra("card_name", getResources().getString(R.string.bank_card));
+                    ocr.putExtra("card_name", getResources().getString(R("bank_card", "string")));
                 } else if (bundle.getString("type").equalsIgnoreCase("barcode")) {
                     RecogType.BARCODE.attachTo(ocr);
                     ocr.putExtras(getIntent().getExtras());

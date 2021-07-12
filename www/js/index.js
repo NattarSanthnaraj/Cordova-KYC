@@ -8,6 +8,14 @@ document.addEventListener("backbutton", function () {
         $('#country-modal').modal('hide');
         return;
     }
+    if ($('#fm-modal').hasClass('show')) {
+        $('#fm-modal').modal('hide');
+        return;
+    }
+    if ($('#result-modal').hasClass('show')) {
+        $('#result-modal').modal('hide');
+        return;
+    }
     Swal.fire({
         title: 'Do you want to Exit?',
         showCancelButton: true,
@@ -133,10 +141,10 @@ function getMetadata() {
                 $('#barcode-div').fadeIn();
                 results.barcodes.forEach(function (barcode, i) {
                     if (i === 0) {
-                        barcodeSelected = i + '_' + barcode.type;
+                        barcodeSelected = barcode.type;
                     }
                     $('#barcode-types').append(
-                        '<option value="' + i + '_' + barcode.type + '">' + barcode.name + '</option>'
+                        '<option value="' + barcode.type + '">' + barcode.name + '</option>'
                     )
                 })
             }
@@ -183,7 +191,7 @@ function startOcrWithCard() {
 
 function startBarcode() {
     var accuraConfs = {app_orientation: screen.orientation.type};
-    accura.startBarcode(accuraConfs, barcodeSelected.split('_')[2], function (results) {
+    accura.startBarcode(accuraConfs, barcodeSelected, function (results) {
         generateResult(results);
     }, function (error) {
         alert(error);
@@ -431,12 +439,12 @@ function generateResult(result) {
                 Object.keys(result[side]).forEach(function (key) {
                     if (["Signature", "front_img", "back_img"].indexOf(key) === -1) {
                         if (result[side][key].indexOf("<") !== -1) {
-                            table += "<tr class='bg-light p-2'><td>" + key + "</td><td>" + result[side][key].replace(/</g, '*') + "</td></tr>"
+                            table += "<tr><td class='bg-light p-2'>" + key + "</td><td>" + result[side][key].replace(/</g, '*') + "</td></tr>"
                         } else {
-                            table += "<tr class='bg-light p-2'><td>" + key + "</td><td>" + result[side][key] + "</td></tr>"
+                            table += "<tr><td class='bg-light p-2'>" + key + "</td><td>" + result[side][key] + "</td></tr>"
                         }
                     } else if (key === "Signature") {
-                        table += "<tr class='bg-light p-2'><td>" + key + "</td><td><img id='signature_" + side + "' src='" + loadingImg + "' class='img-fluid'></td></tr>";
+                        table += "<tr><td class='bg-light p-2'>" + key + "</td><td><img id='signature_" + side + "' src='" + loadingImg + "' class='img-fluid'></td></tr>";
                         getImage('signature_' + side, result[side][key]);
                     }
                 });
