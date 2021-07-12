@@ -16,6 +16,7 @@
     "cordova-accura-kyc": "file:custom-plugins/cordova-accura-kyc",
     "cordova-accura-mrz": "file:custom-plugins/cordova-accura-kyc",
     "cordova-android": "^9.1.0",
+    "cordova-ios": "^6.1.1",
     "cordova-plugin-file": "^6.0.2",
     "cordova-plugin-screen-orientation": "git+https://github.com/apache/cordova-plugin-screen-orientation.git",
     "cordova-plugin-streaming-media": "git+https://github.com/nchutchind/cordova-plugin-streaming-media.git",
@@ -29,7 +30,8 @@
       "cordova-plugin-file": {}
     },
     "platforms": [
-      "android"
+      "android",
+      "ios"
     ]
   }
 }
