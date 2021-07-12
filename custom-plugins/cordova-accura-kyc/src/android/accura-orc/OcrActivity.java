@@ -26,7 +26,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import accura.kyc.app.R;
-import accura.kyc.plugin.adapter.BarCodeFormatListAdapter;
 
 import com.accurascan.ocr.mrz.CameraView;
 import com.accurascan.ocr.mrz.interfaces.OcrCallback;

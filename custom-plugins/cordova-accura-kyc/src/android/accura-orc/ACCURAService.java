@@ -1,11 +1,11 @@
 package accura.kyc.plugin;
 
-import android.app.Activity;
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -20,16 +20,14 @@ import com.accurascan.ocr.mrz.model.ContryModel;
 import com.accurascan.ocr.mrz.util.AccuraLog;
 import com.androidnetworking.AndroidNetworking;
 import com.docrecog.scan.RecogEngine;
-import com.google.gson.Gson;
-import com.inet.facelock.callback.FaceHelper;
 
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
+import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -48,6 +46,8 @@ public class ACCURAService extends CordovaPlugin {
     public static CallbackContext ocrCL = null;
     public static boolean ocrCLProcess = false;
     boolean livenessWithFace = false;
+    public static final String CAMERA = Manifest.permission.CAMERA;
+    public static final int SEARCH_REQ_CODE = 0;
     public ACCURAService() {
         super();
         Log.e("t", "run");
@@ -82,9 +82,38 @@ public class ACCURAService extends CordovaPlugin {
         }
         return "file://"+file.getAbsolutePath();
     }
+    protected void getCameraPermission()
+    {
+        cordova.requestPermission(this, ACCURAService.SEARCH_REQ_CODE, CAMERA);
+    }
 
     @Override
+    public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) throws JSONException {
+        for(int r:grantResults)
+        {
+            if(r == PackageManager.PERMISSION_DENIED)
+            {
+                this.pCallbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "Permission Not Granted. App cannot be used"));
+                return;
+            }
+        }
+        if (requestCode == SEARCH_REQ_CODE) {
+            execute(pAction, pArgs, pCallbackContext);
+        }
+    }
+    CallbackContext pCallbackContext = null;
+    JSONArray pArgs = null;
+    String pAction = null;
+    @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
+        if(!cordova.hasPermission(CAMERA))
+        {
+            pCallbackContext = callbackContext;
+            pArgs = args;
+            pAction = action;
+            getCameraPermission();
+            return true;
+        }
         if (action.equals("getMetadata")) {
             ocrCL = callbackContext;
             RecogEngine recogEngine = new RecogEngine();

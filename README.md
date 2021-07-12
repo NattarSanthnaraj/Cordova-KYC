@@ -1,2 +1,0 @@
-# accura-cordova
-

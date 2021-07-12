@@ -25,8 +25,8 @@
   "cordova": {
     "plugins": {
       "cordova-plugin-whitelist": {},
-      "cordova-accura-kyc": {},
-      "cordova-plugin-file": {}
+      "cordova-plugin-file": {},
+      "cordova-accura-kyc": {}
     },
     "platforms": [
       "android"

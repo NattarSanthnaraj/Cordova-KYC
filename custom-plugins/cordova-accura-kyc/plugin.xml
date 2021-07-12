@@ -24,20 +24,14 @@
             <uses-feature android:name="android.hardware.camera.autofocus" />
         </config-file>
         <framework src="androidx.appcompat:appcompat:1.3.0" />
-        <framework src="androidx.recyclerview:recyclerview:1.2.1" />
         <framework src="androidx.constraintlayout:constraintlayout:2.0.4" />
-        <framework src="com.google.android.material:material:1.4.0-beta01" />
         <lib-file src="src/android/accura_kyc_v1_0.aar"/>
-        <framework src="com.github.bumptech.glide:glide:4.11.0" />
-        <framework src="com.github.bumptech.glide:compiler:4.11.0" />
         <framework src="com.google.android.gms:play-services-mlkit-text-recognition:16.2.0" />
         <framework src="com.google.android.gms:play-services-mlkit-face-detection:16.1.7" />
         <framework src="com.google.android.gms:play-services-vision:20.1.3" />
         <framework src="com.quickbirdstudios:opencv:4.1.0" />
         <framework src="com.google.code.gson:gson:2.8.6" />
         <framework src="com.amitshekhar.android:android-networking:1.0.2" />
-
-        <framework src="com.squareup.okhttp3:okhttp:4.9.0" />
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <activity android:name="accura.kyc.plugin.OcrActivity" android:screenOrientation="locked" android:theme="@style/AppTheme" />
@@ -51,8 +45,6 @@
             <access origin="http://localhost/*" />
         </config-file>
         <source-file src="src/android/accura-orc/ACCURAService.java" target-dir="src/accura/kyc/plugin/" />
-        <source-file src="src/android/accura-orc/adapter/BarCodeFormatListAdapter.java" target-dir="src/accura/kyc/plugin/adapter/" />
-        <source-file src="src/android/accura-orc/BaseActivity.java" target-dir="src/accura/kyc/plugin/" />
         <source-file src="src/android/accura-orc/FaceMatchActivity.java" target-dir="src/accura/kyc/plugin/" />
         <source-file src="src/android/accura-orc/OcrActivity.java" target-dir="src/accura/kyc/plugin/" />
         <source-file src="src/android/accura-orc/NavigateActivity.java" target-dir="src/accura/kyc/plugin/" />
@@ -61,16 +53,12 @@
         <resource-file src="src/android/accura-orc/layout/activity_face_match.xml" target="res/layout/activity_face_match.xml"/>
         <resource-file src="src/android/accura-orc/layout/activity_navigate.xml" target="res/layout/activity_navigate.xml"/>
         <resource-file src="src/android/accura-orc/layout/custom_frame_layout.xml" target="res/layout/custom_frame_layout.xml"/>
-        <resource-file src="src/android/accura-orc/layout/dialog_barcode_type.xml" target="res/layout/dialog_barcode_type.xml"/>
-        <resource-file src="src/android/accura-orc/layout/item_barcode.xml" target="res/layout/item_barcode.xml"/>
-        <resource-file src="src/android/accura-orc/layout/item_layout.xml" target="res/layout/item_layout.xml"/>
         <resource-file src="src/android/accura-orc/layout/ocr_activity.xml" target="res/layout/ocr_activity.xml"/>
 
-        <resource-file src="src/android/accura-orc/menu/menu_land_port.xml" target="res/menu/menu_land_port.xml"/>
 
         <resource-file src="src/android/accura-orc/values/accura_strings.xml" target="res/values/accura_strings.xml"/>
-        <resource-file src="src/android/accura-orc/values/colors.xml" target="res/values/colors.xml"/>
-        <resource-file src="src/android/accura-orc/values/styles.xml" target="res/values/styles.xml"/>
+        <resource-file src="src/android/accura-orc/values/accura_colors.xml" target="res/values/accura_colors.xml"/>
+        <resource-file src="src/android/accura-orc/values/accura_styles.xml" target="res/values/accura_styles.xml"/>
 
         <resource-file src="src/android/configs/accura_error_titles_configs.xml" target="res/values/accura_error_titles_configs.xml"/>
         <resource-file src="src/android/configs/accura_scan_titles_configs.xml" target="res/values/accura_scan_titles_configs.xml"/>
@@ -79,16 +67,9 @@
         <resource-file src="src/android/configs/recog_engine_config.xml" target="res/values/recog_engine_config.xml"/>
 
 
-        <source-file src="src/android/accura-orc/drawables/drawable/btn_bg_gray.xml" target-dir="res/drawable/"/>
         <source-file src="src/android/accura-orc/drawables/drawable/flip_camera_icon.png" target-dir="res/drawable/"/>
-        <source-file src="src/android/accura-orc/drawables/drawable/ic_launcher_background.xml" target-dir="res/drawable/"/>
-        <source-file src="src/android/accura-orc/drawables/drawable/round_border_rect.xml" target-dir="res/drawable/"/>
-        <source-file src="src/android/accura-orc/drawables/drawable-xhdpi/ic_barcode.png" target-dir="res/drawable-xhdpi/"/>
-        <source-file src="src/android/accura-orc/drawables/drawable-xhdpi/ic_biometric.png" target-dir="res/drawable-xhdpi/"/>
-        <source-file src="src/android/accura-orc/drawables/drawable-xhdpi/ic_liveness.png" target-dir="res/drawable-xhdpi/"/>
         <source-file src="src/android/accura-orc/drawables/layout-land/custom_frame_layout.xml" target-dir="res/layout-land/"/>
         <source-file src="src/android/accura-orc/drawables/layout-land/ocr_activity.xml" target-dir="res/layout-land/"/>
-        <source-file src="src/android/accura-orc/drawables/mipmap-xhdpi/ic_document_verified.png" target-dir="res/mipmap-xhdpi/"/>
 
 
         <hook type="after_plugin_install" src="scripts/afterBuild.js" />
