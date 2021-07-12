@@ -36,8 +36,6 @@ import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-
-import accura.kyc.app.R;
 import okhttp3.OkHttpClient;
 
 public class ACCURAService extends CordovaPlugin {
@@ -104,6 +102,9 @@ public class ACCURAService extends CordovaPlugin {
     CallbackContext pCallbackContext = null;
     JSONArray pArgs = null;
     String pAction = null;
+    public int R(String name, String type){
+       return cordova.getActivity().getResources().getIdentifier(name, type, cordova.getActivity().getPackageName());
+    }
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         if(!cordova.hasPermission(CAMERA))
@@ -234,72 +235,72 @@ public class ACCURAService extends CordovaPlugin {
             livenessWithFace = accuraConf.getBoolean("with_face");
             JSONObject config = args.getJSONObject(1);
             LivenessCustomization livenessCustomization = new LivenessCustomization();
-            livenessCustomization.backGroundColor = res.getColor(R.color.livenessBackground);
+            livenessCustomization.backGroundColor = res.getColor(R("livenessBackground", "color"));
             if (config.has("livenessBackground")) {
                 livenessCustomization.backGroundColor = Color.parseColor(config.getString("livenessBackground"));
             }
-            livenessCustomization.closeIconColor = res.getColor(R.color.livenessCloseIcon);
+            livenessCustomization.closeIconColor = res.getColor(R("livenessCloseIcon", "color"));
             if (config.has("livenessCloseIcon")) {
                 livenessCustomization.closeIconColor = Color.parseColor(config.getString("livenessCloseIcon"));
             }
-            livenessCustomization.feedbackBackGroundColor = res.getColor(R.color.livenessfeedbackBg);
+            livenessCustomization.feedbackBackGroundColor = res.getColor(R("livenessfeedbackBg", "color"));
             if (config.has("livenessfeedbackBg")) {
                 livenessCustomization.feedbackBackGroundColor = Color.parseColor(config.getString("livenessfeedbackBg"));
             }
-            livenessCustomization.feedbackTextColor = res.getColor(R.color.livenessfeedbackText);
+            livenessCustomization.feedbackTextColor = res.getColor(R("livenessfeedbackText", "color"));
             if (config.has("livenessfeedbackText")) {
                 livenessCustomization.feedbackTextColor = Color.parseColor(config.getString("livenessfeedbackText"));
             }
-            livenessCustomization.feedbackTextSize = res.getInteger(R.integer.feedbackTextSize);
+            livenessCustomization.feedbackTextSize = res.getInteger(R("feedbackTextSize", "integer"));
             if (config.has("livenessfeedbackText")) {
                 livenessCustomization.feedbackTextSize = config.getInt("feedbackTextSize");
             }
-            livenessCustomization.feedBackframeMessage = res.getString(R.string.feedBackframeMessage);
+            livenessCustomization.feedBackframeMessage = res.getString(R("feedBackframeMessage", "string"));
             if (config.has("feedBackframeMessage")) {
                 livenessCustomization.feedBackframeMessage = config.getString("feedBackframeMessage");
             }
-            livenessCustomization.feedBackAwayMessage = res.getString(R.string.feedBackAwayMessage);
+            livenessCustomization.feedBackAwayMessage = res.getString(R("feedBackAwayMessage", "string"));
             if (config.has("feedBackAwayMessage")) {
                 livenessCustomization.feedBackAwayMessage = config.getString("feedBackAwayMessage");
             }
-            livenessCustomization.feedBackOpenEyesMessage = res.getString(R.string.feedBackOpenEyesMessage);
+            livenessCustomization.feedBackOpenEyesMessage = res.getString(R("feedBackOpenEyesMessage", "string"));
             if (config.has("feedBackOpenEyesMessage")) {
                 livenessCustomization.feedBackOpenEyesMessage = config.getString("feedBackOpenEyesMessage");
             }
-            livenessCustomization.feedBackCloserMessage = res.getString(R.string.feedBackCloserMessage);
+            livenessCustomization.feedBackCloserMessage = res.getString(R("feedBackCloserMessage", "string"));
             if (config.has("feedBackCloserMessage")) {
                 livenessCustomization.feedBackCloserMessage = config.getString("feedBackCloserMessage");
             }
-            livenessCustomization.feedBackCenterMessage = res.getString(R.string.feedBackCenterMessage);
+            livenessCustomization.feedBackCenterMessage = res.getString(R("feedBackCenterMessage", "string"));
             if (config.has("feedBackCenterMessage")) {
                 livenessCustomization.feedBackCenterMessage = config.getString("feedBackCenterMessage");
             }
-            livenessCustomization.feedBackMultipleFaceMessage = res.getString(R.string.feedBackMultipleFaceMessage);
+            livenessCustomization.feedBackMultipleFaceMessage = res.getString(R("feedBackMultipleFaceMessage", "string"));
             if (config.has("feedBackMultipleFaceMessage")) {
                 livenessCustomization.feedBackMultipleFaceMessage = config.getString("feedBackMultipleFaceMessage");
             }
-            livenessCustomization.feedBackHeadStraightMessage = res.getString(R.string.feedBackHeadStraightMessage);
+            livenessCustomization.feedBackHeadStraightMessage = res.getString(R("feedBackHeadStraightMessage", "string"));
             if (config.has("feedBackHeadStraightMessage")) {
                 livenessCustomization.feedBackHeadStraightMessage = config.getString("feedBackHeadStraightMessage");
             }
-            livenessCustomization.feedBackBlurFaceMessage = res.getString(R.string.feedBackBlurFaceMessage);
+            livenessCustomization.feedBackBlurFaceMessage = res.getString(R("feedBackBlurFaceMessage", "string"));
             if (config.has("feedBackBlurFaceMessage")) {
                 livenessCustomization.feedBackBlurFaceMessage = config.getString("feedBackBlurFaceMessage");
             }
-            livenessCustomization.feedBackGlareFaceMessage = res.getString(R.string.feedBackGlareFaceMessage);
+            livenessCustomization.feedBackGlareFaceMessage = res.getString(R("feedBackGlareFaceMessage", "string"));
             if (config.has("feedBackGlareFaceMessage")) {
                 livenessCustomization.feedBackGlareFaceMessage = config.getString("feedBackGlareFaceMessage");
             }
-            livenessCustomization.feedBackVideoRecordingMessage = res.getString(R.string.feedBackVideoRecordingMessage);
+            livenessCustomization.feedBackVideoRecordingMessage = res.getString(R("feedBackVideoRecordingMessage", "string"));
             if (config.has("feedBackVideoRecordingMessage")) {
                 livenessCustomization.feedBackVideoRecordingMessage = config.getString("feedBackVideoRecordingMessage");
             }
-            livenessCustomization.setBlurPercentage(res.getInteger(R.integer.setBlurPercentage));
+            livenessCustomization.setBlurPercentage(res.getInteger(R("setBlurPercentage", "integer")));
             if (config.has("setBlurPercentage")) {
                 livenessCustomization.setBlurPercentage(config.getInt("setBlurPercentage"));
             }
-            int minGlare = res.getInteger(R.integer.setGlarePercentage_0);
-            int maxGlare = res.getInteger(R.integer.setGlarePercentage_1);
+            int minGlare = res.getInteger(R("setGlarePercentage_0", "integer"));
+            int maxGlare = res.getInteger(R("setGlarePercentage_1", "integer"));
             if (config.has("setGlarePercentage_0")) {
                 minGlare = config.getInt("setGlarePercentage_0");
             }
@@ -307,58 +308,58 @@ public class ACCURAService extends CordovaPlugin {
                 minGlare = config.getInt("setGlarePercentage_1");
             }
             livenessCustomization.setGlarePercentage(minGlare, maxGlare);
-            livenessCustomization.isSaveImage = res.getBoolean(R.bool.isSaveImage);
+            livenessCustomization.isSaveImage = res.getBoolean(R("isSaveImage", "bool"));
             if (config.has("isSaveImage")) {
                 livenessCustomization.isSaveImage = config.getBoolean("isSaveImage");
             }
-            livenessCustomization.isRecordVideo = res.getBoolean(R.bool.isRecordVideo);
+            livenessCustomization.isRecordVideo = res.getBoolean(R("isRecordVideo", "bool"));
             if (config.has("isRecordVideo")) {
                 livenessCustomization.isRecordVideo = config.getBoolean("isRecordVideo");
             }
             // video length in seconds
-            livenessCustomization.videoLengthInSecond = res.getInteger(R.integer.videoLengthInSecond);
+            livenessCustomization.videoLengthInSecond = res.getInteger(R("videoLengthInSecond", "integer"));
             if (config.has("videoLengthInSecond")) {
                 livenessCustomization.videoLengthInSecond = config.getInt("videoLengthInSecond");
             }
-            livenessCustomization.recordingTimerTextColor = res.getColor(R.color.livenessRecordingText);
+            livenessCustomization.recordingTimerTextColor = res.getColor(R("livenessRecordingText", "color"));
             if (config.has("livenessRecordingTextColor")) {
                 livenessCustomization.recordingTimerTextColor = Color.parseColor(config.getString("livenessRecordingTextColor"));
             }
-            livenessCustomization.recordingTimerTextSize = res.getInteger(R.integer.recordingTimerTextSize);
+            livenessCustomization.recordingTimerTextSize = res.getInteger(R("recordingTimerTextSize", "integer"));
             if (config.has("recordingTimerTextSize")) {
                 livenessCustomization.recordingTimerTextSize = config.getInt("recordingTimerTextSize");
             }
-            livenessCustomization.recordingMessage = res.getString(R.string.recordingMessage);
+            livenessCustomization.recordingMessage = res.getString(R("recordingMessage", "string"));
             if (config.has("recordingMessage")) {
                 livenessCustomization.recordingMessage = config.getString("recordingMessage");
             }
-            livenessCustomization.recordingMessageTextColor = res.getColor(R.color.livenessRecordingText);
+            livenessCustomization.recordingMessageTextColor = res.getColor(R("livenessRecordingText", "color"));
             if (config.has("livenessRecordingTextColor")) {
                 livenessCustomization.recordingMessageTextColor = Color.parseColor(config.getString("livenessRecordingTextColor"));
             }
-            livenessCustomization.recordingMessageTextSize = res.getInteger(R.integer.recordingMessageTextSize);
+            livenessCustomization.recordingMessageTextSize = res.getInteger(R("recordingMessageTextSize", "integer"));
             if (config.has("recordingMessageTextSize")) {
                 livenessCustomization.recordingMessageTextSize = config.getInt("recordingMessageTextSize");
             }
-            livenessCustomization.enableFaceDetect = res.getBoolean(R.bool.enableFaceDetect);
+            livenessCustomization.enableFaceDetect = res.getBoolean(R("enableFaceDetect", "bool"));
             if (config.has("enableFaceDetect")) {
                 livenessCustomization.enableFaceDetect = config.getBoolean("enableFaceDetect");
             }
-            livenessCustomization.enableFaceMatch = res.getBoolean(R.bool.enableFaceMatch);
+            livenessCustomization.enableFaceMatch = res.getBoolean(R("enableFaceMatch", "bool"));
             if (config.has("enableFaceMatch")) {
                 livenessCustomization.enableFaceMatch = config.getBoolean("enableFaceMatch");
             }
-            livenessCustomization.fmScoreThreshold = res.getInteger(R.integer.fmScoreThreshold);
+            livenessCustomization.fmScoreThreshold = res.getInteger(R("fmScoreThreshold", "integer"));
             if (config.has("fmScoreThreshold")) {
                 livenessCustomization.fmScoreThreshold = config.getInt("fmScoreThreshold");
             }
-            livenessCustomization.feedbackFMFailed = res.getString(R.string.feedbackFMFailed);
+            livenessCustomization.feedbackFMFailed = res.getString(R("feedbackFMFailed", "string"));
             if (config.has("feedbackFMFailed")) {
                 livenessCustomization.feedbackFMFailed = config.getString("feedbackFMFailed");
             }
             OkHttpClient okHttpClient = UnsafeOkHttpClient.getUnsafeOkHttpClient();
             AndroidNetworking.initialize(cordova.getContext(), okHttpClient);
-            String liveUrl = res.getString(R.string.liveness_url);
+            String liveUrl = res.getString(R("liveness_url", "string"));
             if (config.has("liveness_url")) {
                 liveUrl = config.getString("liveness_url");
             }
