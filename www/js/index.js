@@ -100,7 +100,7 @@ function getCardsModal(id) {
 function openForCard(id) {
     $('#country-modal').modal('hide');
     $('#card-modal').modal('hide');
-    var accuraConfs = {app_orientation: screen.orientation.type};
+    var accuraConfs = {app_orientation: screen.orientation.type, rg_setBackSide: true};
     accura.startOcrWithCard(accuraConfs, countrySelectedId, countryCard[id].id, countryCard[id].name, countryCard[id].type, function (results) {
         generateResult(results);
     }, function (error) {
@@ -360,17 +360,17 @@ function startFaceMatch(withFace = false) {
         }
     }, function (error) {
         console.log(error);
-        alert(error)
-    })
+        alert(error);
+    });
 }
 
 function startMRZ() {
-    var accuraConfigs = {app_orientation: screen.orientation.type};
+    var accuraConfigs = {app_orientation: screen.orientation.type, rg_setBackSide: true};
     accura.startMRZ(accuraConfigs, mrzSelected, function (result) {
-        generateResult(result)
+        generateResult(result);
     }, function (error) {
-        alert(error)
-    })
+        alert(error);
+    });
 }
 
 function generateResult(result) {
@@ -472,14 +472,14 @@ function getImage(id, uri, isFm = false) {
             reader.onloadend = function () {
                 $('#' + id).attr("src", this.result);
                 if (isFm) {
-                    $('#check-ls, #check-fm').fadeIn()
+                    $('#check-ls, #check-fm').fadeIn();
                 }
             };
 
             reader.onerror = function () {
                 $('#' + id).attr("src", errorImg);
                 if (isFm) {
-                    $('#check-ls, #check-fm').fadeOut()
+                    $('#check-ls, #check-fm').fadeOut();
                 }
             }
 
@@ -488,13 +488,13 @@ function getImage(id, uri, isFm = false) {
         }, function () {
             $('#' + id).attr("src", errorImg);
             if (isFm) {
-                $('#check-ls, #check-fm').fadeOut()
+                $('#check-ls, #check-fm').fadeOut();
             }
         });
     }, function () {
         $('#' + id).attr("src", errorImg);
         if (isFm) {
-            $('#check-ls, #check-fm').fadeOut()
+            $('#check-ls, #check-fm').fadeOut();
         }
     });
 }

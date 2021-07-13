@@ -105,6 +105,7 @@ public class OcrActivity extends SensorsActivity implements OcrCallback {
     public int R(String name, String type){
         return getResources().getIdentifier(name, type, getPackageName());
     }
+    boolean isSetBackSide = false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         bundle = getIntent().getExtras();
@@ -179,9 +180,16 @@ public class OcrActivity extends SensorsActivity implements OcrCallback {
                 .setStatusBarHeight(statusBarHeight)  // To remove Height from Camera View if status bar visible
                 .setFrontSide()
 //                optional field
-                .setEnableMediaPlayer(bundle.getBoolean("rg_setEnableMediaPlayer", res.getBoolean(R("rg_setEnableMediaPlayer", "bool")))) // false to disable default sound and default it is true
+                .setEnableMediaPlayer(bundle.getBoolean("rg_setEnableMediaPlayer", res.getBoolean(R("rg_setEnableMediaPlayer", "bool")))); // false to disable default sound and default it is true
 //                .setCustomMediaPlayer(MediaPlayer.create(this, com.accurascan.ocr.mrz.R.raw.beep)) // To add your custom sound and Must have to enable media player
-                .init();  // initialized camera
+                  // initialized camera
+        isSetBackSide = bundle.getBoolean("rg_setBackSide", false);
+        if (isSetBackSide) {
+            cameraView.setBackSide();
+        } else {
+            cameraView.setFrontSide();
+        }
+        cameraView.init();
     }
 
     private void init() {
@@ -279,7 +287,11 @@ public class OcrActivity extends SensorsActivity implements OcrCallback {
 
                     } else {
                         isBack = true;
-                        cameraView.setBackSide();
+                        if (isSetBackSide) {
+                            cameraView.setFrontSide();
+                        } else {
+                            cameraView.setBackSide();
+                        }
                         cameraView.flipImage(imageFlip);
                     }
                 } else if (recogType == RecogType.DL_PLATE || recogType == RecogType.BARCODE) {
@@ -306,7 +318,11 @@ public class OcrActivity extends SensorsActivity implements OcrCallback {
                     sendDataToResultActivity(recogType);
                 } else {
                     isBack = true;
-                    cameraView.setBackSide();
+                    if (isSetBackSide) {
+                        cameraView.setFrontSide();
+                    } else {
+                        cameraView.setBackSide();
+                    }
                     cameraView.flipImage(imageFlip);
                 }
             }
@@ -638,11 +654,11 @@ public class OcrActivity extends SensorsActivity implements OcrCallback {
                 return String.format(bundle.getString("SCAN_TITLE_OCR", res.getString(R("SCAN_TITLE_OCR", "string"))), cardName);
             case RecogEngine.SCAN_TITLE_MRZ_PDF417_FRONT:// for front side MRZ and PDF417
                 if (recogType == RecogType.BANKCARD) {
-                    return bundle.getString("SCAN_TITLE_MRZ_PDF417_FRONT_BANKCARD", res.getString(R("SCAN_TITLE_MRZ_PDF417_FRONT_BANKCARD", "string")));
+                    return bundle.getString("SCAN_TITLE_BANKCARD", res.getString(R("SCAN_TITLE_BANKCARD", "string")));
                 } else if (recogType == RecogType.BARCODE) {
-                    return bundle.getString("SCAN_TITLE_MRZ_PDF417_FRONT_BARCODE", res.getString(R("SCAN_TITLE_MRZ_PDF417_FRONT_BARCODE", "string")));
+                    return bundle.getString("SCAN_TITLE_BARCODE", res.getString(R("SCAN_TITLE_BARCODE", "string")));
                 } else
-                    return bundle.getString("SCAN_TITLE_MRZ_PDF417_FRONT_DEFAULT", res.getString(R("SCAN_TITLE_MRZ_PDF417_FRONT_DEFAULT", "string")));
+                    return bundle.getString("SCAN_TITLE_MRZ_PDF417_FRONT", res.getString(R("SCAN_TITLE_MRZ_PDF417_FRONT", "string")));
             case RecogEngine.SCAN_TITLE_MRZ_PDF417_BACK: // for back side MRZ and PDF417
                 return bundle.getString("SCAN_TITLE_MRZ_PDF417_BACK", res.getString(R("SCAN_TITLE_MRZ_PDF417_BACK", "string")));
             case RecogEngine.SCAN_TITLE_DLPLATE: // for DL plate

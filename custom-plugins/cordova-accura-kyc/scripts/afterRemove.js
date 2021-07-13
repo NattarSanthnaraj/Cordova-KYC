@@ -1,12 +1,21 @@
 const fs = require('fs');
-const srcPath = __dirname.replace('scripts','');
-const srcParentPath = __dirname.replace('plugins\\cordova-accura-kyc\\scripts','platforms\\android');
-
-fs.unlinkSync(srcParentPath + '\\app\\src\\main\\assets\\accuraface.license');
-fs.unlinkSync(srcParentPath + '\\app\\src\\main\\assets\\key.license');
-var gradle = fs.readFileSync(srcParentPath+"\\app\\build.gradle").toString();
-if (gradle.indexOf('accura_kyc_v1_0.aar') !== -1) {
-    const lib = 'implementation files(\'libs\\\\accura_kyc_v1_0.aar\')';
+const os = require('os');
+const srcPath = __dirname.replace('scripts', '');
+var srcParentPath = __dirname.replace('plugins\\cordova-accura-kyc\\scripts', 'platforms\\android');
+var fcDestPath = srcParentPath + '\\app\\src\\main\\assets\\accuraface.license';
+var ocrDestPath = srcParentPath + '\\app\\src\\main\\assets\\key.license';
+var gridlePath = srcParentPath + "\\app\\build.gradle";
+if (['linux', 'darwin'].indexOf(os.platform()) !== -1) {
+    srcParentPath = __dirname.replace('plugins/cordova-accura-kyc/scripts', 'platforms/android');
+    fcDestPath = srcParentPath + '/app/src/main/assets/accuraface.license';
+    ocrDestPath = srcParentPath + '/app/src/main/assets/key.license';
+    gridlePath = srcParentPath + "/app/build.gradle";
+}
+fs.unlinkSync(fcDestPath);
+fs.unlinkSync(ocrDestPath);
+var gradle = fs.readFileSync(gridlePath).toString();
+if (gradle.indexOf('accura_kyc.aar') !== -1) {
+    const lib = 'implementation files(\'libs\\\\accura_kyc.aar\')';
     gradle = gradle.replace(lib, '');
-    fs.writeFileSync(srcParentPath+"\\app\\build.gradle", gradle)
+    fs.writeFileSync(gridlePath, gradle);
 }
