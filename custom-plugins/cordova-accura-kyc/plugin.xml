@@ -76,5 +76,24 @@
         <hook type="before_plugin_rm" src="scripts/afterRemove.js" />
     </platform>
     <platform name="ios">
+        <config-file parent="/*" target="config.xml">
+            <feature name="ACCURAService">
+                <param name="ios-package" value="ACCURAService"/>
+            </feature>
+        </config-file>
+        <podspec>
+        <config>
+            <source url="https://github.com/CocoaPods/Specs.git"/>
+        </config>
+        <pods use-frameworks="true">
+            <pod name="AccuraKYC" spec="~> 3.0.0" />
+        </pods>
+        </podspec>
+        <source-file src="src/ios/accura-orc/ACCURAService.swift" target-dir="accura-kyc/"/>
+        <hook type="after_plugin_install" src="scripts/after-build-ios.js" />
     </platform>
 </plugin>
+
+
+
+
