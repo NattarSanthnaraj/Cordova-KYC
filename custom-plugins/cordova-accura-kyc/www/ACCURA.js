@@ -26,26 +26,30 @@ exports.getMetadata = function (success, error) {
 };
 
 exports.startMRZ = function (accuraConfigs = {}, type = 'other_mrz', success, error) {
-    return execAsPromise(success, error, 'ACCURAService', 'startMRZ', [accuraConfigs, type]);
+    return execAsPromise(success, error, 'ACCURAService', 'startMRZ', [accuraConfigs, type, screen.orientation.type]);
 };
 
 exports.startBankCard = function (accuraConfigs = {}, success, error) {
-    return execAsPromise(success, error, 'ACCURAService', 'startBankCard', [accuraConfigs]);
+    return execAsPromise(success, error, 'ACCURAService', 'startBankCard', [accuraConfigs, screen.orientation.type]);
 };
 
 exports.startBarcode = function (accuraConfigs = {}, type, success, error) {
-    return execAsPromise(success, error, 'ACCURAService', 'startBarcode', [accuraConfigs, type]);
+    return execAsPromise(success, error, 'ACCURAService', 'startBarcode', [accuraConfigs, type, screen.orientation.type]);
 };
 
 exports.startOcrWithCard = function (accuraConfigs = {}, country, card, cardName, cardType, success, error) {
- return execAsPromise(success, error, 'ACCURAService', 'startOcrWithCard', [accuraConfigs, country, card, cardName, cardType]);
+ return execAsPromise(success, error, 'ACCURAService', 'startOcrWithCard', [accuraConfigs, country, card, cardName, cardType, screen.orientation.type]);
 };
 
 exports.startLiveness = function (accuraConfigs = {}, livenessConfigs = {}, success, error) {
-    return execAsPromise(success, error, 'ACCURAService', 'startLiveness', [accuraConfigs, livenessConfigs]);
+    return execAsPromise(success, error, 'ACCURAService', 'startLiveness', [accuraConfigs, livenessConfigs, screen.orientation.type]);
 };
 
 exports.startFaceMatch = function (accuraConfigs = {}, faceMatchConfigs = {}, success, error) {
-    return execAsPromise(success, error, 'ACCURAService', 'startFaceMatch', [accuraConfigs, faceMatchConfigs]);
+    return execAsPromise(success, error, 'ACCURAService', 'startFaceMatch', [accuraConfigs, faceMatchConfigs, screen.orientation.type]);
+};
+
+exports.cleanFaceMatch = function (success, error) {
+    return execAsPromise(success, error, 'ACCURAService', 'cleanFaceMatch', []);
 };
 

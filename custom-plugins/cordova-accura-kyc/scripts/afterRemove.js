@@ -11,8 +11,16 @@ if (['linux', 'darwin'].indexOf(os.platform()) !== -1) {
     ocrDestPath = srcParentPath + '/app/src/main/assets/key.license';
     gridlePath = srcParentPath + "/app/build.gradle";
 }
-fs.unlinkSync(fcDestPath);
-fs.unlinkSync(ocrDestPath);
+try {
+    fs.unlinkSync(fcDestPath);
+}catch (e) {
+
+}
+try {
+    fs.unlinkSync(ocrDestPath);
+}catch (e) {
+
+}
 var gradle = fs.readFileSync(gridlePath).toString();
 if (gradle.indexOf('accura_kyc.aar') !== -1) {
     const lib = 'implementation files(\'libs\\\\accura_kyc.aar\')';

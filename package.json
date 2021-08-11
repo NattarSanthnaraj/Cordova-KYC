@@ -15,7 +15,7 @@
   "devDependencies": {
     "cordova-accura-kyc": "file:custom-plugins/cordova-accura-kyc",
     "cordova-android": "^9.1.0",
-    "cordova-ios": "^6.1.1",
+    "cordova-ios": "^6.2.0",
     "cordova-plugin-file": "^6.0.2",
     "cordova-plugin-screen-orientation": "git+https://github.com/apache/cordova-plugin-screen-orientation.git",
     "cordova-plugin-streaming-media": "git+https://github.com/nchutchind/cordova-plugin-streaming-media.git",
@@ -26,11 +26,15 @@
     "plugins": {
       "cordova-plugin-whitelist": {},
       "cordova-plugin-file": {},
+      "cordova-plugin-add-swift-support": {},
       "cordova-accura-kyc": {}
     },
     "platforms": [
-      "ios",
-      "android"
+      "android",
+      "ios"
     ]
+  },
+  "dependencies": {
+    "cordova-plugin-add-swift-support": "2.0.2"
   }
 }
