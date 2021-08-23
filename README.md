@@ -63,6 +63,8 @@ $ `cordova plugin add <absolute-path-to-(cordova-accura-kyc)-folder>`
 ###
 ### Liveness Configurations:  JSON Object
 
+Contact AccuraScan at contact@accurascan.com for Liveness SDK or API
+
 |Option|Type|Default|Description|
 | :- | :- | :- | :- |
 |feedbackTextSize|integer|18||
@@ -1993,6 +1995,9 @@ TO MODIFY rename it to your desire package name and run in CMD (in the root of  
 “cordova prepare android”
 
 1. ## License Paths
+  
+  **Generate your Accura license from [here](https://accurascan.com/developer/dashboard)**
+  
 These are the paths for licences:
 
 - \accura-cordova\custom-plugins\cordova-accura-kyc\src\android\accuraface.license
