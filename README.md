@@ -9,18 +9,18 @@ $ `cordova plugin add <absolute-path-to-(cordova-accura-kyc)-folder>`
 ### Example
 `cordova plugin add I:\accura-cordova\custom-plugins\cordova-accura-kyc`
 
-### - Replace `accura_kyc.aar` aar file path in plugin.xml file for change android library
-    1. Without simulator library(only for device) size: 42Mb
+#### - Replace `accura_kyc.aar` aar file path in plugin.xml file for change android library
+    1. Without simulator library(only for device) size: 40Mb (Check size)
         - Open file from custom-plugins -> cordova-accura-kyc -> plugin.xml
         - Uncomment line no 31 and comment line no 34
         
 
-    2. With simulator support library(device + simulator both) size: 117Mb
+    2. With simulator support library(device + simulator both) size: 112Mb (Check size)
         - Open file from custom-plugins -> cordova-accura-kyc -> plugin.xml
         - Uncomment line no 34 and comment line no 31
-### NOTE:- 
-#### Default it has without simulator library.
-#### When you change the library every time you have to first remove the plugin and then add it again.
+#### NOTE:- 
+ - Default it has without simulator library.
+ - When you change the library every time you have to first remove the plugin and then add it again.
     
 <!-- How to release both support on github in one SDK.
 
