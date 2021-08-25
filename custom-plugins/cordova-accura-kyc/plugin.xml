@@ -26,7 +26,13 @@
         </config-file>
         <framework src="androidx.appcompat:appcompat:1.3.0" />
         <framework src="androidx.constraintlayout:constraintlayout:2.0.4" />
-        <lib-file src="src/android/accura_kyc.aar"/>
+        
+        <!-- File for Without Simulator support android library --> <!-- For active it uncomment bellow line and comment line no 34 -->
+        <lib-file src="src/android/lib/without_simulator/accura_kyc.aar"/>
+
+        <!-- File for With Simulator support android library --> <!-- For active it uncomment bellow line and comment line no 31 -->
+        <!-- <lib-file src="src/android/lib/with_simulator/accura_kyc.aar"/> -->
+
         <framework src="com.google.android.gms:play-services-mlkit-text-recognition:16.3.0" />
         <framework src="com.google.android.gms:play-services-mlkit-face-detection:16.2.0" />
         <framework src="com.google.android.gms:play-services-vision:20.1.3" />

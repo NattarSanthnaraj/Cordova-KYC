@@ -8,6 +8,29 @@ Note: It is assumed that the developer already has a cordova application.
 $ `cordova plugin add <absolute-path-to-(cordova-accura-kyc)-folder>`
 ### Example
 `cordova plugin add I:\accura-cordova\custom-plugins\cordova-accura-kyc`
+
+### - Replace `accura_kyc.aar` aar file path in plugin.xml file for change android library
+    1. Without simulator library(only for device) size: 42Mb
+        - Open file from custom-plugins -> cordova-accura-kyc -> plugin.xml
+        - Uncomment line no 31 and comment line no 34
+        
+
+    2. With simulator support library(device + simulator both) size: 117Mb
+        - Open file from custom-plugins -> cordova-accura-kyc -> plugin.xml
+        - Uncomment line no 34 and comment line no 31
+### NOTE:- 
+#### Default it has without simulator library.
+#### When you change the library every time you have to first remove the plugin and then add it again.
+    
+<!-- How to release both support on github in one SDK.
+
+1. Use `accura_kyc.aar` file without simulator in project. so it'll make the Cordova sdk light in size.
+2. `accura_kyc.aar` file with simulator add in assets of github release. So other dev can use as per their requirement. 
+
+one thing keep in mind. When we will release Cordova sdk with new update. Create release for that and attach same version of Simulator support aar file in release assets. -->
+<!-- ### Options for Android Library
+Here you have two options for android that which library you want to use for this plugin.
+- Library with  -->
 ## Add dependencies
 `$ cordova plugin add cordova-plugin-file`
 ## Permissions
