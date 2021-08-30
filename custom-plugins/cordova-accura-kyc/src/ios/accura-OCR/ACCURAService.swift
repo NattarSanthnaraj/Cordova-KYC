@@ -11,6 +11,9 @@ struct gl {
     static var withFace = false
     static var type = ""
     static var audio: URL? = nil
+    static var PDFDetectFace: UIImage? = nil
+    static var PDFFrontSide: UIImage? = nil
+    static var PDFBackSide: UIImage? = nil
 }
 @objc(ACCURAService) class ACCURAService : CDVPlugin {
     static func cleanFaceData() {
@@ -231,12 +234,15 @@ struct gl {
         ScanConfigs.CardType = command.argument(at: 4) as! Int
         ScanConfigs.accuraConfigs["app_orientation"] = command.argument(at: 5) as! String
         let viewController = UIStoryboard(name: "MainStoryboard_iPhone", bundle: nil).instantiateViewController(withIdentifier: "ViewController") as! ViewController
+        viewController.cardType = command.argument(at: 4) as! Int
         viewController.commandDelegate = self.commandDelegate
         viewController.isCheckScanOCR = true
         viewController.countryid = command.argument(at: 1) as! Int
         viewController.cardid = command.argument(at: 2) as! Int
         viewController.docName = command.argument(at: 3) as! String
-        viewController.cardType = command.argument(at: 4) as! Int
+        if viewController.cardType == 1 {
+            viewController.isBarCode = true
+        }
         viewController.cordovaViewController = self.viewController
         viewController.win = self.viewController.view.window
         checkForDownloadMedia(vc: viewController)
@@ -245,6 +251,7 @@ struct gl {
     @objc(startLiveness:)
     func startLiveness(command: CDVInvokedUrlCommand) {
         //set liveness url
+        gl.type = "lv"
         gl.ocrClId = command.callbackId
         gl.face1 = nil
         gl.face2 = nil
@@ -258,13 +265,15 @@ struct gl {
         LVController.livenessConfigs = command.argument(at: 1) as! [String: Any]
         LVController.cordovaViewController = self.viewController
         LVController.win = self.viewController.view.window
-        checkForDownloadMedia(vc: LVController)
+        let nav = NavigationController(rootViewController: LVController)
+        self.viewController.view.window?.rootViewController = nav
     }
     
     
     
     @objc(startFaceMatch:)
     func startFaceMatch(command: CDVInvokedUrlCommand) {
+        gl.type = "fm"
         gl.ocrClId = command.callbackId
         gl.withFace = false
         let fmInit = EngineWrapper.isEngineInit()
@@ -286,7 +295,9 @@ struct gl {
         FMController.livenessConfigs = command.argument(at: 1) as! [String: Any]
         FMController.cordovaViewController = self.viewController
         FMController.win = self.viewController.view.window
-        checkForDownloadMedia(vc: FMController)
+        
+        let nav = NavigationController(rootViewController: FMController)
+        self.viewController.view.window?.rootViewController = nav
         
     }
     
@@ -376,6 +387,13 @@ class NavigationController: UINavigationController {
     
     func getCurrentOrientation(isMask: Bool) -> Any {
         let orientastion = ScanConfigs.accuraConfigs["app_orientation"] as! String
+        if gl.type == "fm" || gl.type == "lv" {
+            if isMask {
+                return UIInterfaceOrientationMask.portrait
+            } else {
+                return UIInterfaceOrientation.portrait
+            }
+        }
         if(orientastion.contains("portrait")) {
             if isMask {
                 return UIInterfaceOrientationMask.portrait

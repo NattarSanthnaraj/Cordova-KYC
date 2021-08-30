@@ -13,7 +13,9 @@ class FMController: UIViewController, FacematchData {
     var commandDelegate:CDVCommandDelegate? = nil
     var cordovaViewController:UIViewController? = nil
     var audioPath: URL? = nil
+    var isFacematchDone = false
     func facematchData(_ FaceImage: UIImage!) {
+        isFacematchDone = true
         if gl.face1 == nil {
             var results:[String: Any] = [:]
             results["status"] = false
@@ -88,10 +90,17 @@ class FMController: UIViewController, FacematchData {
     var win: UIWindow? = nil
     
     func facematchViewDisappear() {
-        print("facematchViewDisappear")
+        if !isFacematchDone {
+           closeMe()
+        }
         if gl.face2 != nil {
             EngineWrapper.faceEngineClose()
         }
+    }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        
+        return .portrait
     }
 
     override func viewDidLoad() {

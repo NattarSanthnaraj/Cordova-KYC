@@ -102,18 +102,12 @@
         <config-file target="*-Info.plist" parent="UISupportsDocumentBrowser">
             <true/>
         </config-file>
-<!--        <podspec>-->
-<!--            <config>-->
-<!--                <source url="https://github.com/CocoaPods/Specs.git"/>-->
-<!--            </config>-->
-<!--            <pods use-frameworks="true">-->
-<!--                <pod name="AFNetworking" spec="~> 3.2.1" />-->
-<!--            </pods>-->
-<!--        </podspec>-->
 
+        <!-- File for Without Simulator support android library --> <!-- For active it uncomment bellow line and comment line no 34 -->
         <framework src="src/ios/AccuraKYC.framework" custom="true" embed="true" />
 
-<!--        <header-file src="src/ios/accura-OCR/cordova-accura-bridge-header.h" type="BridgingHeader" />-->
+        <!-- File for With Simulator support android library --> <!-- For active it uncomment bellow line and comment line no 31 -->
+        <!--  <framework src="src/ios/with_simulator/AccuraKYC.framework" custom="true" embed="true" /> -->
 
         <source-file src="src/ios/accura-OCR/resources/back.imageset/back480.png" target-dir="../../Images.xcassets/back.imageset/"/>
         <source-file src="src/ios/accura-OCR/resources/back.imageset/back720.png" target-dir="../../Images.xcassets/back.imageset/"/>

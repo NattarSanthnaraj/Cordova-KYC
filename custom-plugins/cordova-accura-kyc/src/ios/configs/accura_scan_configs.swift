@@ -8,13 +8,13 @@ struct ScanConfigs {
     static var SCAN_TITLE_OCR = "Scan %@"
 
 
-    static var SCAN_TITLE_MRZ_PDF417_FRONT_BANKCARD = "Scan Bank Card"
+    static var SCAN_TITLE_BANKCARD = "Scan Bank Card"
 
 
-    static var SCAN_TITLE_MRZ_PDF417_FRONT_BARCODE = "Scan Barcode"
+    static var SCAN_TITLE_BARCODE = "Scan Barcode"
 
 
-    static var SCAN_TITLE_MRZ_PDF417_FRONT_DEFAULT = "Scan Front Side of Document"
+    static var SCAN_TITLE_MRZ_PDF417_FRONT = "Scan Front Side of Document"
 
 
     static var SCAN_TITLE_MRZ_PDF417_BACK = "Scan Back Side of Document"

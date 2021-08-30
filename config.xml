@@ -32,4 +32,5 @@
         <preference name="BackupWebStorage" value="local"/>
         <preference name="UseSwiftLanguageVersion" value="5" />
     </platform>
+    <preference name="StatusBarOverlaysWebView" value="false" />
 </widget>

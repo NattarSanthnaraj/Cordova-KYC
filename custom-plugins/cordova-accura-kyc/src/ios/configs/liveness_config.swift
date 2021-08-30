@@ -80,8 +80,8 @@ struct LivenessConfigs {
     static let livenessCloseIconColor: String = "#000000"
     static let livenessfeedbackBackground: String = "#C4C4C5"
     static let livenessfeedbackTextColor: String = "#000000"
-    static let livenessRecordingTextColor: String = "#FFFFFF"
-    static let livenessRecordingTimerColor: String = "#FF5555"
+    static let livenessRecordingTextColor: String = "#555555"
+    static let livenessRecordingTimerColor: String = "#555555"
     static var isLivenessGetVideo = false
     static var livenessVideo = ""
 }

@@ -21,6 +21,8 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     
     var accuraCameraWrapper: AccuraCameraWrapper? = nil
     
+    var isbothSideAvailable = false
+    
     var shareScanningListing: NSMutableDictionary = [:]
     
     var documentImage: UIImage? = nil
@@ -93,6 +95,10 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     var isBarCode = false
     var audioPath: URL? = nil
     
+    var recogFace: UIImage?
+    var recogFront: UIImage?
+    var recogBack: UIImage?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -107,7 +113,7 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         } else {
             // Fallback on earlier versions
         }
-        
+        shareScanningListing = [:]
         isFirstTimeStartCamara = false
         isCheckFirstTime = false
         viewStatusBar.backgroundColor = UIColor(red: 231.0 / 255.0, green: 52.0 / 255.0, blue: 74.0 / 255.0, alpha: 1.0)
@@ -184,6 +190,9 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         self.shareScanningListing.removeAllObjects()
         isBackSide = false
         isCheckMRZData = false
+        recogFace = nil
+        recogFront = nil
+        recogBack = nil
         //         self.ChangedOrientation()
         if self.accuraCameraWrapper == nil {
             setOCRData()
@@ -191,12 +200,6 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         
         if isFirstTimeStartCamara!{
             accuraCameraWrapper?.startCamera()
-        }
-        if(isBarCode){
-            _lblTitle.text = "Scan Barcode"
-        }
-        else{
-            _lblTitle.text = "Scan front side of Document"
         }
     }
     
@@ -237,14 +240,14 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         dictFaceDataBack.removeAllObjects()
         dictFaceDataFront.removeAllObjects()
         dictScanningMRZData.removeAllObjects()
-        closeMe()
+        self.win!.rootViewController = cordovaViewController!
         //        self.navigationController?.popViewController(animated: true)
     }
     @IBAction func buttonFlipAction(_ sender: UIButton) {
         accuraCameraWrapper?.switchCamera()
     }
     func closeMe() {
-        self.win!.rootViewController = cordovaViewController!
+        backAction("")
     }
     var selectedTypes: BarcodeType = .all
     func setSelectedTypes(types: String) {
@@ -302,30 +305,8 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         imgPhoto = nil
         isFrontDataComplate = false
         isBackDataComplate = false
-        DispatchQueue.main.async { [self] in
-            if self.cardType == 3 {
-                self._lblTitle.text = ScanConfigs.SCAN_TITLE_MRZ_PDF417_FRONT_BANKCARD
-                if ScanConfigs.accuraConfigs.index(forKey: "SCAN_TITLE_MRZ_PDF417_FRONT_BANKCARD") != nil {
-                    self._lblTitle.text = ScanConfigs.accuraConfigs["SCAN_TITLE_MRZ_PDF417_FRONT_BANKCARD"] as! String
-                }
-            } else {
-                if !isBarCode {
-                    if ScanConfigs.accuraConfigs.index(forKey: "rg_setBackSide") != nil {
-                        self._lblTitle.text = ScanConfigs.SCAN_TITLE_MRZ_PDF417_FRONT_DEFAULT
-                        if ScanConfigs.accuraConfigs.index(forKey: "SCAN_TITLE_MRZ_PDF417_FRONT_DEFAULT") != nil {
-                            self._lblTitle.text = ScanConfigs.accuraConfigs["SCAN_TITLE_MRZ_PDF417_FRONT_DEFAULT"] as! String
-                        }
-                    } else {
-                        self._lblTitle.text = ScanConfigs.SCAN_TITLE_MRZ_PDF417_BACK
-                        if ScanConfigs.accuraConfigs.index(forKey: "SCAN_TITLE_MRZ_PDF417_BACK") != nil {
-                            self._lblTitle.text = ScanConfigs.accuraConfigs["SCAN_TITLE_MRZ_PDF417_BACK"] as! String
-                        }
-                    }
-                }
-                
-                
-            }
-            
+        if (ScanConfigs.accuraConfigs.index(forKey: "rg_setBackSide") == nil) {
+//            ScanConfigs.accuraConfigs["rg_setBackSide"] = true
         }
         
         if isBarCode {
@@ -333,71 +314,83 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
 //            if ScanConfigs.barcodeType == "PDF417" {
 //                isBarcodeEnabled = false
 //            }
-            setSelectedTypes(types: ScanConfigs.barcodeType!)
-            accuraCameraWrapper = AccuraCameraWrapper.init(delegate: self, andImageView: _imageView, andLabelMsg: self.lblOCRMsg, andurl: 1, isBarcodeEnable: self.isBarcodeEnabled, countryID: Int32(self.countryid), setBarcodeType: self.selectedTypes)
-        } else {
-            accuraCameraWrapper = AccuraCameraWrapper.init(delegate: self, andImageView: _imageView, andLabelMsg: lblOCRMsg, andurl: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String, cardId: Int32(cardid), countryID: Int32(countryid), isScanOCR: isCheckScanOCR, andLabelMsgTop: _lblTitle, andcardName: docName, andcardType: Int32(cardType), andMRZDocType: Int32(MRZDocType))
-            if (ScanConfigs.accuraConfigs.index(forKey: "rg_setBackSide") != nil) {
-                accuraCameraWrapper?.andCardSide(.BACK_CARD_SCAN)
+            
+            if cardType == 1 {
+                isBarcodeEnabled = false
+                selectedTypes = .all
             } else {
-                accuraCameraWrapper?.andCardSide(.FRONT_CARD_SCAN)
+                setSelectedTypes(types: ScanConfigs.barcodeType!)
             }
-            self.accuraCameraWrapper?.setBlurPercentage(EnginConfigs.rg_setBlurPercentage)
-            if (ScanConfigs.accuraConfigs.index(forKey: "rg_setBlurPercentage") != nil) {
-                self.accuraCameraWrapper?.setBlurPercentage(ScanConfigs.accuraConfigs["rg_setBlurPercentage"] as! Int32)
-            }
+            accuraCameraWrapper = AccuraCameraWrapper.init(delegate: self, andImageView: _imageView, andLabelMsg: self.lblOCRMsg, andurl: 1, isBarcodeEnable: self.isBarcodeEnabled, countryID: Int32(self.countryid), setBarcodeType: self.selectedTypes)
             
-            self.accuraCameraWrapper?.setFaceBlurPercentage(EnginConfigs.rg_setFaceBlurPercentage)
-            if (ScanConfigs.accuraConfigs.index(forKey: "rg_setFaceBlurPercentage") != nil) {
-                self.accuraCameraWrapper?.setFaceBlurPercentage(ScanConfigs.accuraConfigs["rg_setFaceBlurPercentage"] as! Int32)
-            }
-            
-            self.accuraCameraWrapper?.setFaceBlurPercentage(EnginConfigs.rg_setFaceBlurPercentage)
-            if (ScanConfigs.accuraConfigs.index(forKey: "rg_setFaceBlurPercentage") != nil) {
-                self.accuraCameraWrapper?.setFaceBlurPercentage(ScanConfigs.accuraConfigs["rg_setFaceBlurPercentage"] as! Int32)
-            }
-            var gl_0 = EnginConfigs.rg_setGlarePercentage_0
-            var gl_1 = EnginConfigs.rg_setGlarePercentage_1
-            if (ScanConfigs.accuraConfigs.index(forKey: "rg_setGlarePercentage_0") != nil) {
-                gl_0 = ScanConfigs.accuraConfigs["rg_setGlarePercentage_0"] as! Int32
-            }
-            if (ScanConfigs.accuraConfigs.index(forKey: "rg_setGlarePercentage_1") != nil) {
-                gl_1 = ScanConfigs.accuraConfigs["rg_setGlarePercentage_1"] as! Int32
-            }
-            self.accuraCameraWrapper?.setGlarePercentage(gl_0, intMax: gl_1)
-            
-            self.accuraCameraWrapper?.setCheckPhotoCopy(EnginConfigs.rg_isCheckPhotoCopy)
-            if (ScanConfigs.accuraConfigs.index(forKey: "rg_isCheckPhotoCopy") != nil) {
-                self.accuraCameraWrapper?.setCheckPhotoCopy(ScanConfigs.accuraConfigs["rg_isCheckPhotoCopy"] as! Bool)
-            }
-            
-            self.accuraCameraWrapper?.setHologramDetection(EnginConfigs.rg_SetHologramDetection)
-            if (ScanConfigs.accuraConfigs.index(forKey: "rg_SetHologramDetection") != nil) {
-                self.accuraCameraWrapper?.setCheckPhotoCopy(ScanConfigs.accuraConfigs["rg_SetHologramDetection"] as! Bool)
-            }
-            
-            self.accuraCameraWrapper?.setLowLightTolerance(EnginConfigs.rg_setLowLightTolerance)
-            if (ScanConfigs.accuraConfigs.index(forKey: "rg_setLowLightTolerance") != nil) {
-                self.accuraCameraWrapper?.setLowLightTolerance(ScanConfigs.accuraConfigs["rg_setLowLightTolerance"] as! Int32)
-            }
-            
-            self.accuraCameraWrapper?.setMotionThreshold(EnginConfigs.rg_setMotionThreshold)
-            if (ScanConfigs.accuraConfigs.index(forKey: "rg_setMotionThreshold") != nil) {
-                self.accuraCameraWrapper?.setMotionThreshold(ScanConfigs.accuraConfigs["rg_setMotionThreshold"] as! Int32)
-            }
-            
-
-            
-            self.accuraCameraWrapper?.setMotionThreshold(EnginConfigs.rg_setMotionThreshold)
-            if (ScanConfigs.accuraConfigs.index(forKey: "rg_setMotionThreshold") != nil) {
-                self.accuraCameraWrapper?.setMotionThreshold(ScanConfigs.accuraConfigs["rg_setMotionThreshold"] as! Int32)
+        } else {
+            startOCRCamera()
+            if (isNeedBackSideFirst()) {
+                accuraCameraWrapper!.cardSide(.BACK_CARD_SCAN)
+            } else {
+                accuraCameraWrapper!.cardSide(.FRONT_CARD_SCAN)
             }
         }
-        self.accuraCameraWrapper?.showLogFile(false)
+        
         if (ScanConfigs.accuraConfigs.index(forKey: "enableLogs") != nil) {
             if let needLogs = ScanConfigs.accuraConfigs["enableLogs"] as? Bool {
                 self.accuraCameraWrapper?.showLogFile(needLogs)
             }
+        }
+    }
+    
+    func startOCRCamera() {
+        accuraCameraWrapper = AccuraCameraWrapper.init(delegate: self, andImageView: _imageView, andLabelMsg: lblOCRMsg, andurl: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String, cardId: Int32(cardid), countryID: Int32(countryid), isScanOCR: isCheckScanOCR, andcardName: docName, andcardType: Int32(cardType), andMRZDocType: Int32(MRZDocType))
+        accuraCameraWrapper?.setMinFrameForValidate(5)
+        self.accuraCameraWrapper?.setBlurPercentage(EnginConfigs.rg_setBlurPercentage)
+        if (ScanConfigs.accuraConfigs.index(forKey: "rg_setBlurPercentage") != nil) {
+            self.accuraCameraWrapper?.setBlurPercentage(ScanConfigs.accuraConfigs["rg_setBlurPercentage"] as! Int32)
+        }
+        
+        self.accuraCameraWrapper?.setFaceBlurPercentage(EnginConfigs.rg_setFaceBlurPercentage)
+        if (ScanConfigs.accuraConfigs.index(forKey: "rg_setFaceBlurPercentage") != nil) {
+            self.accuraCameraWrapper?.setFaceBlurPercentage(ScanConfigs.accuraConfigs["rg_setFaceBlurPercentage"] as! Int32)
+        }
+        
+        self.accuraCameraWrapper?.setFaceBlurPercentage(EnginConfigs.rg_setFaceBlurPercentage)
+        if (ScanConfigs.accuraConfigs.index(forKey: "rg_setFaceBlurPercentage") != nil) {
+            self.accuraCameraWrapper?.setFaceBlurPercentage(ScanConfigs.accuraConfigs["rg_setFaceBlurPercentage"] as! Int32)
+        }
+        var gl_0 = EnginConfigs.rg_setGlarePercentage_0
+        var gl_1 = EnginConfigs.rg_setGlarePercentage_1
+        if (ScanConfigs.accuraConfigs.index(forKey: "rg_setGlarePercentage_0") != nil) {
+            gl_0 = ScanConfigs.accuraConfigs["rg_setGlarePercentage_0"] as! Int32
+        }
+        if (ScanConfigs.accuraConfigs.index(forKey: "rg_setGlarePercentage_1") != nil) {
+            gl_1 = ScanConfigs.accuraConfigs["rg_setGlarePercentage_1"] as! Int32
+        }
+        self.accuraCameraWrapper?.setGlarePercentage(gl_0, intMax: gl_1)
+        
+        self.accuraCameraWrapper?.setCheckPhotoCopy(EnginConfigs.rg_isCheckPhotoCopy)
+        if (ScanConfigs.accuraConfigs.index(forKey: "rg_isCheckPhotoCopy") != nil) {
+            self.accuraCameraWrapper?.setCheckPhotoCopy(ScanConfigs.accuraConfigs["rg_isCheckPhotoCopy"] as! Bool)
+        }
+        
+        self.accuraCameraWrapper?.setHologramDetection(EnginConfigs.rg_SetHologramDetection)
+        if (ScanConfigs.accuraConfigs.index(forKey: "rg_SetHologramDetection") != nil) {
+            self.accuraCameraWrapper?.setCheckPhotoCopy(ScanConfigs.accuraConfigs["rg_SetHologramDetection"] as! Bool)
+        }
+        
+        self.accuraCameraWrapper?.setLowLightTolerance(EnginConfigs.rg_setLowLightTolerance)
+        if (ScanConfigs.accuraConfigs.index(forKey: "rg_setLowLightTolerance") != nil) {
+            self.accuraCameraWrapper?.setLowLightTolerance(ScanConfigs.accuraConfigs["rg_setLowLightTolerance"] as! Int32)
+        }
+        
+        self.accuraCameraWrapper?.setMotionThreshold(EnginConfigs.rg_setMotionThreshold)
+        if (ScanConfigs.accuraConfigs.index(forKey: "rg_setMotionThreshold") != nil) {
+            self.accuraCameraWrapper?.setMotionThreshold(ScanConfigs.accuraConfigs["rg_setMotionThreshold"] as! Int32)
+        }
+        
+
+        
+        self.accuraCameraWrapper?.setMotionThreshold(EnginConfigs.rg_setMotionThreshold)
+        if (ScanConfigs.accuraConfigs.index(forKey: "rg_setMotionThreshold") != nil) {
+            self.accuraCameraWrapper?.setMotionThreshold(ScanConfigs.accuraConfigs["rg_setMotionThreshold"] as! Int32)
         }
     }
 
@@ -1739,9 +1732,85 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         }
         
     }
+    var ocrFrontModeResult:ResultModel?
+    var ocrBackModeResult:ResultModel?
 }
 
 extension ViewController: VideoCameraWrapperDelegate {
+    func reco_titleMessage(_ messageCode: Int32) {
+        var msg: String = ""
+        switch messageCode {
+            case SCAN_TITLE_OCR_FRONT:
+                msg = ScanConfigs.SCAN_TITLE_OCR_FRONT
+                if ScanConfigs.accuraConfigs.index(forKey: "SCAN_TITLE_OCR_FRONT") != nil {
+                    msg = ScanConfigs.accuraConfigs["SCAN_TITLE_OCR_FRONT"] as! String
+                }
+//                if isNeedBackSideFirst() {
+//                    msg = ScanConfigs.SCAN_TITLE_OCR_BACK
+//                    if ScanConfigs.accuraConfigs.index(forKey: "SCAN_TITLE_OCR_BACK") != nil {
+//                        msg = ScanConfigs.accuraConfigs["SCAN_TITLE_OCR_BACK"] as! String
+//                    }
+//                }
+                msg = msg.replacingOccurrences(of: "%@", with: docName)
+                break
+            case SCAN_TITLE_OCR_BACK:
+                msg = ScanConfigs.SCAN_TITLE_OCR_BACK
+                if ScanConfigs.accuraConfigs.index(forKey: "SCAN_TITLE_OCR_BACK") != nil {
+                    msg = ScanConfigs.accuraConfigs["SCAN_TITLE_OCR_BACK"] as! String
+                }
+//                if isNeedBackSideFirst() {
+//                    msg = ScanConfigs.SCAN_TITLE_OCR_FRONT
+//                    if ScanConfigs.accuraConfigs.index(forKey: "SCAN_TITLE_OCR_FRONT") != nil {
+//                        msg = ScanConfigs.accuraConfigs["SCAN_TITLE_OCR_FRONT"] as! String
+//                    }
+//                }
+                msg = msg.replacingOccurrences(of: "%@", with: docName)
+                break
+            case  SCAN_TITLE_OCR:
+                msg = ScanConfigs.SCAN_TITLE_OCR
+                if ScanConfigs.accuraConfigs.index(forKey: "SCAN_TITLE_OCR") != nil {
+                    msg = ScanConfigs.accuraConfigs["SCAN_TITLE_OCR"] as! String
+                }
+                msg = msg.replacingOccurrences(of: "%@", with: docName)
+                break
+            case SCAN_TITLE_MRZ_PDF417_FRONT:
+                msg = "Scan Front Side of Document"
+                break
+            case SCAN_TITLE_MRZ_PDF417_BACK:
+                msg = ScanConfigs.SCAN_TITLE_MRZ_PDF417_FRONT
+                if ScanConfigs.accuraConfigs.index(forKey: "SCAN_TITLE_MRZ_PDF417_FRONT") != nil {
+                    msg = ScanConfigs.accuraConfigs["SCAN_TITLE_MRZ_PDF417_FRONT"] as! String
+                }
+                if isNeedBackSideFirst() {
+                    msg = ScanConfigs.SCAN_TITLE_MRZ_PDF417_BACK
+                    if ScanConfigs.accuraConfigs.index(forKey: "SCAN_TITLE_MRZ_PDF417_BACK") != nil {
+                        msg = ScanConfigs.accuraConfigs["SCAN_TITLE_MRZ_PDF417_BACK"] as! String
+                    }
+                }
+                break
+            case SCAN_TITLE_DLPLATE:
+                msg = ScanConfigs.SCAN_TITLE_DLPLATE
+                if ScanConfigs.accuraConfigs.index(forKey: "SCAN_TITLE_DLPLATE") != nil {
+                    msg = ScanConfigs.accuraConfigs["SCAN_TITLE_DLPLATE"] as! String
+                }
+                break
+            case SCAN_TITLE_BARCODE:
+                msg = ScanConfigs.SCAN_TITLE_BARCODE
+                if ScanConfigs.accuraConfigs.index(forKey: "SCAN_TITLE_BARCODE") != nil {
+                    msg = ScanConfigs.accuraConfigs["SCAN_TITLE_BARCODE"] as! String
+                }
+                break
+            case SCAN_TITLE_BANKCARD:
+                msg = ScanConfigs.SCAN_TITLE_BANKCARD
+                if ScanConfigs.accuraConfigs.index(forKey: "SCAN_TITLE_BANKCARD") != nil {
+                    msg = ScanConfigs.accuraConfigs["SCAN_TITLE_BANKCARD"] as! String
+                }
+                break
+            default:
+                break
+        }
+        _lblTitle.text = msg
+    }
     
     func onUpdateLayout(_ frameSize: CGSize, _ borderRatio: Float) {
         var width: CGFloat = 0.0
@@ -1797,8 +1866,182 @@ extension ViewController: VideoCameraWrapperDelegate {
         )
         closeMe()
     }
+    func getMRZKeyValue() -> [String: String] {
+        var mrzData:[String: String] = [:]
+        if let line =  shareScanningListing["lines"] as? String {
+            mrzData["MRZ"] = line
+
+        }
+        if let givenname =  shareScanningListing["givenname"] as? String {
+            mrzData["First Name"] = givenname
+        } else if let givenname =  shareScanningListing["givenNames"] as? String {
+            mrzData["First Name"] = givenname
+        }
+        
+        if let surname =  shareScanningListing["surname"] as? String {
+            mrzData["Last Name"] = surname
+            
+        } else if let surname =  shareScanningListing["surName"] as? String {
+            mrzData["Last Name"] = surname
+            
+        }
+        
+        if let docnumber =  shareScanningListing["docnumber"] as? String {
+            mrzData["Document No."] = docnumber
+
+        } else if let docnumber =  shareScanningListing["docNumber"] as? String {
+            mrzData["Document No."] = docnumber
+
+        }
+        
+        if let docchecksum =  shareScanningListing["docchecksum"] as? String {
+            mrzData["Document check No."] = docchecksum
+        } else if let docchecksum =  shareScanningListing["docCheckSum"] as? String {
+            mrzData["Document check No."] = docchecksum
+        }
+        
+        if let correctdocchecksum =  shareScanningListing["correctdocchecksum"] as? String {
+            mrzData["Correct Document check No."] = correctdocchecksum
+
+        } else if let correctdocchecksum =  shareScanningListing["correctPassportChecksum"] as? String {
+            mrzData["Correct Document check No."] = correctdocchecksum
+
+        }
+        if let contri =  shareScanningListing["country"] as? String {
+            mrzData["Country"] = contri
+
+        }
+        if let nationality =  shareScanningListing["nationality"] as? String {
+            mrzData["Nationality"] = nationality
+
+        }
+        if let birth =  shareScanningListing["birth"] as? String {
+            mrzData["Date of Birth"] = birth
+
+        }
+        if let birthchecksum =  shareScanningListing["birthchecksum"] as? String {
+            mrzData["Birth Check No."] = birthchecksum
+
+        } else if let birthchecksum =  shareScanningListing["birthCheckSum"] as? String {
+            mrzData["Birth Check No."] = birthchecksum
+
+        }
+        if let correctbirthchecksum =  shareScanningListing["correctbirthchecksum"] as? String {
+            mrzData["Correct Birth Check No."] = correctbirthchecksum
+
+        } else if let correctbirthchecksum =  shareScanningListing["correctBirthChecksum"] as? String {
+            mrzData["Correct Birth Check No."] = correctbirthchecksum
+
+        }
+        if let expirationdate =  shareScanningListing["expirationdate"] as? String {
+            mrzData["Date of Expiry"] = expirationdate
+
+        } else if let expirationdate =  shareScanningListing["expirationDate"] as? String {
+            mrzData["Date of Expiry"] = expirationdate
+
+        }
+        if let expirationchecksum =  shareScanningListing["expirationchecksum"] as? String {
+            mrzData["Expiration Check No."] = expirationchecksum
+
+        } else if let expirationchecksum =  shareScanningListing["expirationChecksum"] as? String {
+            mrzData["Expiration Check No."] = expirationchecksum
+
+        }
+        if let correctexpirationchecksum =  shareScanningListing["correctexpirationchecksum"] as? String {
+            mrzData["Correct Expiration Check No."] = correctexpirationchecksum
+
+        } else if let correctexpirationchecksum =  shareScanningListing["correctExpirationChecksum"] as? String {
+            mrzData["Correct Expiration Check No."] = correctexpirationchecksum
+
+        }
+        if let issuedate =  shareScanningListing["issuedate"] as? String {
+            mrzData["Date Of Issue"] = issuedate
+
+        } else if let issuedate =  shareScanningListing["issueDate"] as? String {
+            mrzData["Date Of Issue"] = issuedate
+
+        }
+        if let departmentnumber =  shareScanningListing["departmentnumber"] as? String {
+            mrzData["Department No."] = departmentnumber
+
+        }else if let departmentnumber =  shareScanningListing["departmentNumber"] as? String {
+            mrzData["Department No."] = departmentnumber
+
+        }
+        if let otherid =  shareScanningListing["otherid"] as? String {
+            mrzData["Other ID"] = otherid
+
+        } else if let otherid =  shareScanningListing["otherId"] as? String {
+            mrzData["Other ID"] = otherid
+
+        }
+        
+        if let otheridchecksum =  shareScanningListing["otheridchecksum"] as? String {
+            mrzData["Other ID Check"] = otheridchecksum
+
+        } else if let otheridchecksum =  shareScanningListing["otherIdChecksum"] as? String {
+            mrzData["Other ID Check"] = otheridchecksum
+
+        }
+        if let secondrowchecksum =  shareScanningListing["secondrowchecksum"] as? String {
+            mrzData["Second Row Check No."] = secondrowchecksum
+
+        } else if let secondrowchecksum =  shareScanningListing["secondRowChecksum"] as? String {
+            mrzData["Second Row Check No."] = secondrowchecksum
+
+        }
+        if let correctsecondrowchecksum =  shareScanningListing["correctsecondrowchecksum"] as? String {
+            mrzData["Correct Second Row Check No."] = correctsecondrowchecksum
+
+        } else if let correctsecondrowchecksum =  shareScanningListing["correctSecondRowChecksum"] as? String {
+            mrzData["Correct Second Row Check No."] = correctsecondrowchecksum
+
+        }
+        mrzData["sex"] = ""
+        if let sx = shareScanningListing["sex"] as? String {
+            if sx == "F" {
+                mrzData["sex"] = "Female"
+            } else if sx == "M" {
+                mrzData["sex"] = "Male"
+            }
+        }
     
+        return mrzData
+    }
     func resultData(_ resultmodel: ResultModel!) {
+        if isbothSideAvailable {
+            if isNeedBackSideFirst() {
+                accuraCameraWrapper?.cardSide(.FRONT_CARD_SCAN)
+                if(resultmodel.arrayocrFrontSideDataKey.count == 0) {
+                    flipAnimation()
+//                    playSound()
+                    return
+                }
+            } else {
+                accuraCameraWrapper?.cardSide(.BACK_CARD_SCAN)
+                if(resultmodel.arrayocrBackSideDataKey.count == 0) {
+                    flipAnimation()
+//                    playSound()
+                    return
+                }
+            }
+            
+        }
+        if isNeedBackSideFirst() {
+//            if ocrBackModeResult == nil {
+//                ocrBackModeResult = resultmodel
+//                flipAnimation()
+//                startOCRCamera()
+//                accuraCameraWrapper?.cardSide(.FRONT_CARD_SCAN)
+//                accuraCameraWrapper?.startCamera()
+//                return
+//            }
+//            resultmodel.ocrFaceBackData = ocrBackModeResult!.ocrFaceBackData
+//            resultmodel.backSideImage = ocrBackModeResult!.backSideImage
+//            resultmodel.arrayocrBackSideDataKey = ocrBackModeResult!.arrayocrBackSideDataKey
+//            resultmodel.arrayocrBackSideDataValue = ocrBackModeResult!.arrayocrBackSideDataValue
+            
+        }
         playSound()
         var results:[String: Any] = [:]
         var frontData:[String: Any] = [:]
@@ -1853,28 +2096,17 @@ extension ViewController: VideoCameraWrapperDelegate {
         for data in dictSecuretyData {
             frontData[data.key as! String] = data.value as? String ?? data.value as? Int ?? ""
         }
-        
-        //        self.dictOCRTypeData = resultmodel.ocrTypeData
-        //        for data in dictOCRTypeData {
-        //            frontData[data.key as! String] = data.value as? String ?? data.value as? Int ?? ""
-        //        }
+
         self.arrFrontResultKey = resultmodel.arrayocrFrontSideDataKey as! [String]
         self.arrFrontResultValue = resultmodel.arrayocrFrontSideDataValue as! [String]
         for i in arrFrontResultKey.indices {
             if arrFrontResultKey[i] != "MRZ" {
                 frontData[arrFrontResultKey[i]] = arrFrontResultValue[i]
             } else {
-                self.dictScanningMRZData = resultmodel.shareScanningMRZListing
-                for data in dictScanningMRZData {
-                    if let key = data.key as? String {
-                        if key != "lines" {
-                            mrzData[data.key as! String] = data.value as? String ?? data.value as? Int ?? ""
-                        } else {
-                            mrzData["MRZ"] = data.value as? String ?? data.value as? Int ?? ""
-                        }
-                    }
-                }
-                mrzData["personalNumber2"] = dictScanningMRZData["personalNumber2"]
+                self.shareScanningListing = resultmodel.shareScanningMRZListing
+                mrzData = self.getMRZKeyValue()
+                mrzData["Other Id2"] = shareScanningListing["personalNumber2"]
+                mrzData["Document Type"] = "Card"
             }
         }
         
@@ -1884,17 +2116,10 @@ extension ViewController: VideoCameraWrapperDelegate {
             if arrBackResultKey[i] != "MRZ" {
                 backData[arrBackResultKey[i]] = arrBackResultValue[i]
             } else {
-                self.dictScanningMRZData = resultmodel.shareScanningMRZListing
-                for data in dictScanningMRZData {
-                    if let key = data.key as? String {
-                        if key != "lines" {
-                            mrzData[data.key as! String] = data.value as? String ?? data.value as? Int ?? ""
-                        } else {
-                            mrzData["MRZ"] = data.value as? String ?? data.value as? Int ?? ""
-                        }
-                    }
-                }
-                mrzData["personalNumber2"] = dictScanningMRZData["personalNumber2"]
+                self.shareScanningListing = resultmodel.shareScanningMRZListing
+                mrzData = self.getMRZKeyValue()
+                mrzData["Other Id2"] = shareScanningListing["personalNumber2"]
+                mrzData["Document Type"] = "Card"
             }
         }
         
@@ -1919,20 +2144,23 @@ extension ViewController: VideoCameraWrapperDelegate {
         if !self.isflipanimation!{
             self.isflipanimation = true
             self.flipAnimation()
-            
-            if ScanConfigs.accuraConfigs.index(forKey: "rg_setBackSide") != nil {
-                self._lblTitle.text = ScanConfigs.SCAN_TITLE_MRZ_PDF417_FRONT_DEFAULT
-                if ScanConfigs.accuraConfigs.index(forKey: "SCAN_TITLE_MRZ_PDF417_FRONT_DEFAULT") != nil {
-                    self._lblTitle.text = ScanConfigs.accuraConfigs["SCAN_TITLE_MRZ_PDF417_FRONT_DEFAULT"] as! String
-                }
-            } else {
-                self._lblTitle.text = ScanConfigs.SCAN_TITLE_MRZ_PDF417_BACK
-                if ScanConfigs.accuraConfigs.index(forKey: "SCAN_TITLE_MRZ_PDF417_BACK") != nil {
-                    self._lblTitle.text = ScanConfigs.accuraConfigs["SCAN_TITLE_MRZ_PDF417_BACK"] as! String
-                }
-            }
         }
         
+    }
+    
+    func isBothSideAvailable(_ isBothAvailable: Bool) {
+        isbothSideAvailable = isBothAvailable
+        if !isBothAvailable && isNeedBackSideFirst(){
+            let pluginResult = CDVPluginResult(
+                status: CDVCommandStatus_ERROR,
+                messageAs: "Back Side not available"
+            )
+            self.commandDelegate!.send(
+                pluginResult,
+                callbackId: gl.ocrClId
+            )
+            closeMe()
+        }
     }
     
     func playSound() {
@@ -1948,20 +2176,78 @@ extension ViewController: VideoCameraWrapperDelegate {
         }
     }
     
-    func recognizeSucceedBarcode(_ message: String!, barcodeImage: UIImage!) {
+    func recognizeSucceedBarcode(_ message: String!, back BackSideImage: UIImage!, frontImage FrontImage: UIImage!, face FaceImage: UIImage!) {
         var results:[String: Any] = [:]
         var frontData:[String: Any] = [:]
         var backData:[String: Any] = [:]
-        if(isBarcodeEnabled){
+        if(!isBarcodeEnabled) {
+            //display result of barcode
+            if isNeedBackSideFirst() {
+                if (FrontImage == nil) {
+                   self.accuraCameraWrapper?.cardSide(.FRONT_CARD_SCAN)
+                   self.flipAnimation()
+                   return
+               } else if(BackSideImage == nil) {
+                     self.accuraCameraWrapper?.cardSide(.BACK_CARD_SCAN)
+                self._lblTitle.text = ScanConfigs.SCAN_TITLE_OCR_BACK.replacingOccurrences(of: "%@", with: "Card")
+                if ScanConfigs.accuraConfigs.index(forKey: "SCAN_TITLE_OCR_BACK") != nil {
+                    self._lblTitle.text = (ScanConfigs.accuraConfigs["SCAN_TITLE_OCR_BACK"] as! String).replacingOccurrences(of: "%@", with: "Card")
+                }
+                     self.flipAnimation()
+                   return
+               }else {
+                   //Display Result
+               }
+            } else {
+                if(BackSideImage == nil) {
+                     self.accuraCameraWrapper?.cardSide(.BACK_CARD_SCAN)
+                    self._lblTitle.text = ScanConfigs.SCAN_TITLE_OCR_BACK.replacingOccurrences(of: "%@", with: "Card")
+                    if ScanConfigs.accuraConfigs.index(forKey: "SCAN_TITLE_OCR_BACK") != nil {
+                        self._lblTitle.text = (ScanConfigs.accuraConfigs["SCAN_TITLE_OCR_BACK"] as! String).replacingOccurrences(of: "%@", with: "Card")
+                    }
+                     self.flipAnimation()
+                   return
+               } else if (FrontImage == nil) {
+                   self.accuraCameraWrapper?.cardSide(.FRONT_CARD_SCAN)
+                   self.flipAnimation()
+                   return
+               }else {
+                   //Display Result
+               }
+            }
+
+            
+       }
             let isPDF = self.decodework(type: message)
             self.accuraCameraWrapper?.stopCamera()
             playSound()
-            if let frontUri = ACCURAService.getImageUri(img: barcodeImage, name: nil) {
-                results["front_img"] = frontUri
+            if cardType == 1 {
+                if FaceImage != nil{
+                    if let frontUri = ACCURAService.getImageUri(img: FaceImage!, name: nil) {
+                        results["face"] = frontUri
+                    }
+                }
+                if FrontImage != nil{
+                    if let frontUri = ACCURAService.getImageUri(img: FrontImage!, name: nil) {
+                        results["front_img"] = frontUri
+                    }
+                }
+                if BackSideImage != nil{
+                    if let frontUri = ACCURAService.getImageUri(img: BackSideImage!, name: nil) {
+                        results["back_img"] = frontUri
+                    }
+                }
+            } else {
+                if let frontUri = ACCURAService.getImageUri(img: FrontImage!, name: nil) {
+                    results["front_img"] = frontUri
+                }
             }
+            
             if(isPDF)
             {
-                gl.type = "BARCODEPDF417"
+                if cardType != 1 {
+                    gl.type = "BARCODEPDF417"
+                }
                 let kArr = keyArr as! [String]
                 let valArr = valueArr as! [String]
                 for i in kArr.indices {
@@ -1973,7 +2259,7 @@ extension ViewController: VideoCameraWrapperDelegate {
                 gl.type = "BARCODE"
                 frontData["barcode"] = message
             }
-        }
+        
         results["front_data"] = frontData
         results["back_data"] = backData
         results["type"] = gl.type
@@ -2006,85 +2292,29 @@ extension ViewController: VideoCameraWrapperDelegate {
         closeMe()
     }
     
+    func isNeedBackSideFirst() -> Bool {
+        var result = false
+        if ScanConfigs.accuraConfigs.index(forKey: "rg_setBackSide") != nil {
+            if let isBackSideFirst = ScanConfigs.accuraConfigs["rg_setBackSide"] as? Bool {
+                result = isBackSideFirst
+            }
+        }
+        return result
+    }
+
     func recognizeSucceed(_ scanedInfo: NSMutableDictionary!, recType: RecType, bRecDone: Bool, bFaceReplace: Bool, bMrzFirst: Bool, photoImage: UIImage, docFrontImage: UIImage!, docbackImage: UIImage!) {
-        var results:[String: Any] = [:]
-        var frontData:[String: Any] = [:]
-        var backData:[String: Any] = [:]
+        
         if(bMrzFirst)
         
         {
-            if isBackSide!{
-                
-                documentImage = docbackImage
-                if(docFrontImage != nil) {
-                    self.docfrontImage = docFrontImage
-                }
-            }else{
-                documentImage = nil
-                self.docfrontImage = docFrontImage
-                
-            }
             self.imageRotation(rotation: "BackImg")
             self.accuraCameraWrapper?.stopCamera()
             self._imageView.image = nil
             
             playSound()
             
-            self.shareScanningListing = scanedInfo
-            for (key, value) in scanedInfo {
-                let k = key as! String
-                if let val = value as? String {
-                    if k != "lines" {
-                        frontData[k] = val
-                    } else {
-                        frontData["MRZ"] = val
-                    }
-                    
-                }
-            }
-            frontData["personalNumber2"] = scanedInfo["personalNumber2"]
-            let shareScanningListing: NSMutableDictionary = self.shareScanningListing
-            if documentImage != nil{
-                shareScanningListing["documentImage"] = documentImage?.jpegData(compressionQuality: 1.0)
-            }
-            shareScanningListing["docfrontImage"] = docfrontImage?.jpegData(compressionQuality: 1.0)
-            shareScanningListing["fontImageRotation"] = frontImageRotation
-            shareScanningListing["backImageRotation"] = backImageRotation
-            if photoImage != nil{
-                if let frontUri = ACCURAService.getImageUri(img: photoImage, name: nil) {
-                    results["face"] = frontUri
-                }
-            }
-            if docFrontImage != nil{
-                if let frontUri = ACCURAService.getImageUri(img: docFrontImage, name: nil) {
-                    results["front_img"] = frontUri
-                }
-            }
-            if docbackImage != nil{
-                if let frontUri = ACCURAService.getImageUri(img: docbackImage, name: nil) {
-                    results["back_img"] = frontUri
-                }
-            }
-            
-            //            let vc : ShowResultVC = self.storyboard?.instantiateViewController(withIdentifier: "ShowResultVC") as! ShowResultVC
-            //            vc.scannedData = shareScanningListing
-            //            vc.stCountryCardName = stCountryCardName
-            //            vc.imageCountryCard = cardImage
-            //            vc.isBackSide = isBackSide
-            //            vc.pageType = .ScanPassport
-            //            self.navigationController?.pushViewController(vc, animated: true)
-            results["front_data"] = frontData
-            results["back_data"] = backData
-            results["type"] = "MRZ"
-            let pluginResult = CDVPluginResult(
-                status: CDVCommandStatus_OK,
-                messageAs: results
-            )
-            self.commandDelegate!.send(
-                pluginResult,
-                callbackId: gl.ocrClId
-            )
-            closeMe()
+            self.shareScanningListing.addEntries(from: scanedInfo as! [AnyHashable : Any])
+            sendCordovaRecognizResults(face: photoImage, front: docFrontImage, back: docbackImage)
         }
         else{
             countface += 1
@@ -2095,25 +2325,88 @@ extension ViewController: VideoCameraWrapperDelegate {
                     self.docfrontImage = self._imageView.image
                     self.imageRotation(rotation: "FrontImage")
                     isBackSide = true
-                    if ScanConfigs.accuraConfigs.index(forKey: "rg_setBackSide") != nil {
-                        self._lblTitle.text = ScanConfigs.SCAN_TITLE_MRZ_PDF417_FRONT_DEFAULT
-                        if ScanConfigs.accuraConfigs.index(forKey: "SCAN_TITLE_MRZ_PDF417_FRONT_DEFAULT") != nil {
-                            self._lblTitle.text = ScanConfigs.accuraConfigs["SCAN_TITLE_MRZ_PDF417_FRONT_DEFAULT"] as! String
-                        }
-                    } else {
-                        self._lblTitle.text = ScanConfigs.SCAN_TITLE_MRZ_PDF417_BACK
-                        if ScanConfigs.accuraConfigs.index(forKey: "SCAN_TITLE_MRZ_PDF417_BACK") != nil {
-                            self._lblTitle.text = ScanConfigs.accuraConfigs["SCAN_TITLE_MRZ_PDF417_BACK"] as! String
-                        }
+                    
+                    self._lblTitle.text = ScanConfigs.SCAN_TITLE_OCR_BACK.replacingOccurrences(of: "%@", with: "Card")
+                    if ScanConfigs.accuraConfigs.index(forKey: "SCAN_TITLE_OCR_BACK") != nil {
+                        self._lblTitle.text = (ScanConfigs.accuraConfigs["SCAN_TITLE_OCR_BACK"] as! String).replacingOccurrences(of: "%@", with: "Card")
                     }
                     self.flipAnimation()
                     return
                 }
             }
             else{
+                self._lblTitle.text = ScanConfigs.SCAN_TITLE_OCR_BACK.replacingOccurrences(of: "%@", with: "Card")
+                if ScanConfigs.accuraConfigs.index(forKey: "SCAN_TITLE_OCR_BACK") != nil {
+                    self._lblTitle.text = (ScanConfigs.accuraConfigs["SCAN_TITLE_OCR_BACK"] as! String).replacingOccurrences(of: "%@", with: "Card")
+                }
                 return
             }
         }
+    }
+    
+    func sendCordovaRecognizResults(face: UIImage?, front: UIImage?, back: UIImage?) {
+        var results:[String: Any] = [:]
+        var frontData:[String: Any] = [:]
+        var backData:[String: Any] = [:]
+        
+        for (key, value) in shareScanningListing {
+            let k = key as! String
+            if let val = value as? String {
+                if k != "lines" {
+                    frontData[k] = val
+                } else {
+                    frontData["MRZ"] = val
+                }
+                
+            }
+        }
+        frontData = self.getMRZKeyValue()
+        frontData["Other Id2"] = shareScanningListing["personalNumber2"]
+        frontData["Document Type"] = ""
+        if MRZDocType == 1 {
+            frontData["Document Type"] = "Passport"
+        } else if (MRZDocType == 2) {
+            frontData["Document Type"] = "Card"
+        } else if (MRZDocType == 2) {
+            frontData["Document Type"] = "Visa"
+        }
+
+        if let recogFrontImg = face{
+            if let frontUri = ACCURAService.getImageUri(img: recogFrontImg, name: nil) {
+                results["face"] = frontUri
+            }
+        }
+        
+        if let recogFrontImg = front{
+            if let frontUri = ACCURAService.getImageUri(img: recogFrontImg, name: nil) {
+                results["front_img"] = frontUri
+            }
+        }
+        if let recogBackImg = back{
+            if let frontUri = ACCURAService.getImageUri(img: recogBackImg, name: nil) {
+                results["back_img"] = frontUri
+            }
+        }
+        
+        //            let vc : ShowResultVC = self.storyboard?.instantiateViewController(withIdentifier: "ShowResultVC") as! ShowResultVC
+        //            vc.scannedData = shareScanningListing
+        //            vc.stCountryCardName = stCountryCardName
+        //            vc.imageCountryCard = cardImage
+        //            vc.isBackSide = isBackSide
+        //            vc.pageType = .ScanPassport
+        //            self.navigationController?.pushViewController(vc, animated: true)
+        results["front_data"] = frontData
+        results["back_data"] = backData
+        results["type"] = "MRZ"
+        let pluginResult = CDVPluginResult(
+            status: CDVCommandStatus_OK,
+            messageAs: results
+        )
+        self.commandDelegate!.send(
+            pluginResult,
+            callbackId: gl.ocrClId
+        )
+        closeMe()
     }
     
     func recognizSuccessBankCard(_ cardDetail: NSMutableDictionary!, andBankCardImage bankCardImage: UIImage!) {

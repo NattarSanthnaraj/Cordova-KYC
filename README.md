@@ -241,6 +241,8 @@ Contact AccuraScan at contact@accurascan.com for Liveness SDK or API
 
  	 back_data: JSONObjects?,
 
+ 	 mrz_data: JSONObjects?,
+
  	 type: Recognition Type,
 
  	 face: URI?
