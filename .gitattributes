@@ -1,0 +1,2 @@
+custom-plugins/cordova-accura-kyc/src/ios/AccuraKYC.framework/AccuraKYC filter=lfs diff=lfs merge=lfs -text
+custom-plugins/cordova-accura-kyc/src/ios/with_simulator/AccuraKYC.framework/AccuraKYC filter=lfs diff=lfs merge=lfs -text
