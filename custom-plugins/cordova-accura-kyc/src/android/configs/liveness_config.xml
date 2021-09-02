@@ -43,5 +43,5 @@
     <!--// it should be match at least livenessCustomization.fmScoreThreshold.-->
     <integer name="fmScoreThreshold">50</integer>
     <string name="feedbackFMFailed">Face not matched</string>
-    <string name="liveness_url">https://api1.accurascan.com:9922/</string>
+    <string name="liveness_url">your liveness url</string>
 </resources>

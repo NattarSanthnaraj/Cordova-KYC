@@ -238,7 +238,7 @@ function startLiveness() {
         // <!--// Set max percentage for glare or set it -1 to remove glare filter-->
         setGlarePercentage_1: -1,
         isSaveImage: true,
-        liveness_url: 'https://api1.accurascan.com:9922/',
+        liveness_url: '<Your liveness url>',
 
         // Removed configs from liveness check
         // feedBackVideoRecordingMessage: 'Processing...',
@@ -260,8 +260,6 @@ function startLiveness() {
         feedBackLookRightMessage: 'Look over your right shoulder',
         feedBackOralInfoMessage: 'Say each digits out loud',
         enableOralVerification: true,
-        livenessLeftRotatedYDegree: 180,
-        livenessRightRotatedYDegree: 0,
         codeTextColor: 'white'
     };
     $('#ls-score,#fm-score').text("0.00 %");

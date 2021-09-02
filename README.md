@@ -120,13 +120,11 @@ Contact AccuraScan at contact@accurascan.com for Liveness SDK or API
 |setGlarePercentage_0|integer|-1|Set min percentage for glare or set it -1 to remove glare filter|
 |setGlarePercentage_1|integer|-1|Set max percentage for glare or set it -1 to remove glare filter|
 |isSaveImage|boolean|true||
-|liveness_url|URL string|Your liveness url||
+|liveness_url|URL string|Your liveness url|Required|
 |livenessBackground|color string|#FFC4C4C5||
 |livenessCloseIcon|color string|#FF000000||
 |livenessfeedbackBg|color string|#00000000||
 |livenessfeedbackText|color string|#FF000000||
-|livenessRecordingTextColor|color string|#555555||
-|livenessRecordingTimerTextColor|color string|#555555||
 
 ###
 ### Liveness Removed Configurations:  JSON Object
@@ -145,6 +143,8 @@ This configuration's is removed in KYC SDK V2.2.1 & SDK V2.3.1
 |enableFaceMatch|boolean|true||
 |fmScoreThreshold|integer|50||
 |feedbackFMFailed|string|Face not matched||
+|livenessRecordingTextColor|color string|#555555||
+|livenessRecordingTimerTextColor|color string|#555555||
 
 
 ###
@@ -161,8 +161,6 @@ This configuration's is added into KYC SDK V2.2.1 & SDK V2.3.1
 |feedBackLookRightMessage|string|Look over your right shoulder||
 |feedBackOralInfoMessage|string|Say each digits out loud||
 |enableOralVerification|boolean|true||
-|livenessLeftRotatedYDegree|integer|45||
-|livenessRightRotatedYDegree|integer|45||
 |codeTextColor|color string|#FF000000||
 
 
@@ -1234,6 +1232,8 @@ var cardSelected = '';
 
 var mrzSelected = 'other_mrz';
 
+var mrzCountryList = 'all';
+
 var barcodeSelected = '';
 
 function getCards(id) {
@@ -1362,8 +1362,6 @@ function startLiveness(withFace = false) {
 
          feedBackGlareFaceMessage: 'Glare Detected',
 
-         feedBackVideoRecordingMessage: 'Processing…',
-
          // <!--// 0 for clean face and 100 for Blurry face or set it -1 to remove blur filter-->
 
          setBlurPercentage: 80,
@@ -1378,25 +1376,27 @@ function startLiveness(withFace = false) {
 
          isSaveImage: true,
 
-         isRecordVideo: true,
+         liveness_url: '<your liveness url>',
 
-         videoLengthInSecond: 2,
+         feedBackLowLightMessage: 'Low light detected',
 
-         recordingTimerTextSize: 45,
+         feedbackLowLightTolerence: 39,
 
-         recordingMessage: 'Scanning your face be steady',
+         feedBackStartMessage: 'Put your face inside the oval',
 
-         recordingMessageTextSize: 18,
+         feedBackLookLeftMessage: 'Look over your left shoulder',
 
-         enableFaceDetect: true,
+         feedBackLookRightMessage: 'Look over your right shoulder',
 
-         fmScoreThreshold: 50,
+         feedBackOralInfoMessage: 'Say each digits out loud',
 
-         enableFaceMatch: false,
+         enableOralVerification: true,
 
-         feedbackFMFailed: "Face not matched",
+         livenessLeftRotatedYDegree: 180,
 
-         liveness_url: '<your liveness url>'
+         livenessRightRotatedYDegree: 0,
+
+         codeTextColor: 'white'
 
      };
 
@@ -1688,7 +1688,7 @@ function startMRZ() {
 
      var accuraConfigs = {};
 
-     accura.startMRZ(accuraConfigs, mrzSelected, function (result) {
+     accura.startMRZ(accuraConfigs, mrzSelected, mrzCountryList, function (result) {
 
          generateResult(result)
 

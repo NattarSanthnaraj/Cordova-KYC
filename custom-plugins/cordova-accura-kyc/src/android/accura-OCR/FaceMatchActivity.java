@@ -67,6 +67,16 @@ public class FaceMatchActivity extends AppCompatActivity implements FaceHelper.F
                     faceHelper.setInputImage(face);
                 }
 
+            } else if (isLiveness) {
+                //Change it with v2.3.1
+                //Default liveness has face match success.
+                witFace = true;
+                String uri = bundle.getString("face_uri", "");
+                if (uri.length() > 0) {
+                    Bitmap face = BitmapFactory.decodeFile(uri.replace("file://", ""));
+                    face1 = face;
+                    faceHelper.setInputImage(face);
+                }
             } else {
                 if (!isLiveness) {
                     if (!bundle.containsKey("face1")) {
@@ -221,6 +231,10 @@ public class FaceMatchActivity extends AppCompatActivity implements FaceHelper.F
         if (bundle.containsKey("enableOralVerification")) {
             livenessCustomization.enableOralVerification = bundle.getBoolean("enableOralVerification");
         }
+        livenessCustomization.codeTextColor = res.getColor(R("codeTextColor", "color"));
+        if (bundle.containsKey("codeTextColor")) {
+            livenessCustomization.codeTextColor = Color.parseColor(bundle.getString("codeTextColor"));
+        }
 
         livenessCustomization.livenessAlertSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getPackageName() + "/raw/accura_liveness_verified");
         livenessCustomization.livenessVerifiedAlertSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getPackageName() + "/raw/accura_liveness_verified");
@@ -229,6 +243,8 @@ public class FaceMatchActivity extends AppCompatActivity implements FaceHelper.F
         livenessCustomization.livenessLeftMoveAnimation = R.drawable.accura_liveness_face;
         livenessCustomization.livenessRightMoveAnimation = R.drawable.accura_liveness_face;
         livenessCustomization.voiceIcon = R.drawable.ic_mic;
+        livenessCustomization.livenessLeftRotatedYDegree = (float) 180;
+        livenessCustomization.livenessRightRotatedYDegree = (float) 0;
 
         //Not activated yet!
 //        livenessCustomization.livenessAlertSound
@@ -238,23 +254,15 @@ public class FaceMatchActivity extends AppCompatActivity implements FaceHelper.F
 //        livenessCustomization.livenessLeftMoveAnimation
 //        livenessCustomization.livenessRightMoveAnimation
 //        livenessCustomization.voiceIcon
-
-
-        livenessCustomization.livenessLeftRotatedYDegree = (float) res.getInteger(R("livenessLeftRotatedYDegree", "integer"));
-        if (bundle.containsKey("livenessLeftRotatedYDegree")) {
-            livenessCustomization.livenessLeftRotatedYDegree = (float) bundle.getInt("livenessLeftRotatedYDegree");
-        }
-        livenessCustomization.livenessRightRotatedYDegree = (float) res.getInteger(R("livenessRightRotatedYDegree", "integer"));
-        if (bundle.containsKey("livenessRightRotatedYDegree")) {
-            livenessCustomization.livenessRightRotatedYDegree = (float) bundle.getInt("livenessRightRotatedYDegree");
-        }
-        livenessCustomization.codeTextColor = res.getColor(R("codeTextColor", "color"));
-        if (bundle.containsKey("codeTextColor")) {
-            livenessCustomization.codeTextColor = Color.parseColor(bundle.getString("codeTextColor"));
-        }
-
-
-
+        // livenessCustomization.livenessLeftRotatedYDegree = (float) res.getInteger(R("livenessLeftRotatedYDegree", "integer"));
+        // if (bundle.containsKey("livenessLeftRotatedYDegree")) {
+        //     livenessCustomization.livenessLeftRotatedYDegree = (float) bundle.getInt("livenessLeftRotatedYDegree");
+        // }
+        // livenessCustomization.livenessRightRotatedYDegree = (float) res.getInteger(R("livenessRightRotatedYDegree", "integer"));
+        // if (bundle.containsKey("livenessRightRotatedYDegree")) {
+        //     livenessCustomization.livenessRightRotatedYDegree = (float) bundle.getInt("livenessRightRotatedYDegree");
+        // }
+        
 
 //        livenessCustomization.feedBackVideoRecordingMessage = res.getString(R("feedBackVideoRecordingMessage", "string"));
 //        if (bundle.containsKey("feedBackVideoRecordingMessage")) {
@@ -402,16 +410,17 @@ public class FaceMatchActivity extends AppCompatActivity implements FaceHelper.F
             if (result != null) {
                 if (result.getStatus().equals("1")) {
                     livenessResult = handleVerificationSuccessResult(result, results);
-                    if (witFace) {
+                     if (witFace) {
                         if (result.getFaceBiometrics() != null) {
                             Bitmap nBmp = result.getFaceBiometrics();
                             face2 = nBmp;
                             faceHelper.setMatchImage(nBmp);
                         }
-                    } else {
-                        ACCURAService.faceCL.success(livenessResult);
-                        this.finish();
-                    }
+                     } else {
+                         Log.i(TAG, "handleVerificationSuccessResult :- " + livenessResult);
+                         ACCURAService.faceCL.success(livenessResult);
+                         this.finish();
+                     }
 
                 } else {
                     ACCURAService.faceCL.error(result.getErrorMessage());
@@ -474,7 +483,7 @@ public class FaceMatchActivity extends AppCompatActivity implements FaceHelper.F
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
+                    Log.i(TAG, "handleVerificationSuccessResultFM :- " + results);
                     ACCURAService.faceCL.success(results);
                     this.finish();
                     return;
@@ -528,9 +537,11 @@ public class FaceMatchActivity extends AppCompatActivity implements FaceHelper.F
                     } else {
                         results.put("detect", ACCURAService.getImageUri(detectFace2, "img_1", fileDir));
                     }
+                    Log.i(TAG, "onFaceMatch !isLiveness :- " + results);
                     ACCURAService.faceCL.success(results);
                 } else {
                     livenessResult.put("fm_score", v);
+                    Log.i(TAG, "onFaceMatch isLiveness :- " + livenessResult);
                     ACCURAService.faceCL.success(livenessResult);
                 }
                 ACCURAService.face1 = null;

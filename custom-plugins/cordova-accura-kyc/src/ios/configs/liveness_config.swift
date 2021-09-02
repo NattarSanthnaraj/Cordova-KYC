@@ -74,7 +74,7 @@ struct LivenessConfigs {
     static let feedbackFMFailed: String = "Face not matched"
 
 
-    static let liveness_url: String = "https://api1.accurascan.com:9922/"
+    static let liveness_url: String = "Your liveness url"
     
     static let livenessBackground: String = "#C4C4C5"
     static let livenessCloseIconColor: String = "#000000"
