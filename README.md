@@ -156,10 +156,10 @@ This configuration's is added into KYC SDK V2.2.1 & SDK V2.3.1
 | :- | :- | :- | :- |
 |feedBackLowLightMessage|string|Low light detected||
 |feedbackLowLightTolerence|integer|39||
-|feedBackStartMessage|string|Face not matched||
-|feedBackLookLeftMessage|string|Face not matched||
-|feedBackLookRightMessage|string|Face not matched||
-|feedBackOralInfoMessage|string|Face not matched||
+|feedBackStartMessage|string|Put your face inside the oval||
+|feedBackLookLeftMessage|string|Look over your left shoulder||
+|feedBackLookRightMessage|string|Look over your right shoulder||
+|feedBackOralInfoMessage|string|Say each digits out loud||
 |enableOralVerification|boolean|true||
 |livenessLeftRotatedYDegree|integer|45||
 |livenessRightRotatedYDegree|integer|45||
