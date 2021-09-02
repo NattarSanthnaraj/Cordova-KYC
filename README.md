@@ -9,7 +9,9 @@ $ `cordova plugin add <absolute-path-to-(cordova-accura-kyc)-folder>`
 ### Example
 `cordova plugin add I:\accura-cordova\custom-plugins\cordova-accura-kyc`
 
-#### - Replace `accura_kyc.aar` aar file path in plugin.xml file for change android library
+<!-- #### - Replace `accura_kyc.aar` aar file path in plugin.xml file for change android or iOS library
+
+#### 👉 Android 👈
     1. Without simulator library(only for device) size: 40Mb (Check size)
         - Open file from custom-plugins -> cordova-accura-kyc -> plugin.xml
         - Uncomment line no 31 and comment line no 34
@@ -18,10 +20,24 @@ $ `cordova plugin add <absolute-path-to-(cordova-accura-kyc)-folder>`
     2. With simulator support library(device + simulator both) size: 112Mb (Check size)
         - Open file from custom-plugins -> cordova-accura-kyc -> plugin.xml
         - Uncomment line no 34 and comment line no 31
-#### NOTE:- 
- - Default it has without simulator library.
- - When you change the library every time you have to first remove the plugin and then add it again.
+#### 👉 iOS 👈
+    1. Without simulator library(only for device) size: 294Mb (Check size)
+        - Open file from custom-plugins -> cordova-accura-kyc -> plugin.xml
+        - Uncomment line no 107 and comment line no 110
+        
+
+    2. With simulator support library(device + simulator both) size: 359Mb (Check size)
+        - Open file from custom-plugins -> cordova-accura-kyc -> plugin.xml
+        - Uncomment line no 110 and comment line no 107
+
+
+#### 📝 NOTE:- 
+ - Default for both Android & iOS has without simulator library.
+ - When you change the library every time you have to first remove the plugin and then add it again. -->
     
+
+
+
 <!-- How to release both support on github in one SDK.
 
 1. Use `accura_kyc.aar` file without simulator in project. so it'll make the Cordova sdk light in size.
@@ -100,11 +116,26 @@ Contact AccuraScan at contact@accurascan.com for Liveness SDK or API
 |feedBackHeadStraightMessage|string|Keep Your Head Straight||
 |feedBackBlurFaceMessage|string|Blur Detected Over Face||
 |feedBackGlareFaceMessage|string|Glare Detected||
-|feedBackVideoRecordingMessage|string|Processing…||
 |setBlurPercentage|integer|80|0 for clean face and 100 for Blurry face or set it -1 to remove blur filter|
 |setGlarePercentage_0|integer|-1|Set min percentage for glare or set it -1 to remove glare filter|
 |setGlarePercentage_1|integer|-1|Set max percentage for glare or set it -1 to remove glare filter|
 |isSaveImage|boolean|true||
+|liveness_url|URL string|Your liveness url||
+|livenessBackground|color string|#FFC4C4C5||
+|livenessCloseIcon|color string|#FF000000||
+|livenessfeedbackBg|color string|#00000000||
+|livenessfeedbackText|color string|#FF000000||
+|livenessRecordingTextColor|color string|#555555||
+|livenessRecordingTimerTextColor|color string|#555555||
+
+###
+### Liveness Removed Configurations:  JSON Object
+
+This configuration's is removed in KYC SDK V2.2.1 & SDK V2.3.1
+
+|Option|Type|Default|Description|
+| :- | :- | :- | :- |
+|feedBackVideoRecordingMessage|string|Processing…||
 |isRecordVideo|boolean|true||
 |videoLengthInSecond|integer|5||
 |recordingTimerTextSize|integer|45||
@@ -114,13 +145,27 @@ Contact AccuraScan at contact@accurascan.com for Liveness SDK or API
 |enableFaceMatch|boolean|true||
 |fmScoreThreshold|integer|50||
 |feedbackFMFailed|string|Face not matched||
-|liveness_url|URL string|Your liveness url||
-|livenessBackground|color string|#FFC4C4C5||
-|livenessCloseIcon|color string|#FF000000||
-|livenessfeedbackBg|color string|#00000000||
-|livenessfeedbackText|color string|#FF000000||
-|livenessRecordingTextColor|color string|#555555||
-|livenessRecordingTimerTextColor|color string|#555555||
+
+
+###
+### New Added Liveness Configurations:  JSON Object
+
+This configuration's is added into KYC SDK V2.2.1 & SDK V2.3.1
+
+|Option|Type|Default|Description|
+| :- | :- | :- | :- |
+|feedBackLowLightMessage|string|Low light detected||
+|feedbackLowLightTolerence|integer|39||
+|feedBackStartMessage|string|Face not matched||
+|feedBackLookLeftMessage|string|Face not matched||
+|feedBackLookRightMessage|string|Face not matched||
+|feedBackOralInfoMessage|string|Face not matched||
+|enableOralVerification|boolean|true||
+|livenessLeftRotatedYDegree|integer|45||
+|livenessRightRotatedYDegree|integer|45||
+|codeTextColor|color string|#FF000000||
+
+
 ###
 ### Face Match Configurations:  JSON Object
 
@@ -182,6 +227,10 @@ Contact AccuraScan at contact@accurascan.com for Liveness SDK or API
 - visa_mrz
 - other_mrz
 
+###  	 Mrz Country List:
+- all
+- IND,USA,UK etc...
+
 # Cordova Methods
 - ### getMetadata(successCallback, errorCallback)
   - Success: JSON Response = {
@@ -205,11 +254,12 @@ Contact AccuraScan at contact@accurascan.com for Liveness SDK or API
 }
 
   - Error: String<Any Error Message>
-  
-  
-- ### startMRZ(accuraConfigrations?, MRZType, successCallback, errorCallback)
+
+- ### startMRZ(accuraConfigrations?, MRZType, CountryList, successCallback, errorCallback)
   - MRZType: String 
     - default: other_mrz
+  - CountryList: String 
+    - default: all or IND,USA,UK 
   - Success: JSON Response {
 
  	 front_data: JSONObjects?,
@@ -227,7 +277,9 @@ Contact AccuraScan at contact@accurascan.com for Liveness SDK or API
 }
 
   - Error: String<Any Error Message>
-  
+
+#### Note:- startMRZ method is updated with new param into KYC SDK V2.2.1 & SDK V2.3.1
+
   
 - ### startOcrWithCard(accuraConfigrations?,countryID, cardID, cardName,successCallback, errorCallback)
   - countryID: Integer

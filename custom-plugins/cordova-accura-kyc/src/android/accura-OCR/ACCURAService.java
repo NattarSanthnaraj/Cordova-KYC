@@ -16,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -36,6 +37,8 @@ public class ACCURAService extends CordovaPlugin {
     public static final String CAMERA = Manifest.permission.CAMERA;
     public static final String WRITE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
     public static final int SEARCH_REQ_CODE = 0;
+    private static final String TAG = OcrActivity.class.getSimpleName();
+    
     public ACCURAService() {
         super();
     }
@@ -205,10 +208,12 @@ public class ACCURAService extends CordovaPlugin {
         }
         if (action.equals("startMRZ")) {
             String type = args.getString(1);
-            String appOrientation = args.getString(2);
-            Intent myIntent = new Intent(cordova.getActivity(), OcrActivity.class);
+            String countryList = args.getString(2);
+            String appOrientation = args.getString(3);
+            Intent myIntent = new Intent(cordova.getActivity(), accura.kyc.plugin.OcrActivity.class);
             myIntent = addDefaultConfigs(myIntent, accuraConf);
             myIntent.putExtra("type", "mrz");
+            myIntent.putExtra("country-list", countryList);
             myIntent.putExtra("sub-type", type);
             myIntent.putExtra("app_orientation", appOrientation);
             ocrCL = callbackContext;

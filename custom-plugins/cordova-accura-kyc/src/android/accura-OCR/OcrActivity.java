@@ -62,6 +62,7 @@ public class OcrActivity extends SensorsActivity implements OcrCallback {
     private ImageView imageFlip;
     private int cardId;
     private int countryId;
+    private String mrzCountryList;
     RecogType recogType;
     private String cardName;
     private boolean isBack = false;
@@ -161,6 +162,7 @@ public class OcrActivity extends SensorsActivity implements OcrCallback {
                     }
                 } else if (bundle.getString("type").equalsIgnoreCase("mrz")) {
                     String mrz = bundle.getString("sub-type");
+                    mrzCountryList = bundle.getString("country-list");
                     switch (mrz) {
                         case "passport_mrz":
                             recogType = RecogType.MRZ;
@@ -231,6 +233,7 @@ public class OcrActivity extends SensorsActivity implements OcrCallback {
             cameraView.setCountryId(countryId);
         } else if (recogType == RecogType.MRZ) {
             cameraView.setMRZDocumentType(mrzType);
+            cameraView.setMRZCountryCodeList(mrzCountryList);
         }
         cameraView.setRecogType(recogType)
                 .setView(linearLayout) // To add camera view

@@ -14,4 +14,9 @@
     <color name="livenessfeedbackBg">#00000000</color>
     <color name="livenessfeedbackText">#FF000000</color>
     <color name="livenessRecordingText">#FF555555</color>
+
+    <!--    new SDK changes by ANIL-->
+    <color name="codeTextColor">#FFF</color>
+    <!--    End new SDK changes by ANIL-->
+
 </resources>

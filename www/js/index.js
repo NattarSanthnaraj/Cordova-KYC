@@ -84,6 +84,7 @@ var countrySelected = '';
 var countrySelectedForCard = '';
 var cardSelected = '';
 var mrzSelected = 'other_mrz';
+var mrzCountryList = 'all';
 var barcodeSelected = '';
 
 function getCards(id) {
@@ -230,7 +231,6 @@ function startLiveness() {
         feedBackHeadStraightMessage: 'Keep Your Head Straight',
         feedBackBlurFaceMessage: 'Blur Detected Over Face',
         feedBackGlareFaceMessage: 'Glare Detected',
-        feedBackVideoRecordingMessage: 'Processing...',
         // <!--// 0 for clean face and 100 for Blurry face or set it -1 to remove blur filter-->
         setBlurPercentage: 80,
         // <!--// Set min percentage for glare or set it -1 to remove glare filter-->
@@ -238,16 +238,31 @@ function startLiveness() {
         // <!--// Set max percentage for glare or set it -1 to remove glare filter-->
         setGlarePercentage_1: -1,
         isSaveImage: true,
-        isRecordVideo: true,
-        videoLengthInSecond: 4,
-        recordingTimerTextSize: 45,
-        recordingMessage: 'Scanning your face be steady',
-        recordingMessageTextSize: 18,
-        enableFaceDetect: true,
-        fmScoreThreshold: 50,
-        enableFaceMatch: false,
-        feedbackFMFailed: "Face not matched",
-        liveness_url: 'https://api1.accurascan.com:9922/'
+        liveness_url: 'https://api1.accurascan.com:9922/',
+
+        // Removed configs from liveness check
+        // feedBackVideoRecordingMessage: 'Processing...',
+        // isRecordVideo: true,
+        // videoLengthInSecond: 4,
+        // recordingTimerTextSize: 45,
+        // recordingMessage: 'Scanning your face be steady',
+        // recordingMessageTextSize: 18,
+        // enableFaceDetect: true,
+        // fmScoreThreshold: 50,
+        // enableFaceMatch: false,
+        // feedbackFMFailed: "Face not matched",
+
+//        New SDK changes in configs
+        feedBackLowLightMessage: 'Low light detected',
+        feedbackLowLightTolerence: 39,
+        feedBackStartMessage: 'Put your face inside the oval',
+        feedBackLookLeftMessage: 'Look over your left shoulder',
+        feedBackLookRightMessage: 'Look over your right shoulder',
+        feedBackOralInfoMessage: 'Say each digits out loud',
+        enableOralVerification: true,
+        livenessLeftRotatedYDegree: 180,
+        livenessRightRotatedYDegree: 0,
+        codeTextColor: 'white'
     };
     $('#ls-score,#fm-score').text("0.00 %");
     accura.startLiveness(accuraConfs, config, function (result) {
@@ -398,7 +413,7 @@ function startFaceMatch(withFace = false, face1 = false, face2 = false) {
 }
 
 function startMRZ() {
-    accura.startMRZ({enableLogs: false}, mrzSelected, function (result) {
+    accura.startMRZ({enableLogs: false}, mrzSelected, mrzCountryList, function (result) {
         generateResult(result);
     }, function (error) {
         alert(error);

@@ -3,20 +3,25 @@ const os = require('os');
 const srcPath = __dirname.replace('scripts', '');
 var srcParentPath = __dirname.replace('plugins\\cordova-accura-kyc\\scripts', 'platforms\\android');
 var fcPath = srcPath + 'src\\android\\accuraface.license';
+var lvPath = srcPath + 'src\\android\\accuraactiveliveness.license';
 var ocrPath = srcPath + 'src\\android\\key.license';
 var fcDestPath = srcParentPath + '\\app\\src\\main\\assets\\accuraface.license';
+var lvDestPath = srcParentPath + '\\app\\src\\main\\assets\\accuraactiveliveness.license';
 var ocrDestPath = srcParentPath + '\\app\\src\\main\\assets\\key.license';
 var gridlePath = srcParentPath + "\\app\\build.gradle";
 if (['linux', 'darwin'].indexOf(os.platform()) !== -1) {
     srcParentPath = __dirname.replace('plugins/cordova-accura-kyc/scripts', 'platforms/android');
     fcPath = srcPath + 'src/android/accuraface.license';
+    lvPath = srcPath + 'src/android/accuraactiveliveness.license';
     ocrPath = srcPath + 'src/android/key.license';
     fcDestPath = srcParentPath + '/app/src/main/assets/accuraface.license';
+    lvDestPath = srcParentPath + '/app/src/main/assets/accuraactiveliveness.license';
     ocrDestPath = srcParentPath + '/app/src/main/assets/key.license';
     gridlePath = srcParentPath + "/app/build.gradle";
 }
 
 fs.copyFileSync(fcPath, fcDestPath);
+fs.copyFileSync(lvPath, lvDestPath);
 fs.copyFileSync(ocrPath, ocrDestPath);
 
 var gradle = fs.readFileSync(gridlePath).toString();

@@ -1,5 +1,8 @@
 package accura.kyc.plugin;
 
+import android.util.Log;
+import android.net.Uri;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
@@ -7,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import com.kyc.online.R;
 
 import com.accurascan.facedetection.LivenessCustomization;
 import com.accurascan.facedetection.SelfieCameraActivity;
@@ -35,6 +39,7 @@ public class FaceMatchActivity extends AppCompatActivity implements FaceHelper.F
     boolean witFace = false;
     JSONObject livenessResult;
     Boolean isLiveness = false;
+    private static final String TAG = OcrActivity.class.getSimpleName();
 
     public int R(String name, String type) {
         return getResources().getIdentifier(name, type, getPackageName());
@@ -167,10 +172,7 @@ public class FaceMatchActivity extends AppCompatActivity implements FaceHelper.F
         if (bundle.containsKey("feedBackGlareFaceMessage")) {
             livenessCustomization.feedBackGlareFaceMessage = bundle.getString("feedBackGlareFaceMessage");
         }
-        livenessCustomization.feedBackVideoRecordingMessage = res.getString(R("feedBackVideoRecordingMessage", "string"));
-        if (bundle.containsKey("feedBackVideoRecordingMessage")) {
-            livenessCustomization.feedBackVideoRecordingMessage = bundle.getString("feedBackVideoRecordingMessage");
-        }
+
         livenessCustomization.setBlurPercentage(res.getInteger(R("setBlurPercentage", "integer")));
         if (bundle.containsKey("setBlurPercentage")) {
             livenessCustomization.setBlurPercentage(bundle.getInt("setBlurPercentage"));
@@ -188,62 +190,139 @@ public class FaceMatchActivity extends AppCompatActivity implements FaceHelper.F
         if (bundle.containsKey("isSaveImage")) {
             livenessCustomization.isSaveImage = bundle.getBoolean("isSaveImage");
         }
-        livenessCustomization.isRecordVideo = res.getBoolean(R("isRecordVideo", "bool"));
-        if (bundle.containsKey("isRecordVideo")) {
-            livenessCustomization.isRecordVideo = bundle.getBoolean("isRecordVideo");
+
+        //New SDK changes By ANIL
+
+        livenessCustomization.feedBackLowLightMessage = res.getString(R("feedBackLowLightMessage", "string"));
+        if (bundle.containsKey("feedBackLowLightMessage")) {
+            livenessCustomization.feedBackLowLightMessage = bundle.getString("feedBackLowLightMessage");
         }
-        if (livenessCustomization.isRecordVideo && ACCURAService.isLivenessGetVideo) {
-            File vid = new File(ACCURAService.livenessVideo);
-            if (vid.exists()) {
-                livenessCustomization.isRecordVideo = false;
-            } else {
-                livenessCustomization.isRecordVideo = res.getBoolean(R("isRecordVideo", "bool"));
-                if (bundle.containsKey("isRecordVideo")) {
-                    livenessCustomization.isRecordVideo = bundle.getBoolean("isRecordVideo");
-                }
-            }
+        livenessCustomization.setLowLightTolerence(res.getInteger(R("feedbackLowLightTolerence", "integer")));
+        if (bundle.containsKey("feedbackLowLightTolerence")) {
+            livenessCustomization.setLowLightTolerence(bundle.getInt("feedbackLowLightTolerence"));
         }
-        // video length in seconds
-        livenessCustomization.videoLengthInSecond = res.getInteger(R("videoLengthInSecond", "integer"));
-        if (bundle.containsKey("videoLengthInSecond")) {
-            livenessCustomization.videoLengthInSecond = bundle.getInt("videoLengthInSecond");
+        livenessCustomization.feedBackStartMessage = res.getString(R("feedBackStartMessage", "string"));
+        if (bundle.containsKey("feedBackStartMessage")) {
+            livenessCustomization.feedBackStartMessage = bundle.getString("feedBackStartMessage");
         }
-        livenessCustomization.recordingTimerTextColor = res.getColor(R("livenessRecordingText", "color"));
-        if (bundle.containsKey("livenessRecordingTextColor")) {
-            livenessCustomization.recordingTimerTextColor = Color.parseColor(bundle.getString("livenessRecordingTextColor"));
+        livenessCustomization.feedBackLookLeftMessage = res.getString(R("feedBackLookLeftMessage", "string"));
+        if (bundle.containsKey("feedBackLookLeftMessage")) {
+            livenessCustomization.feedBackLookLeftMessage = bundle.getString("feedBackLookLeftMessage");
         }
-        livenessCustomization.recordingTimerTextSize = res.getInteger(R("recordingTimerTextSize", "integer"));
-        if (bundle.containsKey("recordingTimerTextSize")) {
-            livenessCustomization.recordingTimerTextSize = bundle.getInt("recordingTimerTextSize");
+        livenessCustomization.feedBackLookRightMessage = res.getString(R("feedBackLookRightMessage", "string"));
+        if (bundle.containsKey("feedBackLookRightMessage")) {
+            livenessCustomization.feedBackLookRightMessage = bundle.getString("feedBackLookRightMessage");
         }
-        livenessCustomization.recordingMessage = res.getString(R("recordingMessage", "string"));
-        if (bundle.containsKey("recordingMessage")) {
-            livenessCustomization.recordingMessage = bundle.getString("recordingMessage");
+        livenessCustomization.feedBackOralInfoMessage = res.getString(R("feedBackOralInfoMessage", "string"));
+        if (bundle.containsKey("feedBackOralInfoMessage")) {
+            livenessCustomization.feedBackOralInfoMessage = bundle.getString("feedBackOralInfoMessage");
         }
-        livenessCustomization.recordingMessageTextColor = res.getColor(R("livenessRecordingText", "color"));
-        if (bundle.containsKey("livenessRecordingTextColor")) {
-            livenessCustomization.recordingMessageTextColor = Color.parseColor(bundle.getString("livenessRecordingTextColor"));
+        livenessCustomization.enableOralVerification = res.getBoolean(R("enableOralVerification", "bool"));
+        if (bundle.containsKey("enableOralVerification")) {
+            livenessCustomization.enableOralVerification = bundle.getBoolean("enableOralVerification");
         }
-        livenessCustomization.recordingMessageTextSize = res.getInteger(R("recordingMessageTextSize", "integer"));
-        if (bundle.containsKey("recordingMessageTextSize")) {
-            livenessCustomization.recordingMessageTextSize = bundle.getInt("recordingMessageTextSize");
+
+        livenessCustomization.livenessAlertSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getPackageName() + "/raw/accura_liveness_verified");
+        livenessCustomization.livenessVerifiedAlertSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getPackageName() + "/raw/accura_liveness_verified");
+
+        livenessCustomization.livenessVerifiedAnimation = R.drawable.approved_sign;
+        livenessCustomization.livenessLeftMoveAnimation = R.drawable.accura_liveness_face;
+        livenessCustomization.livenessRightMoveAnimation = R.drawable.accura_liveness_face;
+        livenessCustomization.voiceIcon = R.drawable.ic_mic;
+
+        //Not activated yet!
+//        livenessCustomization.livenessAlertSound
+//        livenessCustomization.livenessVerifiedAlertSound
+
+//        livenessCustomization.livenessVerifiedAnimation
+//        livenessCustomization.livenessLeftMoveAnimation
+//        livenessCustomization.livenessRightMoveAnimation
+//        livenessCustomization.voiceIcon
+
+
+        livenessCustomization.livenessLeftRotatedYDegree = (float) res.getInteger(R("livenessLeftRotatedYDegree", "integer"));
+        if (bundle.containsKey("livenessLeftRotatedYDegree")) {
+            livenessCustomization.livenessLeftRotatedYDegree = (float) bundle.getInt("livenessLeftRotatedYDegree");
         }
-        livenessCustomization.enableFaceDetect = res.getBoolean(R("enableFaceDetect", "bool"));
-        if (bundle.containsKey("enableFaceDetect")) {
-            livenessCustomization.enableFaceDetect = bundle.getBoolean("enableFaceDetect");
+        livenessCustomization.livenessRightRotatedYDegree = (float) res.getInteger(R("livenessRightRotatedYDegree", "integer"));
+        if (bundle.containsKey("livenessRightRotatedYDegree")) {
+            livenessCustomization.livenessRightRotatedYDegree = (float) bundle.getInt("livenessRightRotatedYDegree");
         }
-        livenessCustomization.enableFaceMatch = res.getBoolean(R("enableFaceMatch", "bool"));
-        if (bundle.containsKey("enableFaceMatch")) {
-            livenessCustomization.enableFaceMatch = bundle.getBoolean("enableFaceMatch");
+        livenessCustomization.codeTextColor = res.getColor(R("codeTextColor", "color"));
+        if (bundle.containsKey("codeTextColor")) {
+            livenessCustomization.codeTextColor = Color.parseColor(bundle.getString("codeTextColor"));
         }
-        livenessCustomization.fmScoreThreshold = res.getInteger(R("fmScoreThreshold", "integer"));
-        if (bundle.containsKey("fmScoreThreshold")) {
-            livenessCustomization.fmScoreThreshold = bundle.getInt("fmScoreThreshold");
-        }
-        livenessCustomization.feedbackFMFailed = res.getString(R("feedbackFMFailed", "string"));
-        if (bundle.containsKey("feedbackFMFailed")) {
-            livenessCustomization.feedbackFMFailed = bundle.getString("feedbackFMFailed");
-        }
+
+
+
+
+//        livenessCustomization.feedBackVideoRecordingMessage = res.getString(R("feedBackVideoRecordingMessage", "string"));
+//        if (bundle.containsKey("feedBackVideoRecordingMessage")) {
+//            livenessCustomization.feedBackVideoRecordingMessage = bundle.getString("feedBackVideoRecordingMessage");
+//        }
+//
+//        livenessCustomization.isRecordVideo = res.getBoolean(R("isRecordVideo", "bool"));
+//        if (bundle.containsKey("isRecordVideo")) {
+//            livenessCustomization.isRecordVideo = bundle.getBoolean("isRecordVideo");
+//        }
+//        if (livenessCustomization.isRecordVideo && ACCURAService.isLivenessGetVideo) {
+//            File vid = new File(ACCURAService.livenessVideo);
+//            if (vid.exists()) {
+//                livenessCustomization.isRecordVideo = false;
+//            } else {
+//                livenessCustomization.isRecordVideo = res.getBoolean(R("isRecordVideo", "bool"));
+//                if (bundle.containsKey("isRecordVideo")) {
+//                    livenessCustomization.isRecordVideo = bundle.getBoolean("isRecordVideo");
+//                }
+//            }
+//        }
+
+//        // video length in seconds
+//        livenessCustomization.videoLengthInSecond = res.getInteger(R("videoLengthInSecond", "integer"));
+//        if (bundle.containsKey("videoLengthInSecond")) {
+//            livenessCustomization.videoLengthInSecond = bundle.getInt("videoLengthInSecond");
+//        }
+//        livenessCustomization.recordingTimerTextColor = res.getColor(R("livenessRecordingText", "color"));
+//        if (bundle.containsKey("livenessRecordingTextColor")) {
+//            livenessCustomization.recordingTimerTextColor = Color.parseColor(bundle.getString("livenessRecordingTextColor"));
+//        }
+//        livenessCustomization.recordingTimerTextSize = res.getInteger(R("recordingTimerTextSize", "integer"));
+//        if (bundle.containsKey("recordingTimerTextSize")) {
+//            livenessCustomization.recordingTimerTextSize = bundle.getInt("recordingTimerTextSize");
+//        }
+//        livenessCustomization.recordingMessage = res.getString(R("recordingMessage", "string"));
+//        if (bundle.containsKey("recordingMessage")) {
+//            livenessCustomization.recordingMessage = bundle.getString("recordingMessage");
+//        }
+//        livenessCustomization.recordingMessageTextColor = res.getColor(R("livenessRecordingText", "color"));
+//        if (bundle.containsKey("livenessRecordingTextColor")) {
+//            livenessCustomization.recordingMessageTextColor = Color.parseColor(bundle.getString("livenessRecordingTextColor"));
+//        }
+//        livenessCustomization.recordingMessageTextSize = res.getInteger(R("recordingMessageTextSize", "integer"));
+//        if (bundle.containsKey("recordingMessageTextSize")) {
+//            livenessCustomization.recordingMessageTextSize = bundle.getInt("recordingMessageTextSize");
+//        }
+//        livenessCustomization.enableFaceDetect = res.getBoolean(R("enableFaceDetect", "bool"));
+//        if (bundle.containsKey("enableFaceDetect")) {
+//            livenessCustomization.enableFaceDetect = bundle.getBoolean("enableFaceDetect");
+//        }
+//        livenessCustomization.enableFaceMatch = res.getBoolean(R("enableFaceMatch", "bool"));
+//        if (bundle.containsKey("enableFaceMatch")) {
+//            livenessCustomization.enableFaceMatch = bundle.getBoolean("enableFaceMatch");
+//        }
+//        livenessCustomization.fmScoreThreshold = res.getInteger(R("fmScoreThreshold", "integer"));
+//        if (bundle.containsKey("fmScoreThreshold")) {
+//            livenessCustomization.fmScoreThreshold = bundle.getInt("fmScoreThreshold");
+//        }
+//        livenessCustomization.feedbackFMFailed = res.getString(R("feedbackFMFailed", "string"));
+//        if (bundle.containsKey("feedbackFMFailed")) {
+//            livenessCustomization.feedbackFMFailed = bundle.getString("feedbackFMFailed");
+//        }
+
+
+
+
+        //End New SDK changes By ANIL
 
 
         String liveUrl = res.getString(R("liveness_url", "string"));

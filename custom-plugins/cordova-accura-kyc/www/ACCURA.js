@@ -25,8 +25,8 @@ exports.getMetadata = function (success, error) {
     return execAsPromise(success, error, 'ACCURAService', 'getMetadata', []);
 };
 
-exports.startMRZ = function (accuraConfigs = {}, type = 'other_mrz', success, error) {
-    return execAsPromise(success, error, 'ACCURAService', 'startMRZ', [accuraConfigs, type, screen.orientation.type]);
+exports.startMRZ = function (accuraConfigs = {}, type = 'other_mrz', countryList = 'all', success, error) {
+    return execAsPromise(success, error, 'ACCURAService', 'startMRZ', [accuraConfigs, type, countryList, screen.orientation.type]);
 };
 
 exports.startBankCard = function (accuraConfigs = {}, success, error) {

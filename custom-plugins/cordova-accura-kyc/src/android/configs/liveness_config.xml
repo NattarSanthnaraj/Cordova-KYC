@@ -1,5 +1,19 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
+
+<!--    new SDK changes by ANIL-->
+    <string name="feedBackLowLightMessage">Low light detected</string>
+    <integer name="feedbackLowLightTolerence">39</integer>
+    <string name="feedBackStartMessage">Put your face inside the oval</string>
+    <string name="feedBackLookLeftMessage">Look over your left shoulder</string>
+    <string name="feedBackLookRightMessage">Look over your right shoulder</string>
+    <string name="feedBackOralInfoMessage">Say each digits out loud</string>
+    <bool name="enableOralVerification">true</bool>
+    <integer name="livenessLeftRotatedYDegree">180</integer>
+    <integer name="livenessRightRotatedYDegree">0</integer>
+    <integer name="codeTextSize">30</integer>
+
+<!--    End new SDK changes by ANIL-->
     <integer name="feedbackTextSize">18</integer>
     <string name="feedBackframeMessage">Frame Your Face</string>
     <string name="feedBackAwayMessage">Move Phone Away</string>
