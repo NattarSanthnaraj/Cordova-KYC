@@ -10,7 +10,6 @@
     <!--<dependency id="cordova-plugin-file" url="https://github.com/apache/cordova-plugin-file.git"/>-->
     <dependency id="cordova-plugin-screen-orientation" url="https://github.com/apache/cordova-plugin-screen-orientation.git"/>
     <dependency id="cordova-plugin-streaming-media" url="https://github.com/nchutchind/cordova-plugin-streaming-media.git"/>
-    <dependency id="cordova-plugin-console" url="https://github.com/apache/cordova-plugin-console.git"/>
     <dependency id="cordova-plugin-device" url="https://github.com/apache/cordova-plugin-device.git"/>
     <dependency id="cordova-plugin-file" url="https://github.com/apache/cordova-plugin-file.git"/>
 
