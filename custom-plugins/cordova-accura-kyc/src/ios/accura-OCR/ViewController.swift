@@ -103,7 +103,8 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
-        
+        var width: CGFloat = 0.0
+        var height: CGFloat = 0.0
         statusBarRect = UIApplication.shared.statusBarFrame
         let window = UIApplication.shared.windows.first
         
@@ -121,8 +122,6 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         _imageView.layer.masksToBounds = false
         _imageView.clipsToBounds = true
         ChangedOrientation()
-        var width : CGFloat = 0
-        var height : CGFloat = 0
         width = UIScreen.main.bounds.size.width
         height = UIScreen.main.bounds.size.height
         width = width * 0.95
@@ -144,9 +143,9 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
             let alert = UIAlertController(title: "AccuraSdk", message: "It looks like your privacy settings are preventing us from accessing your camera.", preferredStyle: .alert)
             let yesButton = UIAlertAction(title: "OK", style: .default) { _ in
                 if #available(iOS 10.0, *) {
-                    UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+                    UIApplication.shared.open(URL(string: UIApplicationOpenSettingsURLString)!, options: [:], completionHandler: nil)
                 } else {
-                    UIApplication.shared.openURL(URL(string: UIApplication.openSettingsURLString)!)
+                    UIApplication.shared.openURL(URL(string: UIApplicationOpenSettingsURLString)!)
                 }
             }
             alert.addAction(yesButton)
@@ -170,6 +169,23 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
                 } else {
                     // print("Not granted access")
                 }
+            }
+        }
+        if(isCheckCardMRZ) {
+            
+            let orientastion = UIApplication.shared.statusBarOrientation
+           if(orientastion ==  UIInterfaceOrientation.portrait) {
+               width = UIScreen.main.bounds.size.width * 0.95
+               
+               height  = (UIScreen.main.bounds.size.height - (self.bottomPadding + self.topPadding + self.statusBarRect.height)) * 0.35
+           } else {
+               height = UIScreen.main.bounds.size.height * 0.62
+               width = UIScreen.main.bounds.size.width * 0.51
+           }
+            print("layer", width)
+            DispatchQueue.main.async {
+                self._constant_width.constant = width
+                self._constant_height.constant = height
             }
         }
         
@@ -341,6 +357,11 @@ class ViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     
     func startOCRCamera() {
         accuraCameraWrapper = AccuraCameraWrapper.init(delegate: self, andImageView: _imageView, andLabelMsg: lblOCRMsg, andurl: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String, cardId: Int32(cardid), countryID: Int32(countryid), isScanOCR: isCheckScanOCR, andcardName: docName, andcardType: Int32(cardType), andMRZDocType: Int32(MRZDocType))
+        
+        if (isCheckCardMRZ) {
+            accuraCameraWrapper?.setMRZCountryCodeList(ScanConfigs.mrzCountryList)
+            self.accuraCameraWrapper?.setMRZCountryCodeList(ScanConfigs.mrzCountryList)
+        }
         accuraCameraWrapper?.setMinFrameForValidate(5)
         self.accuraCameraWrapper?.setBlurPercentage(EnginConfigs.rg_setBlurPercentage)
         if (ScanConfigs.accuraConfigs.index(forKey: "rg_setBlurPercentage") != nil) {
@@ -1838,6 +1859,22 @@ extension ViewController: VideoCameraWrapperDelegate {
                 
             }
             
+        } else if(isCheckCardMRZ) {
+            
+            let orientastion = UIApplication.shared.statusBarOrientation
+           if(orientastion ==  UIInterfaceOrientation.portrait) {
+               width = UIScreen.main.bounds.size.width * 0.95
+               
+               height  = (UIScreen.main.bounds.size.height - (self.bottomPadding + self.topPadding + self.statusBarRect.height)) * 0.35
+           } else {
+               height = UIScreen.main.bounds.size.height * 0.62
+               width = UIScreen.main.bounds.size.width * 0.51
+           }
+            print("layer", width)
+            DispatchQueue.main.async {
+                self._constant_width.constant = width
+                self._constant_height.constant = height
+            }
         }
         
         
@@ -2352,24 +2389,38 @@ extension ViewController: VideoCameraWrapperDelegate {
         for (key, value) in shareScanningListing {
             let k = key as! String
             if let val = value as? String {
-                if k != "lines" {
-                    frontData[k] = val
-                } else {
-                    frontData["MRZ"] = val
-                }
                 
+                print("key:- \(key) ==> value:- \(val)")
+                if k == "lines" {
+                    frontData["mrz"] = val
+                } else if k == "birth" || k == "expirationDate" || k == "issuedate" {
+                    
+                    var strDate = val
+                    strDate = strDate.replacingOccurrences(of: "<", with: "")
+                    if (strDate.count == 6) {
+                        strDate = "\(strDate[4])\(strDate[5])-\(strDate[2])\(strDate[3])-\(strDate[0])\(strDate[1])"
+                    }
+                    frontData[k] = strDate
+                } else if k == "BirthChecksum" {
+                    frontData["birthChecksum"] = val
+                } else if k == "sex" {
+                    frontData["sex"] = val == "M" ? "Male" : "Female"
+                } else {
+                    frontData[k] = val
+                }
+
             }
         }
-        frontData = self.getMRZKeyValue()
-        frontData["Other Id2"] = shareScanningListing["personalNumber2"]
-        frontData["Document Type"] = ""
-        if MRZDocType == 1 {
-            frontData["Document Type"] = "Passport"
-        } else if (MRZDocType == 2) {
-            frontData["Document Type"] = "Card"
-        } else if (MRZDocType == 2) {
-            frontData["Document Type"] = "Visa"
-        }
+        // frontData = self.getMRZKeyValue()
+        // frontData["Other Id2"] = shareScanningListing["personalNumber2"]
+        // frontData["Document Type"] = ""
+        // if MRZDocType == 1 {
+        //     frontData["Document Type"] = "Passport"
+        // } else if (MRZDocType == 2) {
+        //     frontData["Document Type"] = "Card"
+        // } else if (MRZDocType == 2) {
+        //     frontData["Document Type"] = "Visa"
+        // }
 
         if let recogFrontImg = face{
             if let frontUri = ACCURAService.getImageUri(img: recogFrontImg, name: nil) {
@@ -2552,5 +2603,32 @@ extension ViewController: VideoCameraWrapperDelegate {
             msg = message
         }
         lblOCRMsg.text = msg
+    }
+}
+
+extension String {
+
+    var length: Int {
+        return count
+    }
+
+    subscript (i: Int) -> String {
+        return self[i ..< i + 1]
+    }
+
+    func substring(fromIndex: Int) -> String {
+        return self[min(fromIndex, length) ..< length]
+    }
+
+    func substring(toIndex: Int) -> String {
+        return self[0 ..< max(0, toIndex)]
+    }
+
+    subscript (r: Range<Int>) -> String {
+        let range = Range(uncheckedBounds: (lower: max(0, min(length, r.lowerBound)),
+                                            upper: min(length, max(0, r.upperBound))))
+        let start = index(startIndex, offsetBy: range.lowerBound)
+        let end = index(start, offsetBy: range.upperBound - range.lowerBound)
+        return String(self[start ..< end])
     }
 }

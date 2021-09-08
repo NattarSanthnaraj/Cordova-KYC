@@ -7,9 +7,75 @@
 
 import UIKit
 import AccuraKYC
+import AVFoundation
 
 class LVController: UIViewController, LivenessData
 {
+    func livenessData(_ stLivenessValue: String!, livenessImage: UIImage!, status: Bool, imagePath: String!) {
+        
+        isLivenessDone = true
+        var results:[String: Any] = [:]
+        var pluginResult = CDVPluginResult(
+            status: CDVCommandStatus_OK,
+            messageAs: results
+        )
+//        if status == false && videoPath != ""{
+//            LivenessConfigs.isLivenessGetVideo = true
+//            LivenessConfigs.livenessVideo = videoPath!.replacingOccurrences(of: "file://", with: "")
+//        } else {
+            LivenessConfigs.isLivenessGetVideo = false
+            LivenessConfigs.livenessVideo = ""
+//        }
+        if status == true {
+            print(stLivenessValue)
+            results["status"] = true
+            results["score"] = stLivenessValue.replacingOccurrences(of: " %", with: "")
+            results["with_face"] = gl.withFace
+            results["fm_score"] = 0.0
+            if gl.face1 != nil {
+                gl.face1Detect = EngineWrapper.detectSourceFaces(gl.face1)
+                if gl.face1Detect != nil {
+                    gl.face2Detect = EngineWrapper.detectTargetFaces(livenessImage, feature1: gl.face1Detect!.feature)
+                    results["fm_score"] = EngineWrapper.identify(gl.face1Detect!.feature, featurebuff2: gl.face2Detect!.feature) * 100
+                }
+            }
+            if gl.face2Detect != nil {
+                results["detect"] = ACCURAService.getImageUri(img: ACCURAService.resizeImage(image: livenessImage, targetSize: gl.face2Detect!.bound), name: nil)
+            } else {
+                results["detect"] = ACCURAService.getImageUri(img: livenessImage, name: nil)
+            }
+            if imagePath != "" {
+                results["image_uri"] = "file://\(imagePath!)"
+            }
+//            if videoPath != "" {
+                results["video_uri"] = ""
+//            }
+            
+            pluginResult = CDVPluginResult(
+                status: CDVCommandStatus_OK,
+                messageAs: results
+            )
+        } else {
+            pluginResult = CDVPluginResult(
+                status: CDVCommandStatus_ERROR,
+                messageAs: "Failed to get liveness. Please try again"
+            )
+        }
+        self.commandDelegate!.send(
+            pluginResult,
+            callbackId: gl.ocrClId
+        )
+        
+        closeMe()
+    }
+    
+    func didChangedLivenessState(_ livenessState: LivenessType) {
+        if(livenessState == .LOOK_RIGHT || livenessState == .APPROVED) {
+            //play Sound
+            playSound()
+        }
+    }
+    
     
     var audioPath: URL? = nil
     var isLivenessDone = false
@@ -94,14 +160,27 @@ class LVController: UIViewController, LivenessData
         if(!EngineWrapper.isEngineInit()) {
             EngineWrapper.faceEngineInit()
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
         startLV()
     }
+    
     func startLV() {
         let liveness = Liveness()
         
         if ScanConfigs.accuraConfigs.index(forKey: "with_face") != nil {
-            gl.withFace = ScanConfigs.accuraConfigs["with_face"] as! Bool
+            gl.withFace = true
+            if ScanConfigs.accuraConfigs.index(forKey: "face_uri") != nil {
+                if let face = ACCURAService.getImageFromUri(path: ScanConfigs.accuraConfigs["face_uri"] as! String) {
+                    gl.face1 = face
+                    
+                }
+            }
+        } else {
+            gl.withFace = true
             if ScanConfigs.accuraConfigs.index(forKey: "face_uri") != nil {
                 if let face = ACCURAService.getImageFromUri(path: ScanConfigs.accuraConfigs["face_uri"] as! String) {
                     gl.face1 = face
@@ -171,14 +250,6 @@ class LVController: UIViewController, LivenessData
         if livenessConfigs.index(forKey: "feedBackGlareFaceMessage") != nil {
             liveness.setFeedBackGlareFaceMessage(livenessConfigs["feedBackGlareFaceMessage"] as! String)
         }
-        liveness.setfeedBackVideoRecordingMessage(LivenessConfigs.feedBackVideoRecordingMessage)
-        if livenessConfigs.index(forKey: "feedBackVideoRecordingMessage") != nil {
-            liveness.setfeedBackVideoRecordingMessage(livenessConfigs["feedBackVideoRecordingMessage"] as! String)
-        }
-        liveness.setRecordingMessage(LivenessConfigs.recordingMessage)
-        if livenessConfigs.index(forKey: "recordingMessage") != nil {
-            liveness.setRecordingMessage(livenessConfigs["recordingMessage"] as! String)
-        }
         liveness.setFeedbackTextSize(LivenessConfigs.feedbackTextSize)
         if livenessConfigs.index(forKey: "feedbackTextSize") != nil {
             liveness.setFeedbackTextSize(livenessConfigs["feedbackTextSize"] as! Float)
@@ -200,15 +271,6 @@ class LVController: UIViewController, LivenessData
         }
         liveness.setGlarePercentage(glarePerc0, glarePerc1) //set glaremin -1 and glaremax -1 to remove this filter
         
-        liveness.setVideoLengthInSecond(LivenessConfigs.videoLengthInSecond)
-        if livenessConfigs.index(forKey: "videoLengthInSecond") != nil {
-            liveness.setVideoLengthInSecond(livenessConfigs["videoLengthInSecond"] as! Int32)
-        }
-        
-        liveness.setfeedBackFMFailMessage(LivenessConfigs.feedbackFMFailed)
-        if livenessConfigs.index(forKey: "feedbackFMFailed") != nil {
-            liveness.setfeedBackFMFailMessage(livenessConfigs["feedbackFMFailed"] as! String)
-        }
         liveness.saveImageinDocumentDirectory(LivenessConfigs.isSaveImage)
         if livenessConfigs.index(forKey: "isSaveImage") != nil {
             liveness.saveImageinDocumentDirectory(livenessConfigs["isSaveImage"] as! Bool)
@@ -223,41 +285,112 @@ class LVController: UIViewController, LivenessData
                 isRecVid = false
             }
         }
-        liveness.saveVideoinDocumentDirectory(isRecVid)
         
-        liveness.enableFaceDetect(LivenessConfigs.enableFaceDetect)
-        if livenessConfigs.index(forKey: "enableFaceDetect") != nil {
-            liveness.enableFaceDetect(livenessConfigs["enableFaceDetect"] as! Bool)
-        }
-        liveness.enableFaceMatch(LivenessConfigs.enableFaceMatch)
-        if livenessConfigs.index(forKey: "enableFaceMatch") != nil {
-            liveness.enableFaceMatch(livenessConfigs["enableFaceMatch"] as! Bool)
-        }
-        liveness.fmScoreThreshold(Int32(LivenessConfigs.fmScoreThreshold))
-        if livenessConfigs.index(forKey: "fmScoreThreshold") != nil {
-            liveness.fmScoreThreshold(livenessConfigs["fmScoreThreshold"] as! Int32)
+//        New changes by ANIL => Start
+        
+        liveness.setFeedBackLookLeftMessage(LivenessConfigs.feedBackLookLeftMessage)
+        if livenessConfigs.index(forKey: "feedBackLookLeftMessage") != nil {
+            liveness.setFeedBackLookRightMessage(livenessConfigs["feedBackLookLeftMessage"] as! String)
         }
         
+        liveness.setFeedBackLookRightMessage(LivenessConfigs.feedBackLookRightMessage)
+        if livenessConfigs.index(forKey: "feedBackLookRightMessage") != nil {
+            liveness.setFeedBackLookRightMessage(livenessConfigs["feedBackLookRightMessage"] as! String)
+        }
         
-        liveness.setRecordingTimerTextSize(LivenessConfigs.recordingTimerTextSize)
-        if livenessConfigs.index(forKey: "recordingTimerTextSize") != nil {
-            liveness.setRecordingTimerTextSize(CGFloat(livenessConfigs["recordingTimerTextSize"] as! Float))
+        liveness.setLowLightThreshHold(LivenessConfigs.feedbackLowLightTolerence)
+        if livenessConfigs.index(forKey: "feedbackLowLightTolerence") != nil {
+            liveness.setLowLightThreshHold(livenessConfigs["feedbackLowLightTolerence"] as! Int32)
         }
-        liveness.setRecordingTimerTextColor(LivenessConfigs.livenessRecordingTimerColor)
-        if livenessConfigs.index(forKey: "livenessRecordingTimerColor") != nil {
-            liveness.setRecordingTimerTextColor(livenessConfigs["livenessRecordingTimerColor"] as! String)
+        
+        liveness.setFeedBackFaceInsideOvalMessage(LivenessConfigs.feedBackStartMessage)
+        if livenessConfigs.index(forKey: "feedBackStartMessage") != nil {
+            liveness.setFeedBackFaceInsideOvalMessage(livenessConfigs["feedBackStartMessage"] as! String)
         }
-        liveness.setRecordingMessageTextSize(LivenessConfigs.recordingMessageTextSize)
-        if livenessConfigs.index(forKey: "recordingMessageTextSize") != nil {
-            liveness.setRecordingMessageTextSize(livenessConfigs["recordingMessageTextSize"] as! CGFloat)
-        }
-        liveness.setRecordingMessageTextColor(LivenessConfigs.livenessRecordingTextColor)
-        if livenessConfigs.index(forKey: "livenessRecordingTextColor") != nil {
-            liveness.setRecordingMessageTextColor(livenessConfigs["livenessRecordingTextColor"] as! String)
-        }
+        
+        //set GIF name with extension. make sure GIF files are added in your project root directory.
+        liveness.gifImageName(forLeftMoveFaceAnimation: "accura_liveness_face_left.gif")
+        liveness.gifImageName(forRightMoveFaceAnimation: "accura_liveness_face_Right.gif")
+        
+//        liveness.setfeedBackVideoRecordingMessage(LivenessConfigs.feedBackVideoRecordingMessage)
+//        if livenessConfigs.index(forKey: "feedBackVideoRecordingMessage") != nil {
+//            liveness.setfeedBackVideoRecordingMessage(livenessConfigs["feedBackVideoRecordingMessage"] as! String)
+//        }
+//        liveness.setRecordingMessage(LivenessConfigs.recordingMessage)
+//        if livenessConfigs.index(forKey: "recordingMessage") != nil {
+//            liveness.setRecordingMessage(livenessConfigs["recordingMessage"] as! String)
+//        }
+
+//        liveness.setVideoLengthInSecond(LivenessConfigs.videoLengthInSecond)
+//        if livenessConfigs.index(forKey: "videoLengthInSecond") != nil {
+//            liveness.setVideoLengthInSecond(livenessConfigs["videoLengthInSecond"] as! Int32)
+//        }
+//
+//        liveness.setfeedBackFMFailMessage(LivenessConfigs.feedbackFMFailed)
+//        if livenessConfigs.index(forKey: "feedbackFMFailed") != nil {
+//            liveness.setfeedBackFMFailMessage(livenessConfigs["feedbackFMFailed"] as! String)
+//        }
+//
+//        liveness.saveVideoinDocumentDirectory(isRecVid)
+//
+//        liveness.enableFaceDetect(LivenessConfigs.enableFaceDetect)
+//        if livenessConfigs.index(forKey: "enableFaceDetect") != nil {
+//            liveness.enableFaceDetect(livenessConfigs["enableFaceDetect"] as! Bool)
+//        }
+//        liveness.enableFaceMatch(LivenessConfigs.enableFaceMatch)
+//        if livenessConfigs.index(forKey: "enableFaceMatch") != nil {
+//            liveness.enableFaceMatch(livenessConfigs["enableFaceMatch"] as! Bool)
+//        }
+//        liveness.fmScoreThreshold(Int32(LivenessConfigs.fmScoreThreshold))
+//        if livenessConfigs.index(forKey: "fmScoreThreshold") != nil {
+//            liveness.fmScoreThreshold(livenessConfigs["fmScoreThreshold"] as! Int32)
+//        }
+//
+//        liveness.setRecordingTimerTextSize(LivenessConfigs.recordingTimerTextSize)
+//        if livenessConfigs.index(forKey: "recordingTimerTextSize") != nil {
+//            liveness.setRecordingTimerTextSize(CGFloat(livenessConfigs["recordingTimerTextSize"] as! Float))
+//        }
+//        liveness.setRecordingTimerTextColor(LivenessConfigs.livenessRecordingTimerColor)
+//        if livenessConfigs.index(forKey: "livenessRecordingTimerColor") != nil {
+//            liveness.setRecordingTimerTextColor(livenessConfigs["livenessRecordingTimerColor"] as! String)
+//        }
+//        liveness.setRecordingMessageTextSize(LivenessConfigs.recordingMessageTextSize)
+//        if livenessConfigs.index(forKey: "recordingMessageTextSize") != nil {
+//            liveness.setRecordingMessageTextSize(livenessConfigs["recordingMessageTextSize"] as! CGFloat)
+//        }
+//        liveness.setRecordingMessageTextColor(LivenessConfigs.livenessRecordingTextColor)
+//        if livenessConfigs.index(forKey: "livenessRecordingTextColor") != nil {
+//            liveness.setRecordingMessageTextColor(livenessConfigs["livenessRecordingTextColor"] as! String)
+//        }
+        
+        
+//        New changes by ANIL => End
+        
         liveness.evaluateServerTrustWIthSSLPinning(false)
-        
         liveness.setLiveness(self)
         
+    }
+}
+
+var player: AVAudioPlayer?
+
+func playSound() {
+    guard let url = Bundle.main.url(forResource: "accura_liveness_verified", withExtension: "mp3") else { return }
+
+    do {
+//        try AVAudioSession.sharedInstance().setActive(true)
+//        player = try AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
+//        guard let player = player else { return }
+//        player.play()
+        
+        let player = AVPlayer(url: url)
+        player.isMuted = false
+        player.play()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+            player.pause()
+        })
+
+    } catch let error {
+        print(error.localizedDescription)
     }
 }

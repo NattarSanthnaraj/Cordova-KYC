@@ -34,6 +34,8 @@ struct ScanConfigs {
     
     static var mrzType = ""
     
+    static var mrzCountryList = ""
+    
     static var barcodeType: String? = nil
 }
 

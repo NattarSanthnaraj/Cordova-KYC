@@ -10,6 +10,9 @@
     <!--<dependency id="cordova-plugin-file" url="https://github.com/apache/cordova-plugin-file.git"/>-->
     <dependency id="cordova-plugin-screen-orientation" url="https://github.com/apache/cordova-plugin-screen-orientation.git"/>
     <dependency id="cordova-plugin-streaming-media" url="https://github.com/nchutchind/cordova-plugin-streaming-media.git"/>
+    <dependency id="cordova-plugin-console" url="https://github.com/apache/cordova-plugin-console.git"/>
+    <dependency id="cordova-plugin-device" url="https://github.com/apache/cordova-plugin-device.git"/>
+    <dependency id="cordova-plugin-file" url="https://github.com/apache/cordova-plugin-file.git"/>
 
     <js-module name="Promise" src="www/Promise.js">
         <clobbers target="Promise" />
@@ -55,7 +58,7 @@
         <source-file src="src/android/accura-OCR/ACCURAService.java" target-dir="src/accura/kyc/plugin/" />
         <source-file src="src/android/accura-OCR/FaceMatchActivity.java" target-dir="src/accura/kyc/plugin/" />
         <source-file src="src/android/accura-OCR/OcrActivity.java" target-dir="src/accura/kyc/plugin/" />
-
+        
         <resource-file src="src/android/accura-OCR/layout/activity_face_match.xml" target="res/layout/activity_face_match.xml"/>
          <resource-file src="src/android/accura-OCR/layout/custom_frame_layout.xml" target="res/layout/custom_frame_layout.xml"/>
         <resource-file src="src/android/accura-OCR/layout/ocr_activity.xml" target="res/layout/ocr_activity.xml"/>
@@ -94,6 +97,9 @@
         <config-file target="*-Info.plist" parent="NSCameraUsageDescription">
             <string>App needs to access camera to scan your document and provide you with accurate result</string>
         </config-file>
+        <config-file target="*-Info.plist" parent="NSMicrophoneUsageDescription">
+            <string>App needs microphone for user oral verification</string>
+        </config-file>
         <config-file target="*-Info.plist" parent="NSPhotoLibraryUsageDescription">
             <string>App needs to photo library to save your document</string>
         </config-file>
@@ -110,8 +116,17 @@
             <true/>
         </config-file>
 
+        <podspec>
+            <config>
+                <source url="https://cdn.cocoapods.org/"/>
+            </config>
+            <pods use-frameworks="true">
+                <pod name="AccuraKYC-Hybrid" type="podspec" spec="2.2.3" />
+            </pods>
+        </podspec>
+
         <!-- File for Without Simulator support iOS library --> <!-- For active it uncomment bellow line and comment line no 110 -->
-        <framework src="src/ios/AccuraKYC.framework" custom="true" embed="true" />
+        <!-- <framework src="src/ios/AccuraKYC.framework" custom="true" embed="true" /> -->
 
         <!-- File for With Simulator support iOS library --> <!-- For active it uncomment bellow line and comment line no 107 -->
         <!--  <framework src="src/ios/with_simulator/AccuraKYC.framework" custom="true" embed="true" /> -->
@@ -154,8 +169,12 @@
 
         <resource-file src="src/ios/accuraface.license" target="AccuraScan/accuraface.license"/>
         <resource-file src="src/ios/key.license" target="AccuraScan/key.license"/>
+        <resource-file src="src/ios/accuraactiveliveness.license" target="AccuraScan/accuraactiveliveness.license"/>
 
         <resource-file src="src/ios/accura-OCR/MainStoryboard_iPhone.storyboard" target="MainStoryboard_iPhone.storyboard"/>
+        <resource-file src="src/ios/accura-OCR/resources/accura_liveness_face_left.gif" target="AccuraScan/accura_liveness_face_left.gif"/>
+        <resource-file src="src/ios/accura-OCR/resources/accura_liveness_face_Right.gif" target="AccuraScan/accura_liveness_face_Right.gif"/>
+        <resource-file src="src/ios/accura-OCR/resources/accura_liveness_verified.mp3" target="AccuraScan/accura_liveness_verified.mp3"/>
     </platform>
 </plugin>
 

@@ -59,7 +59,7 @@ struct gl {
         if let filename = name {
             file = filename
         }
-        if let data = img.jpegData(compressionQuality: 1.0) {
+        if let data = UIImageJPEGRepresentation(img, 1.0) {
             let filename = getDocumentsDirectory().appendingPathComponent("\(file).jpg")
             try? data.write(to: filename)
             print(filename.absoluteString)
@@ -119,7 +119,7 @@ struct gl {
             results["isMRZ"] = sdkModel!.isMRZEnable
             
             let countryListStr = accuraCameraWrapper!.getOCRList();
-            for item in countryListStr! {
+            for item in countryListStr ?? [] {
                 let cntry = item as! NSDictionary
                 var country:[String: Any] = [:]
                 
@@ -172,11 +172,13 @@ struct gl {
         gl.ocrClId = command.callbackId
         ScanConfigs.accuraConfigs = command.argument(at: 0) as! [String: Any]
         ScanConfigs.mrzType = command.argument(at: 1) as! String
-        ScanConfigs.accuraConfigs["app_orientation"] = command.argument(at: 2) as! String
+        ScanConfigs.mrzCountryList = command.argument(at: 2) as! String
+        ScanConfigs.accuraConfigs["app_orientation"] = command.argument(at: 3) as! String
         gl.type = "mrz"
         let viewController = UIStoryboard(name: "MainStoryboard_iPhone", bundle: nil).instantiateViewController(withIdentifier: "ViewController") as! ViewController
         viewController.commandDelegate = self.commandDelegate
         viewController.isCheckScanOCR = false
+        viewController.isCheckCardMRZ = true
         viewController.countryid = 0
         if ScanConfigs.mrzType == "passport_mrz" {
             viewController.MRZDocType = 1
@@ -257,7 +259,7 @@ struct gl {
         gl.face2 = nil
         gl.face1Detect = nil
         gl.face2Detect = nil
-        gl.withFace = false
+        gl.withFace = true
         ScanConfigs.accuraConfigs = command.argument(at: 0) as! [String: Any]
         ScanConfigs.accuraConfigs["app_orientation"] = command.argument(at: 2) as! String
         let LVController = UIStoryboard(name: "MainStoryboard_iPhone", bundle: nil).instantiateViewController(withIdentifier: "LVController") as! LVController
@@ -275,7 +277,7 @@ struct gl {
     func startFaceMatch(command: CDVInvokedUrlCommand) {
         gl.type = "fm"
         gl.ocrClId = command.callbackId
-        gl.withFace = false
+        gl.withFace = true
         let fmInit = EngineWrapper.isEngineInit()
         if !fmInit{
             EngineWrapper.faceEngineInit()
@@ -309,7 +311,7 @@ struct gl {
                 let loadingIndicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 150, height: 150))
                 loadingIndicator.center = self.viewController.view.center
                 loadingIndicator.hidesWhenStopped = true
-                loadingIndicator.style = UIActivityIndicatorView.Style.gray
+                loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorView.Style.gray
                 loadingIndicator.startAnimating();
                 self.viewController.view.addSubview(loadingIndicator)
                 let documentsDirectoryURL =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!

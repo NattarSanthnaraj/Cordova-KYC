@@ -25,6 +25,7 @@ import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import com.androidnetworking.AndroidNetworking;
 
 public class ACCURAService extends CordovaPlugin {
     public static Bitmap face1 = null;

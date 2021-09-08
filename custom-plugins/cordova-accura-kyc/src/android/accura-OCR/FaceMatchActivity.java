@@ -10,7 +10,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
-import com.kyc.online.R;
 
 import com.accurascan.facedetection.LivenessCustomization;
 import com.accurascan.facedetection.SelfieCameraActivity;
@@ -239,10 +238,22 @@ public class FaceMatchActivity extends AppCompatActivity implements FaceHelper.F
         livenessCustomization.livenessAlertSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getPackageName() + "/raw/accura_liveness_verified");
         livenessCustomization.livenessVerifiedAlertSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getPackageName() + "/raw/accura_liveness_verified");
 
-        livenessCustomization.livenessVerifiedAnimation = R.drawable.approved_sign;
-        livenessCustomization.livenessLeftMoveAnimation = R.drawable.accura_liveness_face;
-        livenessCustomization.livenessRightMoveAnimation = R.drawable.accura_liveness_face;
-        livenessCustomization.voiceIcon = R.drawable.ic_mic;
+        String mDrawableName = "approved_sign" ;
+        int approved_sign = getResources().getIdentifier(mDrawableName , "drawable" ,
+                getPackageName());
+
+        String mDrawableName1 = "accura_liveness_face" ;
+        int accura_liveness_face = getResources().getIdentifier(mDrawableName1 , "drawable" ,
+                getPackageName());
+
+        String mDrawableName2 = "ic_mic" ;
+        int ic_mic = getResources().getIdentifier(mDrawableName2 , "drawable" ,
+                getPackageName());
+
+        livenessCustomization.livenessVerifiedAnimation = approved_sign;//R.drawable.approved_sign;
+        livenessCustomization.livenessLeftMoveAnimation = accura_liveness_face;//R.drawable.accura_liveness_face;
+        livenessCustomization.livenessRightMoveAnimation = accura_liveness_face;//R.drawable.accura_liveness_face;
+        livenessCustomization.voiceIcon = ic_mic;//R.drawable.ic_mic;
         livenessCustomization.livenessLeftRotatedYDegree = (float) 180;
         livenessCustomization.livenessRightRotatedYDegree = (float) 0;
 

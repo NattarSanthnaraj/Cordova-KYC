@@ -227,7 +227,7 @@ This configuration's is added into KYC SDK V2.2.1 & SDK V2.3.1
 
 ###  	 Mrz Country List:
 - all
-- IND,USA,UK etc...
+- IND,USA etc...
 
 # Cordova Methods
 - ### getMetadata(successCallback, errorCallback)

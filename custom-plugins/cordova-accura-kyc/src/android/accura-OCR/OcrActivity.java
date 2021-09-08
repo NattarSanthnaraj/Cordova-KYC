@@ -806,30 +806,31 @@ public class OcrActivity extends SensorsActivity implements OcrCallback {
     public JSONObject setMRZData(RecogResult recogResult) {
         JSONObject frontResult = new JSONObject();
         try {
-            frontResult.put("MRZ", recogResult.lines);
-            frontResult.put("Document Type", recogResult.docType);
-            frontResult.put("First Name", recogResult.givenname);
-            frontResult.put("Last Name", recogResult.surname);
-            frontResult.put("Document No.", recogResult.docnumber);
-            frontResult.put("Document check No.", recogResult.docchecksum);
-            frontResult.put("Correct Document check No.", recogResult.correctdocchecksum);
-            frontResult.put("Country", recogResult.country);
-            frontResult.put("Nationality", recogResult.nationality);
+            frontResult.put("mrz", recogResult.lines);
+            frontResult.put("passportType", recogResult.docType);
+            frontResult.put("givenNames", recogResult.givenname);
+            frontResult.put("surName", recogResult.surname);
+            frontResult.put("passportNumber", recogResult.docnumber);
+            frontResult.put("passportNumberChecksum", recogResult.docchecksum);
+            frontResult.put("correctPersonalChecksum", recogResult.correctdocchecksum);
+            frontResult.put("country", recogResult.country);
+            frontResult.put("nationality", recogResult.nationality);
             String s = (recogResult.sex.equals("M")) ? "Male" : ((recogResult.sex.equals("F")) ? "Female" : recogResult.sex);
-            frontResult.put("Sex", s);
-            frontResult.put("Date of Birth", recogResult.birth);
-            frontResult.put("Birth Check No.", recogResult.birthchecksum);
-            frontResult.put("Correct Birth Check No.", recogResult.correctbirthchecksum);
-            frontResult.put("Date of Expiry", recogResult.expirationdate);
-            frontResult.put("Expiration Check No.", recogResult.expirationchecksum);
-            frontResult.put("Correct Expiration Check No.", recogResult.correctexpirationchecksum);
-            frontResult.put("Date Of Issue", recogResult.issuedate);
-            frontResult.put("Department No.", recogResult.departmentnumber);
-            frontResult.put("Other ID", recogResult.otherid);
-            frontResult.put("Other ID2", recogResult.otherid2);
-            frontResult.put("Other ID Check", recogResult.otheridchecksum);
-            frontResult.put("Second Row Check No.", recogResult.secondrowchecksum);
-            frontResult.put("Correct Second Row Check No.", recogResult.correctsecondrowchecksum);
+            frontResult.put("sex", s);
+            frontResult.put("birth", recogResult.birth);
+            frontResult.put("birthChecksum", recogResult.birthchecksum);
+            frontResult.put("correctBirthChecksum", recogResult.correctbirthchecksum);
+            frontResult.put("expirationDate", recogResult.expirationdate);
+            frontResult.put("expirationDateChecksum", recogResult.expirationchecksum);
+            frontResult.put("correctExpirationChecksum", recogResult.correctexpirationchecksum);
+            frontResult.put("issueDate", recogResult.issuedate);
+            frontResult.put("departmentNumber", recogResult.departmentnumber);
+            frontResult.put("personalNumber", recogResult.otherid);
+            frontResult.put("personalNumber2", recogResult.otherid2);
+            frontResult.put("personalNumberChecksum", recogResult.otheridchecksum);
+            frontResult.put("secondRowChecksum", recogResult.secondrowchecksum);
+            frontResult.put("correctSecondrowChecksum", recogResult.correctsecondrowchecksum);
+            frontResult.put("retval", recogResult.ret);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -31,9 +31,6 @@ struct LivenessConfigs {
 
     static let feedBackVideoRecordingMessage: String = "Processing..."
     
-    static let feedBackLowLightMessage: String = "Low light detected"
-
-
     static let setBlurPercentage: Int32 = 80
 
 
@@ -84,4 +81,15 @@ struct LivenessConfigs {
     static let livenessRecordingTimerColor: String = "#555555"
     static var isLivenessGetVideo = false
     static var livenessVideo = ""
+    
+//        New changes by ANIL => Start
+    static var feedBackLowLightMessage: String = "Low light detected"
+    static var feedbackLowLightTolerence: Int32 = 39
+    static var feedBackStartMessage: String = "Put your face inside the oval"
+    static var feedBackLookLeftMessage: String = "Look over your left shoulder"
+    static var feedBackLookRightMessage: String = "Look over your right shoulder"
+    static var feedBackOralInfoMessage: String = "Say each digits out loud"
+    static var enableOralVerification: Bool = false
+    static var codeTextColor: String = "#FFFFFF"
+//        New changes by ANIL => End
 }
