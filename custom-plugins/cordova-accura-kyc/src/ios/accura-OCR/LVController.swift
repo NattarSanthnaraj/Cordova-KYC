@@ -1,149 +1,11 @@
-//
-//  LVController.swift
-//  Accura ORC and Facematch
-//
-//  Created by apple on 26/07/2021.
-//
-
 import UIKit
 import AccuraKYC
 import AVFoundation
 
-class LVController: UIViewController, LivenessData
-{
-    func livenessData(_ stLivenessValue: String!, livenessImage: UIImage!, status: Bool, imagePath: String!) {
-        
-        isLivenessDone = true
-        var results:[String: Any] = [:]
-        var pluginResult = CDVPluginResult(
-            status: CDVCommandStatus_OK,
-            messageAs: results
-        )
-//        if status == false && videoPath != ""{
-//            LivenessConfigs.isLivenessGetVideo = true
-//            LivenessConfigs.livenessVideo = videoPath!.replacingOccurrences(of: "file://", with: "")
-//        } else {
-            LivenessConfigs.isLivenessGetVideo = false
-            LivenessConfigs.livenessVideo = ""
-//        }
-        if status == true {
-            print(stLivenessValue)
-            results["status"] = true
-            results["score"] = stLivenessValue.replacingOccurrences(of: " %", with: "")
-            results["with_face"] = gl.withFace
-            results["fm_score"] = 0.0
-            if gl.face1 != nil {
-                gl.face1Detect = EngineWrapper.detectSourceFaces(gl.face1)
-                if gl.face1Detect != nil {
-                    gl.face2Detect = EngineWrapper.detectTargetFaces(livenessImage, feature1: gl.face1Detect!.feature)
-                    results["fm_score"] = EngineWrapper.identify(gl.face1Detect!.feature, featurebuff2: gl.face2Detect!.feature) * 100
-                }
-            }
-            if gl.face2Detect != nil {
-                results["detect"] = ACCURAService.getImageUri(img: ACCURAService.resizeImage(image: livenessImage, targetSize: gl.face2Detect!.bound), name: nil)
-            } else {
-                results["detect"] = ACCURAService.getImageUri(img: livenessImage, name: nil)
-            }
-            if imagePath != "" {
-                results["image_uri"] = "file://\(imagePath!)"
-            }
-//            if videoPath != "" {
-                results["video_uri"] = ""
-//            }
-            
-            pluginResult = CDVPluginResult(
-                status: CDVCommandStatus_OK,
-                messageAs: results
-            )
-        } else {
-            pluginResult = CDVPluginResult(
-                status: CDVCommandStatus_ERROR,
-                messageAs: "Failed to get liveness. Please try again"
-            )
-        }
-        self.commandDelegate!.send(
-            pluginResult,
-            callbackId: gl.ocrClId
-        )
-        
-        closeMe()
-    }
-    
-    func didChangedLivenessState(_ livenessState: LivenessType) {
-        if(livenessState == .LOOK_RIGHT || livenessState == .APPROVED) {
-            //play Sound
-            playSound()
-        }
-    }
-    
+class LVController: UIViewController {
     
     var audioPath: URL? = nil
     var isLivenessDone = false
-    
-    
-    func livenessData(_ stLivenessValue: String!, livenessImage: UIImage!, status: Bool, videoPath: String!, imagePath: String!) {
-        isLivenessDone = true
-        var results:[String: Any] = [:]
-        var pluginResult = CDVPluginResult(
-            status: CDVCommandStatus_OK,
-            messageAs: results
-        )
-        if status == false && videoPath != ""{
-            LivenessConfigs.isLivenessGetVideo = true
-            LivenessConfigs.livenessVideo = videoPath!.replacingOccurrences(of: "file://", with: "")
-        } else {
-            LivenessConfigs.isLivenessGetVideo = false
-            LivenessConfigs.livenessVideo = ""
-        }
-        if status == true {
-            print(stLivenessValue)
-            results["status"] = true
-            results["score"] = stLivenessValue.replacingOccurrences(of: " %", with: "")
-            results["with_face"] = gl.withFace
-            results["fm_score"] = 0.0
-            if gl.face1 != nil {
-                gl.face1Detect = EngineWrapper.detectSourceFaces(gl.face1)
-                if gl.face1Detect != nil {
-                    gl.face2Detect = EngineWrapper.detectTargetFaces(livenessImage, feature1: gl.face1Detect!.feature)
-                    results["fm_score"] = EngineWrapper.identify(gl.face1Detect!.feature, featurebuff2: gl.face2Detect!.feature) * 100
-                }
-            }
-            if gl.face2Detect != nil {
-                results["detect"] = ACCURAService.getImageUri(img: ACCURAService.resizeImage(image: livenessImage, targetSize: gl.face2Detect!.bound), name: nil)
-            } else {
-                results["detect"] = ACCURAService.getImageUri(img: livenessImage, name: nil)
-            }
-            if imagePath != "" {
-                results["image_uri"] = "file://\(imagePath!)"
-            }
-            if videoPath != "" {
-                results["video_uri"] = videoPath!
-            }
-            
-            pluginResult = CDVPluginResult(
-                status: CDVCommandStatus_OK,
-                messageAs: results
-            )
-        } else {
-            pluginResult = CDVPluginResult(
-                status: CDVCommandStatus_ERROR,
-                messageAs: "Failed to get liveness. Please try again"
-            )
-        }
-        self.commandDelegate!.send(
-            pluginResult,
-            callbackId: gl.ocrClId
-        )
-        
-        closeMe()
-    }
-    
-    func livenessViewDisappear() {
-        if !isLivenessDone {
-            closeMe()
-        }
-    }
-    
     var livenessConfigs:[String: Any] = [:]
     var commandDelegate:CDVCommandDelegate? = nil
     var cordovaViewController:UIViewController? = nil
@@ -152,7 +14,6 @@ class LVController: UIViewController, LivenessData
     func closeMe() {
         self.win!.rootViewController = cordovaViewController!
     }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -179,6 +40,12 @@ class LVController: UIViewController, LivenessData
                     
                 }
             }
+            if ScanConfigs.accuraConfigs.index(forKey: "face_base64") != nil {
+                let newImageData = Data(base64Encoded: ScanConfigs.accuraConfigs["face_base64"] as! String)
+                if let newImageData = newImageData {
+                    gl.face1 = UIImage(data: newImageData)
+                }
+            }
         } else {
             gl.withFace = true
             if ScanConfigs.accuraConfigs.index(forKey: "face_uri") != nil {
@@ -187,12 +54,24 @@ class LVController: UIViewController, LivenessData
                     
                 }
             }
+            if ScanConfigs.accuraConfigs.index(forKey: "face_base64") != nil {
+                let newImageData = Data(base64Encoded: ScanConfigs.accuraConfigs["face_base64"] as! String)
+                if let newImageData = newImageData {
+                    gl.face1 = UIImage(data: newImageData)
+                }
+            }
         }
         // To customize your screen theme and feed back messages
         liveness.setLivenessURL(LivenessConfigs.liveness_url)
         if livenessConfigs.index(forKey: "liveness_url") != nil {
             liveness.setLivenessURL(livenessConfigs["liveness_url"] as! String)
         }
+        liveness.setContentType(.form_data)
+        if livenessConfigs.index(forKey: "contentType") != nil {
+            let type = livenessConfigs["contentType"] as! String
+            liveness.setContentType( type == "raw_data" ? .raw_data : .form_data)
+        }
+
         // To customize your screen theme and feed back messages
         liveness.setBackGroundColor(LivenessConfigs.livenessBackground)
         if livenessConfigs.index(forKey: "livenessBackground") != nil {
@@ -307,6 +186,23 @@ class LVController: UIViewController, LivenessData
         if livenessConfigs.index(forKey: "feedBackStartMessage") != nil {
             liveness.setFeedBackFaceInsideOvalMessage(livenessConfigs["feedBackStartMessage"] as! String)
         }
+
+        liveness.setFeedBackProcessingMessage(LivenessConfigs.feedBackProcessingMessage)
+        if livenessConfigs.index(forKey: "feedBackProcessingMessage") != nil {
+            liveness.setFeedBackProcessingMessage(livenessConfigs["feedBackProcessingMessage"] as! String)
+        }
+        
+        liveness.isShowLogo(LivenessConfigs.isShowLogo)
+        if livenessConfigs.index(forKey: "isShowLogo") != nil {
+            liveness.isShowLogo(livenessConfigs["isShowLogo"] as! Bool)
+        }
+        liveness.setLogoImage("ic_logo.png")
+
+        liveness.enableOralVerification(LivenessConfigs.enableOralVerification)
+        if livenessConfigs.index(forKey: "enableOralVerification") != nil {
+            liveness.enableOralVerification(livenessConfigs["enableOralVerification"] as! Bool)
+        }
+        liveness.setButtonStartRecordingIcon("ic_mic.png")
         
         //set GIF name with extension. make sure GIF files are added in your project root directory.
         liveness.gifImageName(forLeftMoveFaceAnimation: "accura_liveness_face_left.gif")
@@ -365,12 +261,144 @@ class LVController: UIViewController, LivenessData
         
         
 //        New changes by ANIL => End
-        
-        liveness.evaluateServerTrustWIthSSLPinning(false)
+        // liveness.evaluateServerTrustWIthSSLPinning(false)
         liveness.setLiveness(self)
         
     }
 }
+
+extension LVController: LivenessData {
+
+    func livenessViewDisappear() {
+        if !isLivenessDone {
+            closeMe()
+        }
+    }
+    
+    func livenessData(_ stLivenessValue: String!, livenessImage: UIImage!, status: Bool, imagePath: String!) {
+        
+        isLivenessDone = true
+        var results:[String: Any] = [:]
+        var pluginResult = CDVPluginResult(
+            status: CDVCommandStatus_OK,
+            messageAs: results
+        )
+//        if status == false && videoPath != ""{
+//            LivenessConfigs.isLivenessGetVideo = true
+//            LivenessConfigs.livenessVideo = videoPath!.replacingOccurrences(of: "file://", with: "")
+//        } else {
+            LivenessConfigs.isLivenessGetVideo = false
+            LivenessConfigs.livenessVideo = ""
+//        }
+        if status == true {
+            print(stLivenessValue)
+            results["status"] = true
+            results["score"] = stLivenessValue.replacingOccurrences(of: " %", with: "")
+            results["with_face"] = gl.withFace
+            results["fm_score"] = 0.0
+            if gl.face1 != nil {
+                gl.face1Detect = EngineWrapper.detectSourceFaces(gl.face1)
+                if gl.face1Detect != nil {
+                    gl.face2Detect = EngineWrapper.detectTargetFaces(livenessImage, feature1: gl.face1Detect!.feature)
+                    results["fm_score"] = EngineWrapper.identify(gl.face1Detect!.feature, featurebuff2: gl.face2Detect!.feature) * 100
+                }
+            }
+            if gl.face2Detect != nil {
+                results["detect"] = ACCURAService.getImageUri(img: ACCURAService.resizeImage(image: livenessImage, targetSize: gl.face2Detect!.bound), name: nil)
+            } else {
+                results["detect"] = ACCURAService.getImageUri(img: livenessImage, name: nil)
+            }
+            if imagePath != "" {
+                results["image_uri"] = "file://\(imagePath!)"
+            }
+//            if videoPath != "" {
+                results["video_uri"] = ""
+//            }
+            
+            pluginResult = CDVPluginResult(
+                status: CDVCommandStatus_OK,
+                messageAs: results
+            )
+        } else {
+            pluginResult = CDVPluginResult(
+                status: CDVCommandStatus_ERROR,
+                messageAs: "Failed to get liveness. Please try again"
+            )
+        }
+        self.commandDelegate!.send(
+            pluginResult,
+            callbackId: gl.ocrClId
+        )
+        
+        closeMe()
+    }
+    
+    func didChangedLivenessState(_ livenessState: LivenessType) {
+        if(livenessState == .LOOK_RIGHT || livenessState == .APPROVED) {
+            //play Sound
+            playSound()
+        }
+    }
+
+    func livenessData(_ stLivenessValue: String!, livenessImage: UIImage!, status: Bool, videoPath: String!, imagePath: String!) {
+        isLivenessDone = true
+        var results:[String: Any] = [:]
+        var pluginResult = CDVPluginResult(
+            status: CDVCommandStatus_OK,
+            messageAs: results
+        )
+        if status == false && videoPath != ""{
+            LivenessConfigs.isLivenessGetVideo = true
+            LivenessConfigs.livenessVideo = videoPath!.replacingOccurrences(of: "file://", with: "")
+        } else {
+            LivenessConfigs.isLivenessGetVideo = false
+            LivenessConfigs.livenessVideo = ""
+        }
+        if status == true {
+            print(stLivenessValue)
+            results["status"] = true
+            results["score"] = stLivenessValue.replacingOccurrences(of: " %", with: "")
+            results["with_face"] = gl.withFace
+            results["fm_score"] = 0.0
+            if gl.face1 != nil {
+                gl.face1Detect = EngineWrapper.detectSourceFaces(gl.face1)
+                if gl.face1Detect != nil {
+                    gl.face2Detect = EngineWrapper.detectTargetFaces(livenessImage, feature1: gl.face1Detect!.feature)
+                    results["fm_score"] = EngineWrapper.identify(gl.face1Detect!.feature, featurebuff2: gl.face2Detect!.feature) * 100
+                }
+            }
+            if gl.face2Detect != nil {
+                results["detect"] = ACCURAService.getImageUri(img: ACCURAService.resizeImage(image: livenessImage, targetSize: gl.face2Detect!.bound), name: nil)
+            } else {
+                results["detect"] = ACCURAService.getImageUri(img: livenessImage, name: nil)
+            }
+            if imagePath != "" {
+                results["image_uri"] = "file://\(imagePath!)"
+            }
+            if videoPath != "" {
+                results["video_uri"] = videoPath!
+            }
+            
+            pluginResult = CDVPluginResult(
+                status: CDVCommandStatus_OK,
+                messageAs: results
+            )
+        } else {
+            pluginResult = CDVPluginResult(
+                status: CDVCommandStatus_ERROR,
+                messageAs: "Failed to get liveness. Please try again"
+            )
+        }
+        self.commandDelegate!.send(
+            pluginResult,
+            callbackId: gl.ocrClId
+        )
+        
+        closeMe()
+    }
+
+}
+
 
 var player: AVAudioPlayer?
 

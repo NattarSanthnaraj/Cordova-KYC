@@ -59,7 +59,7 @@ struct gl {
         if let filename = name {
             file = filename
         }
-        if let data = UIImageJPEGRepresentation(img, 1.0) {
+        if let data = img.jpegData(compressionQuality: 1.0) {
             let filename = getDocumentsDirectory().appendingPathComponent("\(file).jpg")
             try? data.write(to: filename)
             print(filename.absoluteString)
@@ -165,6 +165,26 @@ struct gl {
             callbackId: command.callbackId
         )
         
+    }
+
+    @objc(setupAccuraConfig:)
+    func setupAccuraConfig(command: CDVInvokedUrlCommand) {
+
+        var pluginResult = CDVPluginResult(
+            status: CDVCommandStatus_ERROR
+        )
+
+        gl.ocrClId = command.callbackId
+        ScanConfigs.accuraMessagesConfigs = command.argument(at: 0) as! [String: Any]
+
+        pluginResult = CDVPluginResult(
+            status: CDVCommandStatus_OK,
+            messageAs: "Messages setup successfully"
+        )
+        self.commandDelegate!.send(
+            pluginResult,
+            callbackId: command.callbackId
+        )
     }
     
     @objc(startMRZ:)
@@ -311,7 +331,7 @@ struct gl {
                 let loadingIndicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 150, height: 150))
                 loadingIndicator.center = self.viewController.view.center
                 loadingIndicator.hidesWhenStopped = true
-                loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorView.Style.gray
+                loadingIndicator.style = UIActivityIndicatorView.Style.gray
                 loadingIndicator.startAnimating();
                 self.viewController.view.addSubview(loadingIndicator)
                 let documentsDirectoryURL =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!

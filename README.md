@@ -59,6 +59,7 @@ Here you have two options for android that which library you want to use for thi
 |enableLogs|boolean|false|<p>if true logs will be enabled for the app.</p><p><br>make sure to disable logs in release mode</p>|
 |with_face|boolean|false|need when using liveness or face match after ocr|
 |face_uri|URI Sting|undefined|Required when with_face = true|
+|face_base64|Image base64 Sting|undefined|Required when with_face = true. You have to pass "face_uri" or "face_base64"|
 |face1|boolean|false|need when using facematch with “with_face = false”<br><br>For Face1 set it to TRUE|
 |face2|boolean|false|<p>need when using facematch with “with_face = false”</p><p>For Face2 set it to TRUE</p>|
 |rg_setBlurPercentage|integer|62|0 for clean document and 100 for Blurry document|
@@ -74,6 +75,7 @@ Here you have two options for android that which library you want to use for thi
 |rg_setBackSide|boolean|false|set true to use backside|
 |rg_setEnableMediaPlayer|boolean|true|false to disable default sound and default it is true|
 |rg_customMediaURL|string|null|if given a valid URL it will download the file and use it as an alert sound.|
+|IS_SHOW_LOGO|boolean|true||
 |SCAN_TITLE_OCR_FRONT|string|Scan Front Side of %s||
 |SCAN_TITLE_OCR_BACK|string|Scan Back Side of %s||
 |SCAN_TITLE_OCR|string|Scan %s||
@@ -121,39 +123,11 @@ Contact AccuraScan at contact@accurascan.com for Liveness SDK or API
 |setGlarePercentage_1|integer|-1|Set max percentage for glare or set it -1 to remove glare filter|
 |isSaveImage|boolean|true||
 |liveness_url|URL string|Your liveness url|Required|
+|contentType|string|form_data|param type of your liveness API|
 |livenessBackground|color string|#FFC4C4C5||
 |livenessCloseIcon|color string|#FF000000||
 |livenessfeedbackBg|color string|#00000000||
 |livenessfeedbackText|color string|#FF000000||
-
-###
-### Liveness Removed Configurations:  JSON Object
-
-This configuration's is removed in KYC SDK V2.2.1 & SDK V2.3.1
-
-|Option|Type|Default|Description|
-| :- | :- | :- | :- |
-|feedBackVideoRecordingMessage|string|Processing…||
-|isRecordVideo|boolean|true||
-|videoLengthInSecond|integer|5||
-|recordingTimerTextSize|integer|45||
-|recordingMessage|string|Scanning your face be steady||
-|recordingMessageTextSize|integer|18||
-|enableFaceDetect|boolean|true||
-|enableFaceMatch|boolean|true||
-|fmScoreThreshold|integer|50||
-|feedbackFMFailed|string|Face not matched||
-|livenessRecordingTextColor|color string|#555555||
-|livenessRecordingTimerTextColor|color string|#555555||
-
-
-###
-### New Added Liveness Configurations:  JSON Object
-
-This configuration's is added into KYC SDK V2.2.1 & SDK V2.3.1
-
-|Option|Type|Default|Description|
-| :- | :- | :- | :- |
 |feedBackLowLightMessage|string|Low light detected||
 |feedbackLowLightTolerence|integer|39||
 |feedBackStartMessage|string|Put your face inside the oval||
@@ -161,6 +135,8 @@ This configuration's is added into KYC SDK V2.2.1 & SDK V2.3.1
 |feedBackLookRightMessage|string|Look over your right shoulder||
 |feedBackOralInfoMessage|string|Say each digits out loud||
 |enableOralVerification|boolean|true||
+|feedBackProcessingMessage|string|"Processing..."||
+|isShowLogo|boolean|true|For display watermark logo images|
 |codeTextColor|color string|#FF000000||
 
 
@@ -169,19 +145,21 @@ This configuration's is added into KYC SDK V2.2.1 & SDK V2.3.1
 
 |Option|Type|Default|Description|
 | :- | :- | :- | :- |
-|fm_feedbackTextSize|integer|18||
-|fm_feedBackframeMessage|string|Frame Your Face||
-|fm_feedBackAwayMessage|string|Move Phone Away||
-|fm_feedBackOpenEyesMessage|string|Keep Your Eyes Open||
-|fm_feedBackCloserMessage|string|Move Phone Closer||
-|fm_feedBackCenterMessage|string|Move Phone Center||
-|fm_feedBackMultipleFaceMessage|string|Multiple Face Detected||
-|fm_feedBackHeadStraightMessage|string|Keep Your Head Straight||
-|fm_feedBackBlurFaceMessage|string|Blur Detected Over Face||
-|fm_feedBackGlareFaceMessage|string|Glare Detected||
-|fm_setBlurPercentage|integer|80|0 for clean face and 100 for Blurry face or set it -1 to remove blur filter|
-|fm_setGlarePercentage_0|integer|-1|Set min percentage for glare or set it -1 to remove glare filter|
-|fm_setGlarePercentage_1|integer|-1|Set max percentage for glare or set it -1 to remove glare filter|
+|feedbackTextSize|integer|18||
+|feedBackframeMessage|string|Frame Your Face||
+|feedBackAwayMessage|string|Move Phone Away||
+|feedBackOpenEyesMessage|string|Keep Your Eyes Open||
+|feedBackCloserMessage|string|Move Phone Closer||
+|feedBackCenterMessage|string|Move Phone Center||
+|feedBackMultipleFaceMessage|string|Multiple Face Detected||
+|feedBackHeadStraightMessage|string|Keep Your Head Straight||
+|feedBackBlurFaceMessage|string|Blur Detected Over Face||
+|feedBackGlareFaceMessage|string|Glare Detected||
+|feedBackProcessingMessage|string|"Processing..."||
+|isShowLogo|boolean|true|For display watermark logo images|
+|setBlurPercentage|integer|80|0 for clean face and 100 for Blurry face or set it -1 to remove blur filter|
+|setGlarePercentage_0|integer|-1|Set min percentage for glare or set it -1 to remove glare filter|
+|setGlarePercentage_1|integer|-1|Set max percentage for glare or set it -1 to remove glare filter|
 |backGroundColor|color string|#FFC4C4C5||
 |closeIconColor|color string|#FF000000||
 |feedbackBackGroundColor|color string|#00000000||
@@ -253,11 +231,19 @@ This configuration's is added into KYC SDK V2.2.1 & SDK V2.3.1
 
   - Error: String<Any Error Message>
 
+
+- ### setupAccuraConfig(config, successCallback, errorCallback)
+  - config: JSON Object 
+
+  - Success: JSON Response = {"Messages setup successfully"}
+
+  - Error: String<Any Error Message>
+
 - ### startMRZ(accuraConfigrations?, MRZType, CountryList, successCallback, errorCallback)
   - MRZType: String 
     - default: other_mrz
   - CountryList: String 
-    - default: all or IND,USA,UK 
+    - default: all or IND,USA
   - Success: JSON Response {
 
  	 front_data: JSONObjects?,
@@ -276,9 +262,7 @@ This configuration's is added into KYC SDK V2.2.1 & SDK V2.3.1
 
   - Error: String<Any Error Message>
 
-#### Note:- startMRZ method is updated with new param into KYC SDK V2.2.1 & SDK V2.3.1
 
-  
 - ### startOcrWithCard(accuraConfigrations?,countryID, cardID, cardName,successCallback, errorCallback)
   - countryID: Integer
     - allowed: CountryModel<country_id>
@@ -1078,6 +1062,49 @@ function getMetadata() {
 
 }
 ```
+
+### Call setupAccuraConfig for setup custom messages and setup of Accura SDK.
+```js
+function setupAccuraConfig() {
+
+    var language = 'en';
+    var config = {
+        ACCURA_ERROR_CODE_MOTION: language == 'en' ? 'Keep Document Steady' : 'حافظ على ثبات المستند',
+        ACCURA_ERROR_CODE_DOCUMENT_IN_FRAME: language == 'en' ? 'Keep document in frame' : 'احتفظ بالمستند في الإطار',
+        ACCURA_ERROR_CODE_BRING_DOCUMENT_IN_FRAME: language == 'en' ?  'Bring card near to frame' : 'إحضار البطاقة بالقرب من الإطار',
+        ACCURA_ERROR_CODE_PROCESSING: language == 'en' ?  'Processing…' : 'يعالج…',
+        ACCURA_ERROR_CODE_BLUR_DOCUMENT: language == 'en' ?  'Blur detect in document' : 'كشف التمويه في المستند',
+        ACCURA_ERROR_CODE_FACE_BLUR: language == 'en' ?  'Blur detected over face' : 'تم الكشف عن ضبابية على الوجه',
+        ACCURA_ERROR_CODE_GLARE_DOCUMENT: language == 'en' ?  'Glare detect in document' : 'كشف الوهج في المستند',
+        ACCURA_ERROR_CODE_HOLOGRAM: language == 'en' ?  'Hologram Detected' : 'تم الكشف عن صورة ثلاثية الأبعاد', 
+        ACCURA_ERROR_CODE_DARK_DOCUMENT: language == 'en' ?  'Low lighting detected' : 'تم الكشف عن إضاءة منخفضة',
+        ACCURA_ERROR_CODE_PHOTO_COPY_DOCUMENT: language == 'en' ?  'Can not accept Photo Copy Document' : 'لا يمكن قبول مستند نسخ الصور',
+        ACCURA_ERROR_CODE_FACE: language == 'en' ?  'Face not detected' : 'لم يتم الكشف عن الوجه',
+        ACCURA_ERROR_CODE_MRZ: language == 'en' ?  'MRZ not detected' : 'لم يتم الكشف عن MRZ',
+        ACCURA_ERROR_CODE_PASSPORT_MRZ: language == 'en' ?  'Passport MRZ not detected' : 'لم يتم الكشف عن MRZ جواز سفر',
+        ACCURA_ERROR_CODE_ID_MRZ: language == 'en' ?  'ID card MRZ not detected' : 'لم يتم الكشف عن بطاقة الهوية MRZ',
+        ACCURA_ERROR_CODE_VISA_MRZ: language == 'en' ?  'Visa MRZ not detected' : 'لم يتم الكشف عن Visa MRZ',
+        ACCURA_ERROR_CODE_WRONG_SIDE: language == 'en' ?  'Scanning wrong side of document' : 'مسح الجانب الخطأ من المستند',
+        ACCURA_ERROR_CODE_UPSIDE_DOWN_SIDE: language == 'en' ?  'Document is upside down. Place it properly' : 'المستند مقلوب. ضعه بشكل صحيح',
+    
+        IS_SHOW_LOGO: true,
+        SCAN_TITLE_OCR_FRONT: language == 'en' ?  'Scan Front Side of OCR Document' : 'مسح الوجه الأمامي لمستند OCR',
+        SCAN_TITLE_OCR_BACK: language == 'en' ?  'Scan Back Side of OCR Document' : 'مسح الجانب الخلفي من مستند OCR',
+        SCAN_TITLE_OCR: language == 'en' ?  'Scan' : 'مسح',
+        SCAN_TITLE_BANKCARD: language == 'en' ?  'Scan Bank Card' : 'مسح البطاقة المصرفية',
+        SCAN_TITLE_BARCODE: language == 'en' ?  'Scan Barcode' : 'مسح الرمز الشريطى',
+        SCAN_TITLE_MRZ_PDF417_FRONT: language == 'en' ?  'Scan Front Side of Document' : 'مسح الوجه الأمامي للمستند',
+        SCAN_TITLE_MRZ_PDF417_BACK: language == 'en' ?  'Now Scan Back Side of Document' : 'الآن مسح الجانب الخلفي من المستند',
+        SCAN_TITLE_DLPLATE: language == 'en' ?  'Scan Number Plate' : 'مسح رقم اللوحة'
+    };
+    accura.setupAccuraConfig( config, function (result) {
+        console.log("Messgae:- ", result);
+    }, function (error) {
+        alert(error);
+    });
+}
+```
+
 ### Initialize cordova back button
 ```js
  	document.addEventListener("backbutton", function () {
@@ -1378,6 +1405,8 @@ function startLiveness(withFace = false) {
 
          liveness_url: '<your liveness url>',
 
+         contentType: 'form_data',
+
          feedBackLowLightMessage: 'Low light detected',
 
          feedbackLowLightTolerence: 39,
@@ -1581,35 +1610,35 @@ function startFaceMatch(withFace = false, face1 = false, face2 = false) {
 
      var config = {
 
-         fm_feedbackTextSize: 18,
+         feedbackTextSize: 18,
 
-         fm_feedBackframeMessage: 'Frame Your Face',
+         feedBackframeMessage: 'Frame Your Face',
 
-         fm_feedBackAwayMessage: 'Move Phone Away',
+         feedBackAwayMessage: 'Move Phone Away',
 
-         fm_feedBackOpenEyesMessage: 'Keep Your Eyes Open',
+         feedBackOpenEyesMessage: 'Keep Your Eyes Open',
 
-         fm_feedBackCloserMessage: 'Move Phone Closer',
+         feedBackCloserMessage: 'Move Phone Closer',
 
-         fm_feedBackCenterMessage: 'Move Phone Center',
+         feedBackCenterMessage: 'Move Phone Center',
 
-         fm_feedBackMultipleFaceMessage: 'Multiple Face Detected',
+         feedBackMultipleFaceMessage: 'Multiple Face Detected',
 
-         fm_feedBackHeadStraightMessage: 'Keep Your Head Straight',
+         feedBackHeadStraightMessage: 'Keep Your Head Straight',
 
-         fm_feedBackBlurFaceMessage: 'Blur Detected Over Face',
+         feedBackBlurFaceMessage: 'Blur Detected Over Face',
 
-         fm_feedBackGlareFaceMessage: 'Glare Detected',
+         feedBackGlareFaceMessage: 'Glare Detected',
 
          // <!--// 0 for clean face and 100 for Blurry face or set it -1 to remove blur filter-->
 
-         fm_setBlurPercentage: 80,
+         setBlurPercentage: 80,
 
          // <!--// Set min percentage for glare or set it -1 to remove glare filter-->
 
-         fm_setGlarePercentage_0: -1,
+         setGlarePercentage_0: -1,
 
-         fm_setGlarePercentage_1: -1,
+         setGlarePercentage_1: -1,
 
      };
 

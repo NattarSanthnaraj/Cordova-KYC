@@ -1,102 +1,17 @@
-//
-//  FMController.swift
-//  Accura ORC and Facematch
-//
-//  Created by apple on 25/07/2021.
-//
-
 import UIKit
 import AccuraKYC
 
-class FMController: UIViewController, FacematchData {
+class FMController: UIViewController {
     var livenessConfigs:[String: Any] = [:]
     var commandDelegate:CDVCommandDelegate? = nil
     var cordovaViewController:UIViewController? = nil
     var audioPath: URL? = nil
     var isFacematchDone = false
-    func facematchData(_ FaceImage: UIImage!) {
-        isFacematchDone = true
-        if gl.face1 == nil {
-            var results:[String: Any] = [:]
-            results["status"] = false
-            results["with_face"] = gl.withFace
-            gl.face1 = FaceImage
-            if gl.face1Detect == nil {
-                if let img1 = ACCURAService.getImageUri(img: gl.face1!, name: nil) {
-                    results["img_1"] = img1
-                }
-            } else {
-                if let img1 = ACCURAService.getImageUri(img: ACCURAService.resizeImage(image: gl.face1!, targetSize: gl.face1Detect!.bound), name: nil) {
-                    results["img_1"] = img1
-                }
-            }
-            if results.index(forKey: "img_1") != nil {
-                let pluginResult = CDVPluginResult(
-                    status: CDVCommandStatus_OK,
-                    messageAs: results
-                )
-                self.commandDelegate!.send(
-                    pluginResult,
-                    callbackId: gl.ocrClId
-                )
-            } else {
-                let pluginResult = CDVPluginResult(
-                    status: CDVCommandStatus_ERROR,
-                    messageAs: "Error found in data. Please try again"
-                )
-                self.commandDelegate!.send(
-                    pluginResult,
-                    callbackId: gl.ocrClId
-                )
-            }
-            closeMe()
-            
-        } else {
-            gl.face1Detect = EngineWrapper.detectSourceFaces(gl.face1)
-            gl.face2 = FaceImage
-            gl.face2Detect = EngineWrapper.detectTargetFaces(FaceImage, feature1: gl.face1Detect!.feature)
-            let score = EngineWrapper.identify(gl.face1Detect!.feature, featurebuff2: gl.face2Detect!.feature)
-            var results:[String: Any] = [:]
-            results["status"] = true
-            results["score"] = score*100
-            results["with_face"] = gl.withFace
-            if !gl.withFace {
-                if let img1 = ACCURAService.getImageUri(img: gl.face1!, name: nil) {
-                    results["img_1"] = img1
-                }
-                if let img2 = ACCURAService.getImageUri(img: gl.face2!, name: nil) {
-                    results["img_2"] = img2
-                }
-            } else {
-                if let img1 = ACCURAService.getImageUri(img: ACCURAService.resizeImage(image: gl.face2!, targetSize: gl.face2Detect!.bound), name: nil) {
-                    results["detect"] = img1
-                }
-            }
-            let pluginResult = CDVPluginResult(
-                status: CDVCommandStatus_OK,
-                messageAs: results
-            )
-            self.commandDelegate!.send(
-                pluginResult,
-                callbackId: gl.ocrClId
-            )
-            ACCURAService.cleanFaceData()
-            closeMe()
-        }
-    }
+    
     func closeMe() {
         self.win!.rootViewController = cordovaViewController!
     }
     var win: UIWindow? = nil
-    
-    func facematchViewDisappear() {
-        if !isFacematchDone {
-           closeMe()
-        }
-        if gl.face2 != nil {
-            EngineWrapper.faceEngineClose()
-        }
-    }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         
@@ -111,6 +26,13 @@ class FMController: UIViewController, FacematchData {
                 if ScanConfigs.accuraConfigs.index(forKey: "face_uri") != nil {
                     if let face = ACCURAService.getImageFromUri(path: ScanConfigs.accuraConfigs["face_uri"] as! String) {
                         gl.face1 = face
+                        gl.face1Detect = EngineWrapper.detectSourceFaces(gl.face1)
+                    }
+                }
+                if ScanConfigs.accuraConfigs.index(forKey: "face_base64") != nil {
+                    let newImageData = Data(base64Encoded: ScanConfigs.accuraConfigs["face_base64"] as! String)
+                    if let newImageData = newImageData {
+                        gl.face1 = UIImage(data: newImageData)
                         gl.face1Detect = EngineWrapper.detectSourceFaces(gl.face1)
                     }
                 }
@@ -237,7 +159,16 @@ class FMController: UIViewController, FacematchData {
         if livenessConfigs["feedBackGlareFaceMessage"] != nil {
             liveness.setFeedBackGlareFaceMessage(livenessConfigs["feedBackGlareFaceMessage"] as! String)
         }
-        
+
+        liveness.setFeedBackProcessingMessage(LivenessConfigs.feedBackProcessingMessage)
+        if livenessConfigs.index(forKey: "feedBackProcessingMessage") != nil {
+            liveness.setFeedBackProcessingMessage(livenessConfigs["feedBackProcessingMessage"] as! String)
+        }
+        liveness.isShowLogoImage(LivenessConfigs.isShowLogo)
+        if livenessConfigs.index(forKey: "isShowLogo") != nil {
+            liveness.isShowLogoImage(livenessConfigs["isShowLogo"] as! Bool)
+        }
+        liveness.setLogoImage("ic_logo.png")
         
         // 0 for clean face and 100 for Blurry face
         liveness.setBlurPercentage(Int32(LivenessConfigs.setBlurPercentage)) // set blure percentage -1 to remove this filter
@@ -260,5 +191,89 @@ class FMController: UIViewController, FacematchData {
         liveness.setFacematch(self)
     }
     
+
+}
+
+extension FMController: FacematchData {
+
+    func facematchViewDisappear() {
+        if !isFacematchDone {
+           closeMe()
+        }
+        if gl.face2 != nil {
+            EngineWrapper.faceEngineClose()
+        }
+    }
+
+    func facematchData(_ FaceImage: UIImage!) {
+        isFacematchDone = true
+        if gl.face1 == nil {
+            var results:[String: Any] = [:]
+            results["status"] = false
+            results["with_face"] = gl.withFace
+            gl.face1 = FaceImage
+            if gl.face1Detect == nil {
+                if let img1 = ACCURAService.getImageUri(img: gl.face1!, name: nil) {
+                    results["img_1"] = img1
+                }
+            } else {
+                if let img1 = ACCURAService.getImageUri(img: ACCURAService.resizeImage(image: gl.face1!, targetSize: gl.face1Detect!.bound), name: nil) {
+                    results["img_1"] = img1
+                }
+            }
+            if results.index(forKey: "img_1") != nil {
+                let pluginResult = CDVPluginResult(
+                    status: CDVCommandStatus_OK,
+                    messageAs: results
+                )
+                self.commandDelegate!.send(
+                    pluginResult,
+                    callbackId: gl.ocrClId
+                )
+            } else {
+                let pluginResult = CDVPluginResult(
+                    status: CDVCommandStatus_ERROR,
+                    messageAs: "Error found in data. Please try again"
+                )
+                self.commandDelegate!.send(
+                    pluginResult,
+                    callbackId: gl.ocrClId
+                )
+            }
+            closeMe()
+            
+        } else {
+            gl.face1Detect = EngineWrapper.detectSourceFaces(gl.face1)
+            gl.face2 = FaceImage
+            gl.face2Detect = EngineWrapper.detectTargetFaces(FaceImage, feature1: gl.face1Detect!.feature)
+            let score = EngineWrapper.identify(gl.face1Detect!.feature, featurebuff2: gl.face2Detect!.feature)
+            var results:[String: Any] = [:]
+            results["status"] = true
+            results["score"] = score*100
+            results["with_face"] = gl.withFace
+            if !gl.withFace {
+                if let img1 = ACCURAService.getImageUri(img: gl.face1!, name: nil) {
+                    results["img_1"] = img1
+                }
+                if let img2 = ACCURAService.getImageUri(img: gl.face2!, name: nil) {
+                    results["img_2"] = img2
+                }
+            } else {
+                if let img1 = ACCURAService.getImageUri(img: ACCURAService.resizeImage(image: gl.face2!, targetSize: gl.face2Detect!.bound), name: nil) {
+                    results["detect"] = img1
+                }
+            }
+            let pluginResult = CDVPluginResult(
+                status: CDVCommandStatus_OK,
+                messageAs: results
+            )
+            self.commandDelegate!.send(
+                pluginResult,
+                callbackId: gl.ocrClId
+            )
+            ACCURAService.cleanFaceData()
+            closeMe()
+        }
+    }
 
 }

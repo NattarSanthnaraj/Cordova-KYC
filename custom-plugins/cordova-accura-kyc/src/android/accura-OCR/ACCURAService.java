@@ -1,6 +1,7 @@
 package accura.kyc.plugin;
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -16,11 +17,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.util.Base64;
 import android.util.Log;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.List;
@@ -39,6 +44,7 @@ public class ACCURAService extends CordovaPlugin {
     public static final String WRITE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
     public static final int SEARCH_REQ_CODE = 0;
     private static final String TAG = OcrActivity.class.getSimpleName();
+    public static JSONObject messagesConf = null;
     
     public ACCURAService() {
         super();
@@ -52,6 +58,21 @@ public class ACCURAService extends CordovaPlugin {
             salt.append(SALTCHARS.charAt(index));
         }
         return salt.toString();
+    }
+
+    public static Bitmap getBitmap(ContentResolver cr, Uri url)
+            throws FileNotFoundException, IOException {
+        InputStream input = cr.openInputStream(url);
+        Bitmap bitmap = BitmapFactory.decodeStream(input);
+        input.close();
+        return bitmap;
+    }
+
+    public static Bitmap getBase64ToBitmap(String base64Image) {
+
+        byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        return decodedByte;
     }
 
     public static String getImageUri(Bitmap bitmap, String name, String path) {
@@ -119,6 +140,7 @@ public class ACCURAService extends CordovaPlugin {
             JSONObject results = new JSONObject();
             RecogEngine.SDKModel sdkModel = recogEngine.initEngine(cordova.getContext());
             if (sdkModel.i >= 0) {
+                AndroidNetworking.initialize(cordova.getContext(), UnsafeOkHttpClient.getUnsafeOkHttpClient());
                 results.put("sdk_version", recogEngine.getVersion());
                 results.put("isValid", true);
                 // if OCR enable then get card list
@@ -188,6 +210,16 @@ public class ACCURAService extends CordovaPlugin {
                 }
             }
         }
+
+        if (action.equals("setupAccuraConfig")) {
+
+            JSONObject messagesConf = args.getJSONObject(0);
+            ACCURAService.messagesConf = messagesConf;
+            callbackContext.success("Messages setup successfully");
+            return true;
+        }
+        
+
         if (action.equals("startOcrWithCard")) {
             int country = args.getInt(1);
             int card = args.getInt(2);
@@ -195,7 +227,9 @@ public class ACCURAService extends CordovaPlugin {
             int cardType = args.getInt(4);
             String appOrientation = args.getString(5);
             Intent myIntent = new Intent(cordova.getActivity(), OcrActivity.class);
-
+            if (ACCURAService.messagesConf != null) {
+              myIntent = addDefaultConfigs(myIntent, ACCURAService.messagesConf);
+            }
             myIntent = addDefaultConfigs(myIntent, accuraConf);
             myIntent.putExtra("app_orientation", appOrientation);
             myIntent.putExtra("type", "ocr");
@@ -212,6 +246,9 @@ public class ACCURAService extends CordovaPlugin {
             String countryList = args.getString(2);
             String appOrientation = args.getString(3);
             Intent myIntent = new Intent(cordova.getActivity(), accura.kyc.plugin.OcrActivity.class);
+            if (ACCURAService.messagesConf != null) {
+              myIntent = addDefaultConfigs(myIntent, ACCURAService.messagesConf);
+            }
             myIntent = addDefaultConfigs(myIntent, accuraConf);
             myIntent.putExtra("type", "mrz");
             myIntent.putExtra("country-list", countryList);
@@ -224,6 +261,9 @@ public class ACCURAService extends CordovaPlugin {
         if (action.equals("startBankCard")) {
             Intent myIntent = new Intent(cordova.getActivity(), OcrActivity.class);
             String appOrientation = args.getString(1);
+            if (ACCURAService.messagesConf != null) {
+              myIntent = addDefaultConfigs(myIntent, ACCURAService.messagesConf);
+            }
             myIntent = addDefaultConfigs(myIntent, accuraConf);
             myIntent.putExtra("type", "bankcard");
             myIntent.putExtra("app_orientation", appOrientation);
@@ -235,6 +275,9 @@ public class ACCURAService extends CordovaPlugin {
             String type = args.getString(1);
             String appOrientation = args.getString(2);
             Intent myIntent = new Intent(cordova.getActivity(), OcrActivity.class);
+            if (ACCURAService.messagesConf != null) {
+              myIntent = addDefaultConfigs(myIntent, ACCURAService.messagesConf);
+            }
             myIntent = addDefaultConfigs(myIntent, accuraConf);
             myIntent.putExtra("type", "barcode");
             myIntent.putExtra("sub-type", type);
