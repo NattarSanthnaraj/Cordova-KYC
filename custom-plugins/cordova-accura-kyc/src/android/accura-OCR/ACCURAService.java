@@ -141,7 +141,7 @@ public class ACCURAService extends CordovaPlugin {
             JSONObject results = new JSONObject();
             RecogEngine.SDKModel sdkModel = recogEngine.initEngine(cordova.getContext());
             if (sdkModel.i >= 0) {
-                AndroidNetworking.initialize(cordova.getContext(), UnsafeOkHttpClient.getUnsafeOkHttpClient());
+              //  AndroidNetworking.initialize(cordova.getContext(), UnsafeOkHttpClient.getUnsafeOkHttpClient());
                 results.put("sdk_version", recogEngine.getVersion());
                 results.put("isValid", true);
                 // if OCR enable then get card list

@@ -40,7 +40,6 @@
         <framework src="com.scottyab:rootbeer-lib:0.1.0" />
         <framework src="com.google.code.gson:gson:2.8.6" />
         <framework src="com.github.bumptech.glide:glide:4.6.1" />
-        <framework src="com.amitshekhar.android:android-networking:1.0.2" />
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <activity android:name="accura.kyc.plugin.OcrActivity" android:screenOrientation="locked" android:theme="@style/AppTheme" />
